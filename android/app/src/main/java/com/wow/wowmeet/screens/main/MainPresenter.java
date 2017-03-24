@@ -1,4 +1,4 @@
-package com.wow.wowmeet.main;
+package com.wow.wowmeet.screens.main;
 
 /**
  * Created by mahmutkaraca on 3/24/17.

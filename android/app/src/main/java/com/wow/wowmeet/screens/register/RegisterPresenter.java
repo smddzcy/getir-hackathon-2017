@@ -1,4 +1,4 @@
-package com.wow.wowmeet.register;
+package com.wow.wowmeet.screens.register;
 
 /**
  * Created by mahmutkaraca on 3/24/17.

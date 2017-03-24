@@ -1,4 +1,4 @@
-package com.wow.wowmeet.main.list;
+package com.wow.wowmeet.screens.main.list;
 
 
 import android.os.Bundle;

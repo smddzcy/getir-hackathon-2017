@@ -1,7 +1,11 @@
-package com.wow.wowmeet.data.login;
+package com.wow.wowmeet.data.loginregister;
 
 import com.wow.wowmeet.exceptions.LoginFailedException;
-import com.wow.wowmeet.utils.Constants;
+import com.wow.wowmeet.utils.OkHttpUtils;
+
+import java.util.HashMap;
+
+import static com.wow.wowmeet.data.loginregister.Constants.*;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -12,15 +16,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+
 /**
  * Created by ergunerdogmus on 24.03.2017.
  */
 
 public class LoginRepository {
-
-    private static final String LOGIN_ENDPOINT = Constants.API_URL + "/login";
-    private static final String EMAIL_PARAM_NAME = "email";
-    private static final String PASSWORD_PARAM_NAME = "password";
 
     private OkHttpClient client;
 
@@ -28,23 +29,19 @@ public class LoginRepository {
         this.client = new OkHttpClient();
     }
 
-    // Returned String will be response body
+    private void doLogin(String email, String password){
+
+    }
+
     public Single<Void> login(final String email, final String password){
         return Single.create(new SingleOnSubscribe<Void>() {
             @Override
             public void subscribe(SingleEmitter<Void> e) throws Exception {
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart(EMAIL_PARAM_NAME, email)
-                        .addFormDataPart(PASSWORD_PARAM_NAME, password)
-                        .build();
+                HashMap<String, String> fieldsMap = new HashMap<String, String>();
+                fieldsMap.put(EMAIL_PARAM_NAME, email);
+                fieldsMap.put(PASSWORD_PARAM_NAME, password);
 
-                Request request = new Request.Builder()
-                        .post(requestBody)
-                        .url(LOGIN_ENDPOINT)
-                        .build();
-
-                Response response = client.newCall(request).execute();
+                Response response = OkHttpUtils.makePostRequest(client, API_URL, fieldsMap);
                 if(response.isSuccessful()){
                     e.onSuccess(null);
                 }else{
@@ -54,4 +51,5 @@ public class LoginRepository {
             }
         });
     }
+
 }

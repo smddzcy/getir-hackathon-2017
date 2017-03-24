@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.wow.wowmeet.R;
+import com.wow.wowmeet.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +23,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @BindView(R.id.btnLogin) Button btnLogin;
     @BindView(R.id.txtRegister) TextView txtRegister;
 
+    private String getEditTextString(EditText editText){
+        return editText.getText().toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onLoginClicked();
+                presenter.onLoginClicked(getEditTextString(edtUsername), getEditTextString(edtPassword));
             }
         });
 
@@ -54,7 +58,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onError(Throwable t) {
+        String errorMessage = t.getMessage(); //TODO
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)
@@ -62,8 +67,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         dialog.show();
     }
 
-    @Override
-    public void onLoginSuccess() {
 
+    @Override
+    public void onLoginSuccess(User user) {
+        //TODO FRAGMENT GEÇİŞ
     }
 }

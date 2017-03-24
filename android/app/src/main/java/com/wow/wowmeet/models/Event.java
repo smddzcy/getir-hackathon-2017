@@ -6,15 +6,14 @@ package com.wow.wowmeet.models;
 
 public class Event {
     User user;
-    String locationName;
-    double lat, lang;
+    Location location;
 
-    public Event(User user, String locationName, double lat, double lang) {
+
+    public Event(User user, Location location) {
         this.user = user;
-        this.locationName = locationName;
-        this.lat = lat;
-        this.lang = lang;
+        this.location = location;
     }
+
 
     public User getUser() {
         return user;
@@ -24,27 +23,11 @@ public class Event {
         this.user = user;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLang() {
-        return lang;
-    }
-
-    public void setLang(double lang) {
-        this.lang = lang;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

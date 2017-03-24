@@ -1,5 +1,7 @@
 package com.wow.wowmeet.utils;
 
+import com.wow.wowmeet.models.User;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -35,5 +37,10 @@ public class OkHttpUtils {
                 .build();
 
         return client.newCall(request).execute();
+    }
+
+    //Users' token will be put in here
+    public static Response makeGetRequestWithUser(OkHttpClient client, String endpoint, User user){
+        return null;
     }
 }

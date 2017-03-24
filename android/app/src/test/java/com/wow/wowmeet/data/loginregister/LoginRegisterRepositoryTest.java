@@ -40,11 +40,11 @@ public class LoginRegisterRepositoryTest {
         String password = "123456";
 
         RegisterRepository registerRepository = new RegisterRepository();
-        Single<Void> single = registerRepository.register(email, password);
+        Single<String> single = registerRepository.register(email, password);
 
-        single.subscribeWith(new DisposableSingleObserver<Void>() {
+        single.subscribeWith(new DisposableSingleObserver<String>() {
             @Override
-            public void onSuccess(Void value) {
+            public void onSuccess(String value) {
                 System.out.println("oldu");
             }
 

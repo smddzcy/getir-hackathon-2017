@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 
@@ -15,9 +18,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements MapContract.View {
+public class MapFragment extends SupportMapFragment implements MapContract.View {
 
     MapContract.Presenter presenter;
+
+    boolean mapReady = false;
 
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
@@ -36,6 +41,12 @@ public class MapFragment extends Fragment implements MapContract.View {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
+        getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mapReady = true;
+            }
+        });
 
         return rootView;
     }

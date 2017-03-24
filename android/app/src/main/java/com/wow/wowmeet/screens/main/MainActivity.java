@@ -10,6 +10,7 @@ import com.wow.wowmeet.R;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         MainPresenter presenter = new MainPresenter(this);
         setPresenter(presenter);

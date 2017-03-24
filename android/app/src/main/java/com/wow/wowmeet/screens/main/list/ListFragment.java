@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.User;
 
 import java.util.ArrayList;
@@ -48,8 +49,8 @@ public class ListFragment extends Fragment implements ListContract.View {
         setPresenter(presenter);
 
         ArrayList<Event> events = new ArrayList<>();
-        User user = new User("username", "email", "pass");
-        Event event = new Event(user, "Biga", 127, 231);
+        User user = new User.UserBuilder().setUserId("username").setUsername("email").setEmail("pass").createUser();
+        Event event = new Event(user, new Location("Biga", 122, 123));
         for(int i = 0; i < 5; i++){
             events.add(event);
         }

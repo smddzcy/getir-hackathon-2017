@@ -38,7 +38,7 @@ public class RegisterRepository {
 
                 Response response = OkHttpUtils.makePostRequest(client, REGISTER_ENDPOINT, fieldsMap);
                 if(response.isSuccessful()){
-                    User user = new User("", email, password);
+                    User user = new User.UserBuilder().setUserId("").setUsername(email).setEmail(password).createUser();
                     e.onSuccess(user);
                 }else{
                     RegisterFailedException registerFailedException = new RegisterFailedException();

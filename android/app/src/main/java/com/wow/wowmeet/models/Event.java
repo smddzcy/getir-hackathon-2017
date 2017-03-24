@@ -5,6 +5,7 @@ package com.wow.wowmeet.models;
  */
 
 public class Event {
+    String eventId;
     User user;
     Location location;
 

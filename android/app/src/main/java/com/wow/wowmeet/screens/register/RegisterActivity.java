@@ -46,7 +46,9 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onError(Throwable e) {
+        String errorMessage = e.getMessage();
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)

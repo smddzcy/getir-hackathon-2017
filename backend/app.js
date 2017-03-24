@@ -198,7 +198,7 @@ app.use(errorHandler());
  */
 app.listen(app.get('port'), () => {
   console.log('App is running at http://localhost:%d in %s mode',
-    chalk.green('✓'), app.get('port'), app.get('env')); 
+    app.get('port'), app.get('env')); 
 });
 
 module.exports = app;

@@ -44,7 +44,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         Event event = eventList.get(position);
 
         //holder.imageViewProfilePhoto.setImageDrawable();
-        holder.textViewPlaceName.setText(event.getLocationName());
+        holder.textViewPlaceName.setText(event.getLocation().getLocationName());
         holder.textViewProfileName.setText(event.getUser().getUsername());
     }
 

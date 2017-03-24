@@ -3,6 +3,8 @@ package com.wow.wowmeet.screens.register;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.wow.wowmeet.R;
@@ -18,6 +20,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
     @BindView(R.id.edtEmail) EditText edtEmail;
     @BindView(R.id.edtPassword) EditText edtPassword;
     @BindView(R.id.edtPasswordConfirm) EditText edtPasswordConfirm;
+    @BindView(R.id.btnRegister) Button btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +28,15 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
-        RegisterPresenter presenter = new RegisterPresenter(this);
+        final RegisterPresenter presenter = new RegisterPresenter(this);
         setPresenter(presenter);
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onRegisterClicked();
+            }
+        });
 
     }
 

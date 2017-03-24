@@ -1,5 +1,6 @@
 package com.wow.wowmeet.screens.main;
 
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,9 +9,14 @@ import com.wow.wowmeet.R;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     private MainContract.Presenter presenter;
+
+    @BindView(R.id.viewPager) ViewPager viewPager;
+    MainPagerAdapter mainPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +25,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         MainPresenter presenter = new MainPresenter(this);
         setPresenter(presenter);
+
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+
+        viewPager.setAdapter(mainPagerAdapter);
     }
 
     @Override

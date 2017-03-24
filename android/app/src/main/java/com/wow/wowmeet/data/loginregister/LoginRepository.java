@@ -29,21 +29,18 @@ public class LoginRepository {
         this.client = new OkHttpClient();
     }
 
-    private void doLogin(String email, String password){
 
-    }
-
-    public Single<Void> login(final String email, final String password){
-        return Single.create(new SingleOnSubscribe<Void>() {
+    public Single<String> login(final String email, final String password){
+        return Single.create(new SingleOnSubscribe<String>() {
             @Override
-            public void subscribe(SingleEmitter<Void> e) throws Exception {
+            public void subscribe(SingleEmitter<String> e) throws Exception {
                 HashMap<String, String> fieldsMap = new HashMap<String, String>();
                 fieldsMap.put(EMAIL_PARAM_NAME, email);
                 fieldsMap.put(PASSWORD_PARAM_NAME, password);
 
                 Response response = OkHttpUtils.makePostRequest(client, LOGIN_ENDPOINT, fieldsMap);
                 if(response.isSuccessful()){
-                    e.onSuccess(null);
+                    e.onSuccess("");
                 }else{
                     Throwable throwable = new LoginFailedException();
                     e.onError(throwable);

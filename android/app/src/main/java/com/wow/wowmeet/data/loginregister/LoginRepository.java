@@ -41,7 +41,7 @@ public class LoginRepository {
                 fieldsMap.put(EMAIL_PARAM_NAME, email);
                 fieldsMap.put(PASSWORD_PARAM_NAME, password);
 
-                Response response = OkHttpUtils.makePostRequest(client, API_URL, fieldsMap);
+                Response response = OkHttpUtils.makePostRequest(client, LOGIN_ENDPOINT, fieldsMap);
                 if(response.isSuccessful()){
                     e.onSuccess(null);
                 }else{

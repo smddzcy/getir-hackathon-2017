@@ -19,6 +19,12 @@ public class MapFragment extends Fragment implements MapContract.View {
 
     MapContract.Presenter presenter;
 
+    public static MapFragment newInstance() {
+        MapFragment fragment = new MapFragment();
+
+        return fragment;
+    }
+
     public MapFragment() {
         // Required empty public constructor
     }

@@ -15,7 +15,7 @@ public class LoginRegisterRepositoryTest {
     @Test
     public void login() throws Exception {
         String email = "deneme@deneme.com";
-        String password = "123456";
+        String password = "12345";
 
         LoginRepository loginRepository = new LoginRepository();
         Single<User> single = loginRepository.login(email, password);

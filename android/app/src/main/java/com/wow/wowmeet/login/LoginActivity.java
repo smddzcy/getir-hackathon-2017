@@ -1,7 +1,9 @@
-package com.wow.wowmeet;
+package com.wow.wowmeet.login;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.wow.wowmeet.R;
 
 public class LoginActivity extends AppCompatActivity {
 

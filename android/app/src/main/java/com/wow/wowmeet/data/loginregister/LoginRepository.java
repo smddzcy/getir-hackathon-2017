@@ -6,16 +6,15 @@ import com.wow.wowmeet.utils.OkHttpUtils;
 
 import java.util.HashMap;
 
-import static com.wow.wowmeet.data.loginregister.Constants.*;
-
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.EMAIL_PARAM_NAME;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.LOGIN_ENDPOINT;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.PASSWORD_PARAM_NAME;
 
 
 /**
@@ -41,7 +40,7 @@ public class LoginRepository {
 
                 Response response = OkHttpUtils.makePostRequest(client, LOGIN_ENDPOINT, fieldsMap);
                 if(response.isSuccessful()){
-                    User loggedUser = new User("", email, password);
+                    User loggedUser = new User.UserBuilder().setUserId("").setUsername(email).setEmail(password).createUser();
                     e.onSuccess(loggedUser);
                 }else{
                     Throwable throwable = new LoginFailedException();

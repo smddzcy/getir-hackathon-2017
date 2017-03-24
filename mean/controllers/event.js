@@ -13,9 +13,11 @@ var Event = require('../models/Event');
  * Lists all the events.
  */
 exports.eventGetAll = function(req, res, next) {
-  Event.find({}, function(err, users) {
-    res.send(users);
-  });
+  Event.find({})
+    .populate('creator', ['id', 'name', 'picture'])
+    .exec(function(err, events) {
+      res.send(events);
+    });
 }
 
 /**

@@ -7,8 +7,8 @@ import static com.wow.wowmeet.utils.Constants.API_URL;
  */
 
 class LoginRegisterConstants {
-    static final String LOGIN_ENDPOINT = API_URL + "/signup";
-    static final String REGISTER_ENDPOINT = API_URL + "/register";
+    static final String LOGIN_ENDPOINT = API_URL + "/login";
+    static final String REGISTER_ENDPOINT = API_URL + "/signup";
 
     static final String EMAIL_PARAM_NAME = "email";
     static final String PASSWORD_PARAM_NAME = "password";

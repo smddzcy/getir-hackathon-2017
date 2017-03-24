@@ -1,6 +1,7 @@
 package com.wow.wowmeet.data.loginregister;
 
 import com.wow.wowmeet.exceptions.RegisterFailedException;
+import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
 import java.util.HashMap;
@@ -28,10 +29,10 @@ public class RegisterRepository {
         this.client = new OkHttpClient();
     }
 
-    public Single<String> register(final String email, final String password){
-        return Single.create(new SingleOnSubscribe<String>() {
+    public Single<User> register(final String email, final String password){
+        return Single.create(new SingleOnSubscribe<User>() {
             @Override
-            public void subscribe(SingleEmitter<String> e) throws Exception {
+            public void subscribe(SingleEmitter<User> e) throws Exception {
                 HashMap<String, String> fieldsMap = new HashMap<String, String>();
                 fieldsMap.put(EMAIL_PARAM_NAME, email);
                 fieldsMap.put(PASSWORD_PARAM_NAME, password);
@@ -39,7 +40,8 @@ public class RegisterRepository {
 
                 Response response = OkHttpUtils.makePostRequest(client, REGISTER_ENDPOINT, fieldsMap);
                 if(response.isSuccessful()){
-                    e.onSuccess("");
+                    User user = new User("", email, password);
+                    e.onSuccess(user);
                 }else{
                     RegisterFailedException registerFailedException = new RegisterFailedException();
                     e.onError(registerFailedException);

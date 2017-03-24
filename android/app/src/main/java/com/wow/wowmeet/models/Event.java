@@ -9,6 +9,13 @@ public class Event {
     String locationName;
     double lat, lang;
 
+    public Event(User user, String locationName, double lat, double lang) {
+        this.user = user;
+        this.locationName = locationName;
+        this.lat = lat;
+        this.lang = lang;
+    }
+
     public User getUser() {
         return user;
     }

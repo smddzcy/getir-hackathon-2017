@@ -18,7 +18,7 @@ import okhttp3.Response;
 
 public class LoginRepository {
 
-    private static final String LOGIN_ENDPOINT = "/login";
+    private static final String LOGIN_ENDPOINT = Constants.API_URL + "/login";
     private static final String EMAIL_PARAM_NAME = "email";
     private static final String PASSWORD_PARAM_NAME = "password";
 
@@ -41,7 +41,7 @@ public class LoginRepository {
 
                 Request request = new Request.Builder()
                         .post(requestBody)
-                        .url(Constants.API_URL)
+                        .url(LOGIN_ENDPOINT)
                         .build();
 
                 Response response = client.newCall(request).execute();

@@ -78,6 +78,7 @@ app.post('/auth/github', userController.authGithub);
 app.get('/auth/github/callback', userController.authGithubCallback);
 
 // Event resource
+app.get('/event', eventController.eventGetAll);
 app.get('/event/:id', eventController.eventGet);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);

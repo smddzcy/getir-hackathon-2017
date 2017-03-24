@@ -1,4 +1,4 @@
-package com.wow.wowmeet.screens.main.list;
+package com.wow.wowmeet.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

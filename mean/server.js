@@ -20,6 +20,7 @@ var User = require('./models/User');
 // Controllers
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
+var eventController = require('./controllers/event');
 
 var app = express();
 
@@ -75,6 +76,14 @@ app.post('/auth/twitter', userController.authTwitter);
 app.get('/auth/twitter/callback', userController.authTwitterCallback);
 app.post('/auth/github', userController.authGithub);
 app.get('/auth/github/callback', userController.authGithubCallback);
+
+// Event resource
+app.get('/event', eventController.eventGetAll);
+app.get('/event/:id', eventController.eventGet);
+app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
+app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
+app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);
+
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));

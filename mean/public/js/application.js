@@ -12,6 +12,10 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
         templateUrl: 'partials/contact.html',
         controller: 'ContactCtrl'
       })
+      .when('/event', {
+        templateUrl: 'partials/event.html',
+        controller: 'EventCtrl'
+      })
       .when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginCtrl',
@@ -90,6 +94,23 @@ angular.module('MyApp')
         .catch(function(response) {
           $scope.messages = {
             error: Array.isArray(response.data) ? response.data : [response.data]
+          };
+        });
+    };
+  }]);
+
+angular.module('MyApp')
+  .controller('EventCtrl', ["$scope", "Event", function($scope, Event) {
+    $scope.sendEventForm = function() {
+      Event.send($scope.event)
+        .then(function(response) {
+          $scope.messages = {
+            success: "Event has been created successfully."
+          };
+        })
+        .catch(function(response) {
+          $scope.messages = {
+            error: [response.data.msg]
           };
         });
     };
@@ -320,6 +341,14 @@ angular.module('MyApp')
     return {
       send: function(data) {
         return $http.post('/contact', data);
+      }
+    };
+  }]);
+angular.module('MyApp')
+  .factory('Event', ["$http", function($http) {
+    return {
+      send: function(data) {
+        return $http.post('/event', data);
       }
     };
   }]);

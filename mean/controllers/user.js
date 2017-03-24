@@ -76,14 +76,14 @@ exports.signupPost = function(req, res, next) {
 
   User.findOne({ email: req.body.email }, function(err, user) {
     if (user) {
-    return res.status(400).send({ msg: 'The email address you have entered is already associated with another account.' });
+      return res.status(400).send({ msg: 'The email address you have entered is already associated with another account.' });
     }
     user = new User({
       email: req.body.email,
       password: req.body.password
     });
     user.save(function(err) {
-    res.send({ token: generateToken(user), user: user });
+      res.send({ token: generateToken(user), user: user });
     });
   });
 };

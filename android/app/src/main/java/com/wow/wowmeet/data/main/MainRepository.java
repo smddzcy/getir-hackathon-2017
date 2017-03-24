@@ -7,17 +7,28 @@ import java.util.List;
 import io.reactivex.Single;
 
 /**
- * Created by ergunerdogmus on 24.03.2017.
+ * Created by ergunerdogmus on 25.03.2017.
  */
 
-public interface MainRepository {
+public class MainRepository implements EventsRepository {
 
-    Single<List<Event>> getEvents();
+    @Override
+    public Single<List<Event>> getEvents() {
+        return null;
+    }
 
-    Single<String> addEvent(Event event);
+    @Override
+    public Single<String> addEvent(Event event) {
+        return null;
+    }
 
-    Single<String> removeEvent(Event event);
+    @Override
+    public Single<String> removeEvent(Event event) {
+        return null;
+    }
 
-    Single<Event> getSingleEvent(String eventId);
-
+    @Override
+    public Single<Event> getSingleEvent(String eventId) {
+        return null;
+    }
 }

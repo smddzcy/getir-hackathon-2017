@@ -12,12 +12,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +24,8 @@ import java.util.List;
 public class MapFragment extends SupportMapFragment implements MapContract.View {
 
     MapContract.Presenter presenter;
+
+    MapInfoWindowAdapter infoWindowAdapter;
 
     boolean mapReady = false;
     GoogleMap map;
@@ -44,6 +44,12 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.info_window_map, container, false);
+        infoWindowAdapter = new MapInfoWindowAdapter(v);
+
+        MapPresenter presenter = new MapPresenter(this);
+        setPresenter(presenter);
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -54,6 +60,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
+                map.setInfoWindowAdapter(infoWindowAdapter);
                 mapReady = true;
                 presenter.requestEventRefresh();
             }

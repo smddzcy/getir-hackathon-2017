@@ -19,6 +19,5 @@ interface MapContract {
     }
 
     interface Presenter extends BasePresenter{
-        void onMarkerClicked(Event event);
     }
 }

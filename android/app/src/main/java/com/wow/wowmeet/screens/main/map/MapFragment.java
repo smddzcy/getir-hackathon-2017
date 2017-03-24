@@ -14,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

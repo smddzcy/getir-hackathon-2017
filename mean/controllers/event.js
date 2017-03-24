@@ -8,24 +8,13 @@ var request = require('request');
 var qs = require('querystring');
 var Event = require('../models/Event');
 
-
 /**
- * POST /event
- * Create an event with the given values.
+ * GET /event
+ * Lists all the events.
  */
-exports.eventPost = function(req, res, next) {
-  req.assert('location', 'Location cannot be blank').notEmpty();
-  var event = new Event({
-    creator: req.user,
-    location: req.body.location,
-    type: req.body.type
-  });
-
-  event.save(function(err) {
-    if (err) {
-      res.status(500).send({ msg: 'Event couldn\'t be created.' })
-    }
-    res.send({ event: event });
+exports.eventGetAll = function(req, res, next) {
+  Event.find({}, function(err, users) {
+    res.send(users);
   });
 }
 
@@ -39,6 +28,27 @@ exports.eventGet = function(req, res, next) {
   Event.findById(eventId, function(err, event) {
     res.send({ event: event });
   })
+}
+
+/**
+ * POST /event
+ * Create an event with the given values.
+ */
+exports.eventPost = function(req, res, next) {
+  req.assert('location', 'Location cannot be blank').notEmpty();
+
+  var event = new Event({
+    creator: req.user,
+    location: req.body.location,
+    type: req.body.type
+  });
+
+  event.save(function(err) {
+    if (err) {
+      res.status(500).send({ msg: 'Event couldn\'t be created.' })
+    }
+    res.send({ event: event });
+  });
 }
 
 /**

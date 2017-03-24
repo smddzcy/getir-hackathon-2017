@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wow.wowmeet.screens.main.list.ListFragment;
+import com.wow.wowmeet.screens.main.map.MapFragment;
 
 /**
  * Created by mahmutkaraca on 3/24/17.
@@ -15,7 +16,8 @@ import com.wow.wowmeet.screens.main.list.ListFragment;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
-    private ListFragment listFragment;
+    ListFragment listFragment;
+    MapFragment mapFragment;
 
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,8 +30,18 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 listFragment = ListFragment.newInstance();
             }
             return listFragment;
+        } else if(position == 1) {
+            if(mapFragment == null) {
+                mapFragment = MapFragment.newInstance();
+            }
+            return mapFragment;
         }
-        return listFragment;
+        return null;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return (position == 0) ? "List" : "Map";
     }
 
     @Override

@@ -6,4 +6,7 @@ package com.wow.wowmeet.exceptions;
 
 public class BaseException extends Throwable {
 
+    public BaseException(String message) {
+        super(message);
+    }
 }

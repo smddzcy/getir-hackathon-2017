@@ -5,4 +5,7 @@ package com.wow.wowmeet.exceptions;
  */
 
 public class LoginFailedException extends BaseException {
+    public LoginFailedException(String message) {
+        super(message);
+    }
 }

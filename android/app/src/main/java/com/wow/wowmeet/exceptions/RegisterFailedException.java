@@ -5,4 +5,7 @@ package com.wow.wowmeet.exceptions;
  */
 
 public class RegisterFailedException extends BaseException {
+    public RegisterFailedException(String message) {
+        super(message);
+    }
 }

@@ -1,4 +1,4 @@
-package com.wow.wowmeet.main;
+package com.wow.wowmeet.screens.main;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;

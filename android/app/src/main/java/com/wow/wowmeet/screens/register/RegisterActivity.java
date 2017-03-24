@@ -1,41 +1,37 @@
-package com.wow.wowmeet.login;
+package com.wow.wowmeet.screens.register;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.wow.wowmeet.BaseView;
 import com.wow.wowmeet.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View {
+public class RegisterActivity extends AppCompatActivity implements RegisterContract.View {
 
-    private LoginContract.Presenter presenter;
+    private RegisterContract.Presenter presenter;
 
-    @BindView(R.id.txtUsername) EditText edtUsername;
-    @BindView(R.id.txtPassword) EditText edtPassword;
-    @BindView(R.id.btnLogin) Button btnLogin;
-    @BindView(R.id.txtRegister) TextView txtRegister;
-
+    @BindView(R.id.edtUsername) EditText edtUsername;
+    @BindView(R.id.edtEmail) EditText edtEmail;
+    @BindView(R.id.edtPassword) EditText edtPassword;
+    @BindView(R.id.edtPasswordConfirm) EditText edtPasswordConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
-        LoginPresenter presenter = new LoginPresenter(this);
+        RegisterPresenter presenter = new RegisterPresenter(this);
         setPresenter(presenter);
 
     }
 
     @Override
-    public void setPresenter(LoginContract.Presenter presenter) {
+    public void setPresenter(RegisterContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
@@ -49,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     @Override
-    public void onLoginSuccess() {
+    public void onRegisterSuccessful() {
 
     }
 }

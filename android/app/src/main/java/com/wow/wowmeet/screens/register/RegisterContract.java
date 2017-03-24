@@ -1,4 +1,4 @@
-package com.wow.wowmeet.register;
+package com.wow.wowmeet.screens.register;
 
 import com.wow.wowmeet.BasePresenter;
 import com.wow.wowmeet.BaseView;

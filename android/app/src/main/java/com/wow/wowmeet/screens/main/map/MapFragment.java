@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 
@@ -25,6 +28,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     MapContract.Presenter presenter;
 
     boolean mapReady = false;
+    GoogleMap map;
 
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
@@ -49,7 +53,9 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+                map = googleMap;
                 mapReady = true;
+                presenter.requestEventRefresh();
             }
         });
     }
@@ -72,6 +78,16 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     @Override
     public void showEvents(List<Event> events) {
+        if(mapReady && map != null) {
+            for (Event e : events) {
+                map.addMarker(new MarkerOptions()
+                    .position(new LatLng(e.getLocation().getLat(), e.getLocation().getLang())))
+                    .setTag(e);
+            }
+        } else {
+
+        }
+
 
     }
 }

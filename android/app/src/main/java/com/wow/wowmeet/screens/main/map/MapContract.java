@@ -19,5 +19,6 @@ interface MapContract {
     }
 
     interface Presenter extends BasePresenter{
+        void requestEventRefresh();
     }
 }

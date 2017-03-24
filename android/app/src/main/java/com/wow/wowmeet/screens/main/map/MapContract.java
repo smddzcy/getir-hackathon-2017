@@ -10,7 +10,7 @@ import java.util.List;
  * Created by ergunerdogmus on 24.03.2017.
  */
 
-class MapContract {
+interface MapContract {
 
     interface View extends BaseView<MapContract.Presenter>{
         void showEventInfo(Event event);

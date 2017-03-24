@@ -7,8 +7,6 @@ import org.junit.Test;
 import io.reactivex.Single;
 import io.reactivex.observers.DisposableSingleObserver;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by ergunerdogmus on 24.03.2017.
  */
@@ -38,7 +36,7 @@ public class LoginRegisterRepositoryTest {
 
     @Test
     public void register() throws Exception{
-        String email = "deneme@deneme.com";
+        String email = "deneme111@deneme.com";
         String password = "123456";
 
         RegisterRepository registerRepository = new RegisterRepository();

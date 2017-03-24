@@ -34,7 +34,7 @@ public class User {
         }
     }
 
-    User(String username, String email, String password) {
+    private User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;

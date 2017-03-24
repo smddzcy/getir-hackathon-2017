@@ -39,11 +39,12 @@ public class LoginRepository {
                 fieldsMap.put(PASSWORD_PARAM_NAME, password);
 
                 Response response = OkHttpUtils.makePostRequest(client, LOGIN_ENDPOINT, fieldsMap);
+                String responseBody = response.body().string();
                 if(response.isSuccessful()){
                     User loggedUser = new User.UserBuilder().setUserId("").setUsername(email).setEmail(password).createUser();
                     e.onSuccess(loggedUser);
                 }else{
-                    Throwable throwable = new LoginFailedException();
+                    Throwable throwable = new LoginFailedException(responseBody);
                     e.onError(throwable);
                 }
             }

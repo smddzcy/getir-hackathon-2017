@@ -37,11 +37,14 @@ public class RegisterRepository {
                 fieldsMap.put(PASSWORD_PARAM_NAME, password);
 
                 Response response = OkHttpUtils.makePostRequest(client, REGISTER_ENDPOINT, fieldsMap);
+                String responseBody = response.body().string();
                 if(response.isSuccessful()){
+                    System.out.println(responseBody);
                     User user = new User.UserBuilder().setUserId("").setUsername(email).setEmail(password).createUser();
                     e.onSuccess(user);
                 }else{
-                    RegisterFailedException registerFailedException = new RegisterFailedException();
+                    RegisterFailedException registerFailedException =
+                            new RegisterFailedException(responseBody);
                     e.onError(registerFailedException);
                 }
             }

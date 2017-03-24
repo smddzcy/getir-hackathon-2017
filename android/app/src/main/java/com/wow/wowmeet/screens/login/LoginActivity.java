@@ -1,13 +1,14 @@
 package com.wow.wowmeet.screens.login;
 
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.wow.wowmeet.R;
+import com.wow.wowmeet.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onError(Throwable t) {
+        String errorMessage = t.getMessage(); //TODO error type göre message strings'den gelecek
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)
@@ -47,8 +50,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         dialog.show();
     }
 
+    //TODO USER FRAGMENT
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(User user) {
 
     }
 }

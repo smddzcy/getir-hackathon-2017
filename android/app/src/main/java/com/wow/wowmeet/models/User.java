@@ -9,6 +9,12 @@ public class User {
     private String email;
     private String password;
 
+    public String getToken() {
+        return token;
+    }
+
+    private String token;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;

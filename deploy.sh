@@ -1,1 +1,1 @@
-git subtree push --prefix backend heroku master
+git subtree push --prefix mean heroku master

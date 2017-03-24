@@ -20,6 +20,7 @@
     "watch": "gulp"
   },
   "dependencies": {
+    "angular-google-maps": "^2.4.1",
     "async": "^1.5.2",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.15.1",

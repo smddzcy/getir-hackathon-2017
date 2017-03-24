@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ngRoute', 'satellizer'])
+angular.module('MyApp', ['ngRoute', 'satellizer', 'uiGmapgoogle-maps'])
   .config(function($routeProvider, $locationProvider, $authProvider) {
     $locationProvider.html5Mode(true);
 
@@ -78,4 +78,11 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
     if ($window.localStorage.user) {
       $rootScope.currentUser = JSON.parse($window.localStorage.user);
     }
+  })
+  .config(function(uiGmapGoogleMapApiProvider) {
+    uiGmapGoogleMapApiProvider.configure({
+      key: 'AIzaSyBupogsGuOJ1ckMMIM9K4JsrSl8vksNwG4',
+      v: '3.20', //defaults to latest 3.X anyhow
+      libraries: 'geometry,visualization'
+    });
   });

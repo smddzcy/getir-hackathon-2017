@@ -12,9 +12,9 @@ import io.reactivex.SingleOnSubscribe;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-import static com.wow.wowmeet.data.loginregister.Constants.EMAIL_PARAM_NAME;
-import static com.wow.wowmeet.data.loginregister.Constants.PASSWORD_PARAM_NAME;
-import static com.wow.wowmeet.data.loginregister.Constants.REGISTER_ENDPOINT;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.EMAIL_PARAM_NAME;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.PASSWORD_PARAM_NAME;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.REGISTER_ENDPOINT;
 
 /**
  * Created by ergunerdogmus on 24.03.2017.

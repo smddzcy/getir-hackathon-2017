@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.login;
 
 import com.wow.wowmeet.BasePresenter;
 import com.wow.wowmeet.BaseView;
+import com.wow.wowmeet.models.User;
 
 /**
  * Created by mahmutkaraca on 3/24/17.
@@ -10,11 +11,11 @@ import com.wow.wowmeet.BaseView;
 interface LoginContract {
 
     interface View extends BaseView<LoginContract.Presenter> {
-        public void onLoginSuccess();
+        public void onLoginSuccess(User user);
     }
 
     interface Presenter extends BasePresenter {
-        public void onLoginClicked();
+        public void onLoginClicked(String email, String password);
         public void onRegisterClicked();
     }
 

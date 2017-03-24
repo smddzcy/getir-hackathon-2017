@@ -10,6 +10,10 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
         templateUrl: 'partials/contact.html',
         controller: 'ContactCtrl'
       })
+      .when('/event', {
+        templateUrl: 'partials/event.html',
+        controller: 'EventCtrl'
+      })
       .when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginCtrl',

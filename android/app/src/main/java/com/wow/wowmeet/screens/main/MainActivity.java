@@ -27,7 +27,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onError(Throwable t) {
+        String errorMessage = t.getMessage(); //TODO
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)

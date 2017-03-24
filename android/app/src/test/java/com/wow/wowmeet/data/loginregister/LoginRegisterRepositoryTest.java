@@ -1,5 +1,7 @@
 package com.wow.wowmeet.data.loginregister;
 
+import com.wow.wowmeet.models.User;
+
 import org.junit.Test;
 
 import io.reactivex.Single;
@@ -18,11 +20,11 @@ public class LoginRegisterRepositoryTest {
         String password = "123456";
 
         LoginRepository loginRepository = new LoginRepository();
-        Single<String> single = loginRepository.login(email, password);
+        Single<User> single = loginRepository.login(email, password);
 
-        single.subscribeWith(new DisposableSingleObserver<String>() {
+        single.subscribeWith(new DisposableSingleObserver<User>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(User value) {
                 System.out.println("oldu");
             }
 
@@ -40,11 +42,11 @@ public class LoginRegisterRepositoryTest {
         String password = "123456";
 
         RegisterRepository registerRepository = new RegisterRepository();
-        Single<String> single = registerRepository.register(email, password);
+        Single<User> single = registerRepository.register(email, password);
 
-        single.subscribeWith(new DisposableSingleObserver<String>() {
+        single.subscribeWith(new DisposableSingleObserver<User>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(User value) {
                 System.out.println("oldu");
             }
 

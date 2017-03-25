@@ -1,8 +1,10 @@
 package com.wow.wowmeet.data.main;
 
+import com.google.gson.Gson;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.models.WowException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +63,9 @@ public class MainRepositoryTest {
 
             @Override
             public void onError(Throwable e) {
-
+                Gson gson = new Gson();
+                WowException exception = gson.fromJson(e.getMessage(), WowException.class);
+                System.out.println(exception.getMsg());
             }
         });
     }

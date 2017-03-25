@@ -63,7 +63,7 @@ public class MainRepository implements EventsRepository {
                 Response response = OkHttpUtils.makePostRequestWithUserJson(client, EventsConstants.EVENTS_ENDPOINT, json, user);
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
-                    e.onSuccess("");
+                    e.onSuccess(responseBody);
                 }else{
                     AddEventFailedException addEventFailedException = new AddEventFailedException(responseBody);
                     e.onError(addEventFailedException);

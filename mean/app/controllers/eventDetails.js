@@ -18,7 +18,6 @@ angular.module('MyApp')
         .$promise
         .then(function(event) {
           $scope.event = event;
-          console.log(event);
         })
         .catch(function(response) {
           console.log(response.data);

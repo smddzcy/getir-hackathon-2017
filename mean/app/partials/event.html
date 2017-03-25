@@ -16,8 +16,9 @@
         <div class="form-group">
           <label for="type" class="col-sm-2">Type</label>
           <div class="col-sm-8">
-            <select name="type" style="width: 100%" class="form-control">
-              <option ng-model="event.type" ng-repeat="type in types" value={{type}} >{{type}}</option>
+            <select name="type" style="width: 100%" class="form-control"
+                    ng-options="type as type.name for type in types track by type._id"
+                    ng-model="event.type">
             </select>
            <!-- <input type="text" name="type" id="type" class="form-control" ng-model="event.type" autofocus> -->
           </div>

@@ -9,7 +9,7 @@ var schemaOptions = {
 
 var eventSchema = new mongoose.Schema({
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  type: {{type: mongoose.Schema.Types.ObjectId, ref: 'EventType'}},
+  type: {type: mongoose.Schema.Types.ObjectId, ref: 'EventType'},
   startTime : Date,
   endTime : Date,
   location: {},

@@ -1,5 +1,5 @@
 angular.module('MyApp')
-  .controller('EventCtrl', function($scope, $filter, Event) {
+  .controller('EventCtrl', function($scope, $http, $filter, Event, ngToast) {
     angular.extend($scope, {
       map: {
         center: { latitude: 41.0728162, longitude: 29.0089026 },
@@ -32,8 +32,15 @@ angular.module('MyApp')
         }
       }
     });
-    // types
-    $scope.types = ['fun','more fun','more more fun'];
+
+    // Get event types
+    $http.get('/event-type')
+      .then(function(eventTypes) {
+        $scope.types = eventTypes.data;
+      })
+      .catch(function(err) {
+        ngToast.danger(err.msg);
+      });
 
     $scope.sendEventForm = function() {
       //$scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");

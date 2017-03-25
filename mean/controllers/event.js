@@ -20,6 +20,7 @@ exports.eventGetAll = function(req, res, next) {
 
   Event.find({})
     .populate('creator', ['id', 'name', 'email', 'picture'])
+    .populate('messages')
     .exec(function(err, events) {
       if (lat && lng && radius) {
         return res.send(events.filter(function(event) {
@@ -45,9 +46,10 @@ exports.eventGet = function(req, res, next) {
 
   Event.findById(eventId)
     .populate('creator', ['id', 'name', 'email', 'picture'])
+    .populate('messages')
     .exec(function(err, event) {
-    res.send(event);
-  })
+      res.send(event);
+    })
 }
 
 /**

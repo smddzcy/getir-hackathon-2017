@@ -24,6 +24,7 @@ public class ChatPresenter implements ChatContract.Presenter {
     private ChatRepository chatRepository;
 
     private DisposableSingleObserver<String> disposableSingleChatMessageObserver;
+    private DisposableObserver<Message> disposableSocketObserver;
     private ChatContract.View view;
     private String userToken;
     private List<Message> messages;
@@ -42,7 +43,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
         Observable<Message> socketObservable = chatRepository.socketListen();
 
-        socketObservable
+        disposableSocketObserver = socketObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<Message>() {
@@ -68,6 +69,9 @@ public class ChatPresenter implements ChatContract.Presenter {
     public void stop() {
         if(disposableSingleChatMessageObserver != null)
             disposableSingleChatMessageObserver.dispose();
+
+        if(disposableSocketObserver != null)
+            disposableSocketObserver.dispose();
 
         chatRepository.socketDisconnect();
     }

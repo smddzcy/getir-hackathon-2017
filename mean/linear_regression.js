@@ -20,6 +20,10 @@ var LinearRegression = function(options) {
 };
 
 LinearRegression.prototype.train = function(X, Y, callback) {
+  if (!callback || typeof callback !== 'function') {
+    callback = function() {}
+  }
+
   if (X && !Array.isArray(X)) {
     throw new Error('X must be an array');
   }

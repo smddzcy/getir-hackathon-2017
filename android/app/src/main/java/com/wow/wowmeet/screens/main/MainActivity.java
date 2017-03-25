@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.open_drawer, R.string.close_drawer);
-
+        drawerToggle.syncState();
         drawerLayout.addDrawerListener(drawerToggle);
 
         MainPresenter presenter = new MainPresenter(this);

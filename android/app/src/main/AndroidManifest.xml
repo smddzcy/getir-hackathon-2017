@@ -19,10 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".screens.register.RegisterActivity" />
-        <activity android:name=".screens.main.MainActivity">
-        </activity>
+        <activity android:name=".screens.main.MainActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -32,7 +30,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".screens.profile.ProfileActivity" />
-        <activity android:name=".screens.createevent.CreateEvent"></activity>
+        <activity android:name=".screens.createevent.CreateEvent" />
     </application>
 
 </manifest>

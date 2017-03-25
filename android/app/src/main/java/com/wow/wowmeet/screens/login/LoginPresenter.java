@@ -50,7 +50,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     public void onSuccess(User value) {
                         view.onLoginSuccess(value);
                         view.hideLoading();
-                        loginPreferences.saveUserLogin(value.getUserId(), value.getToken());
+                        loginPreferences.saveUserLogin(value.get_id(), value.getToken());
                     }
 
                     @Override

@@ -1,7 +1,5 @@
 package com.wow.wowmeet.utils;
 
-import com.wow.wowmeet.models.User;
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -45,7 +43,7 @@ public class OkHttpUtils {
     }
 
     public static Response makePostRequestWithUser(OkHttpClient client, String endpoint,
-                                                   Map<String, String> fields, User user) throws IOException {
+                                                   Map<String, String> fields, String token) throws IOException {
         FormBody.Builder builder = new FormBody.Builder();
 
         for(String key : fields.keySet()){
@@ -57,7 +55,7 @@ public class OkHttpUtils {
 
         Request request = new Request.Builder()
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addHeader("Authorization", "Bearer " + user.getToken())
+                .addHeader("Authorization", "Bearer " + token)
                 .post(requestBody)
                 .url(endpoint)
                 .build();
@@ -66,10 +64,10 @@ public class OkHttpUtils {
     }
 
     public static Response makePostRequestWithUserJson(OkHttpClient client, String endpoint,
-                                                       String json, User user) throws IOException {
+                                                       String json, String token) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + user.getToken())
+                .addHeader("Authorization", "Bearer " + token)
                 .url(endpoint)
                 .post(body)
                 .build();
@@ -86,10 +84,10 @@ public class OkHttpUtils {
     }
 
     //Users' token will be put in here
-    public static Response makeGetRequestWithUser(OkHttpClient client, String endpoint, User user) throws IOException {
+    public static Response makeGetRequestWithUser(OkHttpClient client, String endpoint, String token) throws IOException {
         Request request = new Request.Builder()
                 .url(endpoint)
-                .addHeader("Authorization", "Bearer " + user.getToken())
+                .addHeader("Authorization", "Bearer " + token)
                 .build();
 
         return client.newCall(request).execute();

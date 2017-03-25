@@ -40,7 +40,7 @@ public class RegisterRepository {
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
                     System.out.println(responseBody);
-                    User user = new User.UserBuilder().setUserId("").setName(email).setEmail(password).createUser();
+                    User user = new User();
                     e.onSuccess(user);
                 }else{
                     RegisterFailedException registerFailedException =

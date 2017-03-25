@@ -54,7 +54,7 @@ exports.eventGet = function(req, res, next) {
  */
 exports.eventPost = function(req, res, next) {
   req.assert('location', 'Location cannot be blank').notEmpty();
-
+  
   var event = new Event({
     creator: req.user,
     type: req.body.type,
@@ -110,3 +110,4 @@ exports.eventDelete = function(req, res, next) {
     res.send({ msg: 'Event has been permanently deleted.' });
   });
 }
+

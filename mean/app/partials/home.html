@@ -11,11 +11,29 @@
         <ui-gmap-window coords="marker.location"
                         show="marker.isClicked"
                         closeClick="marker.isClicked = false">
-          <div id="content">
-            <div id="siteNotice"></div>
-            <h1 id="firstHeading" class="firstHeading">{{ marker.name }}</h1>
-            <div id="bodyContent">
-              <p>{{ marker.date | date:"MM/dd/yyyy" }}</p>
+          <div id="content" class="markerDetail">
+            <h1 id="markerHeading" class="markerHeading">{{ marker.name }}</h1>
+            <div class="markerBodyContent">
+              <p class="markerTime">{{ marker.date | date:"MM/dd/yyyy" }} 22.22</p>
+              <div class="row creatorInfo">
+                <div class="col-md-5">
+                  <img class="img-responsive img-circle creatorImage" style="background: red" src="">
+                </div>    
+                <div class="col-md-7">
+                  <div class="creatorName">
+                    <span>Creator Name</span>
+                  </div>
+                </div>    
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <a class="btn btn-primary cta-button marker-info-button" href="/event/join">Join Now</a>
+                </div>
+                <div class="col-md-6">
+                  <a class="btn btn-primary cta-button marker-info-button" href="/event/details/{{marker.id}}">Show Details</a>  
+                </div>
+              </div>
             </div>
           </div>
         </ui-gmap-window>

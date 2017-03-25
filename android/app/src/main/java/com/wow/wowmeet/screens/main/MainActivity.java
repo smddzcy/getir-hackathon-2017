@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -46,6 +47,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private ArrayList<Event> events;
 
+    @BindView(R.id.fab) FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +67,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         drawerToggle.syncState();
         drawerLayout.addDrawerListener(drawerToggle);
 
-        MainPresenter presenter = new MainPresenter(this);
+        final MainPresenter presenter = new MainPresenter(this);
         setPresenter(presenter);
 
         ListFragment lf = ListFragment.newInstance();
@@ -80,6 +83,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onAddEventClicked();
+            }
+        });
     }
 
     @Override

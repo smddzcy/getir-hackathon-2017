@@ -7,10 +7,23 @@ var moment = require('moment');
 var request = require('request');
 var qs = require('querystring');
 var User = require('../models/User');
+var redisClient = require('../redis');
 
+/**
+ * Holds the online timeouts of the users.
+ *
+ * In login, each is user set as 'logged in' in Redis. After a certain amount of time,
+ * (10 minutes for now) user is automatically set as offline with a timeout.
+ * This object holds those timeouts by user ids as their keys.
+ */
+var userOnlineTimeouts = {};
+
+/**
+ * Generate a token for the user.
+ */
 function generateToken(user) {
   var payload = {
-    iss: 'my.domain.com',
+    iss: 'getir-hackathon-2017-wow-team.herokuapp.com',
     sub: user.id,
     iat: moment().unix(),
     exp: moment().add(7, 'days').unix()
@@ -23,6 +36,15 @@ function generateToken(user) {
  */
 exports.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
+    // Reset the online timeout of user
+    var onlineTimeout = userOnlineTimeouts[req.user._id];
+    console.log(userOnlineTimeouts);
+    console.log(onlineTimeout);
+    if (onlineTimeout) {
+      clearTimeout(userOnlineTimeouts[req.user._id]);
+      userOnlineTimeouts[req.user._id] = onlineTimeout;
+    }
+
     next();
   } else {
     res.status(401).send({ msg: 'Unauthorized' });
@@ -37,9 +59,23 @@ exports.userGet = function(req, res, next) {
   var userId = req.params.id;
 
   User.findById(userId, function(err, user) {
-    return res.send(user);
+    if (!user) {
+      return res.status(404).send({ msg: 'User couldn\'t be found. '});
+    }
+    res.send(user);
   })
 }
+
+/**
+ * Put user to online users in Redis.
+ */
+var putUserToOnlineUsers = function(user) {
+  redisClient.setUserAsOnline(user);
+  userOnlineTimeouts[user._id] = setTimeout(function(){
+    redisClient.setUserAsOffline(user._id);
+    delete userOnlineTimeouts[user._id];
+  }, 600000);
+};
 
 /**
  * POST /login
@@ -63,10 +99,13 @@ exports.loginPost = function(req, res, next) {
       'Double-check your email address and try again.'
       });
     }
+
     user.comparePassword(req.body.password, function(err, isMatch) {
       if (!isMatch) {
         return res.status(401).send({ msg: 'Invalid email or password' });
       }
+
+      putUserToOnlineUsers(user);
       res.send({ token: generateToken(user), user: user.toJSON() });
     });
   });
@@ -330,6 +369,7 @@ exports.authFacebook = function(req, res) {
           user.picture = user.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.facebook = profile.id;
           user.save(function() {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });
@@ -337,6 +377,7 @@ exports.authFacebook = function(req, res) {
         // Step 3b. Create a new user account or return an existing one.
         User.findOne({ facebook: profile.id }, function(err, user) {
           if (user) {
+            putUserToOnlineUsers(user);
             return res.send({ token: generateToken(user), user: user });
           }
           User.findOne({ email: profile.email }, function(err, user) {
@@ -352,6 +393,7 @@ exports.authFacebook = function(req, res) {
               facebook: profile.id
             });
             user.save(function(err) {
+              putUserToOnlineUsers(user);
               return res.send({ token: generateToken(user), user: user });
             });
           });
@@ -403,6 +445,7 @@ exports.authGoogle = function(req, res) {
           user.location = user.location || profile.location;
           user.google = profile.sub;
           user.save(function() {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });
@@ -410,6 +453,7 @@ exports.authGoogle = function(req, res) {
         // Step 3b. Create a new user account or return an existing one.
         User.findOne({ google: profile.sub }, function(err, user) {
           if (user) {
+            putUserToOnlineUsers(user);
             return res.send({ token: generateToken(user), user: user });
           }
           user = new User({
@@ -421,6 +465,7 @@ exports.authGoogle = function(req, res) {
             google: profile.sub
           });
           user.save(function(err) {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });
@@ -494,6 +539,7 @@ exports.authTwitter = function(req, res) {
           user.location = user.location || profile.location;
           user.twitter = profile.id;
           user.save(function(err) {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });
@@ -501,6 +547,7 @@ exports.authTwitter = function(req, res) {
         // Step 5b. Create a new user account or return an existing one.
         User.findOne({ twitter: profile.id }, function(err, user) {
           if (user) {
+            putUserToOnlineUsers(user);
             return res.send({ token: generateToken(user), user: user });
           }
           // Twitter does not provide an email address, but email is a required field in our User schema.
@@ -513,6 +560,7 @@ exports.authTwitter = function(req, res) {
             twitter: profile.id
           });
           user.save(function() {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });
@@ -565,6 +613,7 @@ exports.authGithub = function(req, res) {
           user.location = user.location || profile.location;
           user.github = profile.id;
           user.save(function() {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });
@@ -572,6 +621,7 @@ exports.authGithub = function(req, res) {
         // Step 3b. Create a new user account or return an existing one.
         User.findOne({ github: profile.id }, function(err, user) {
           if (user) {
+            putUserToOnlineUsers(user);
             return res.send({ token: generateToken(user), user: user });
           }
           user = new User({
@@ -582,6 +632,7 @@ exports.authGithub = function(req, res) {
             github: profile.id
           });
           user.save(function(err) {
+            putUserToOnlineUsers(user);
             res.send({ token: generateToken(user), user: user });
           });
         });

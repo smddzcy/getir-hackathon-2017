@@ -1,8 +1,5 @@
 package com.wow.wowmeet.base;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,7 @@ import com.wow.wowmeet.R;
  * Created by mahmutkaraca on 3/25/17.
  */
 
-public class BaseActivity extends AppCompatActivity implements BaseLoadingView {
+public abstract class BaseActivity extends AppCompatActivity implements BaseLoadingView {
 
     private View loadingView;
 

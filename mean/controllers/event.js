@@ -43,7 +43,9 @@ exports.eventGetAll = function(req, res, next) {
 exports.eventGet = function(req, res, next) {
   var eventId = req.params.id;
 
-  Event.findById(eventId, function(err, event) {
+  Event.findById(eventId)
+    .populate('creator', ['id', 'name', 'email', 'picture'])
+    .exec(function(err, event) {
     res.send(event);
   })
 }
@@ -60,7 +62,6 @@ exports.eventPost = function(req, res, next) {
     type: req.body.type,
     date: req.body.date,
     location: req.body.location,
-    joinRequests: req.body.joinRequests,
     users: req.body.users,
     messages: req.body.message
   });

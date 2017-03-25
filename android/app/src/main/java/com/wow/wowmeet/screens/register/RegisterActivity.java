@@ -1,18 +1,22 @@
 package com.wow.wowmeet.screens.register;
 
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.wow.wowmeet.R;
+import com.wow.wowmeet.base.BaseActivity;
+import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.screens.main.MainActivity;
+import com.wow.wowmeet.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RegisterActivity extends AppCompatActivity implements RegisterContract.View {
+public class RegisterActivity extends BaseActivity implements RegisterContract.View {
 
     private RegisterContract.Presenter presenter;
 
@@ -52,8 +56,22 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
         dialog.show();
     }
 
+
     @Override
-    public void onRegisterSuccessful() {
+    public void goMainWithUser(User user) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Constants.INTENT_EXTRA_USER, user);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
 
     }
 }

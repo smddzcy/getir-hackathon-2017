@@ -3,9 +3,7 @@ package com.wow.wowmeet.screens.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,6 +59,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
+    }
+
+    @Override
     public void setPresenter(LoginContract.Presenter presenter) {
         this.presenter = presenter;
     }
@@ -80,6 +84,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_USER, user);
         startActivity(intent);
+        finish();
     }
 
     @Override

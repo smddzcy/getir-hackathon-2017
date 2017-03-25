@@ -13,6 +13,9 @@ logs
 results
 tmp
 coverage
+public/css/main.css
+public/js/application.js
+public/js/templates.js
 
 # API keys
 .env

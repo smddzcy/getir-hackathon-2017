@@ -80,11 +80,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void showLoading() {
-
+        //TODO Mahmut, loading
     }
 
     @Override
     public void hideLoading() {
-
+        //TODO Mahmut, loading
     }
 }

@@ -41,6 +41,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     MapInfoWindowAdapter infoWindowAdapter;
 
+    private OnRefreshListRequestedListener onRefreshListRequestedListener;
+
     boolean mapReady = false;
     GoogleMap map;
     GoogleLocationAPIWrapper apiWrapper;
@@ -188,5 +190,13 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     @Override
     public void onPermissionRequestResolved(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         this.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void setOnRefreshListRequestedListener(OnRefreshListRequestedListener onRefreshListRequestedListener) {
+        this.onRefreshListRequestedListener = onRefreshListRequestedListener;
+    }
+
+    public interface OnRefreshListRequestedListener {
+        void onRefreshListRequested();
     }
 }

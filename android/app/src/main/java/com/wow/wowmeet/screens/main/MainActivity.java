@@ -47,6 +47,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private ArrayList<Event> events = new ArrayList<>();
 
+    private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListener = new MapFragment.OnRefreshListRequestedListener() {
+        @Override
+        public void onRefreshListRequested() {
+            //TODO
+        }
+    };
+
     @BindView(R.id.fab) FloatingActionButton fab;
 
     @Override
@@ -72,6 +79,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         ListFragment lf = ListFragment.newInstance();
         MapFragment mf = MapFragment.newInstance();
+
+        mf.setOnRefreshListRequestedListener(onRefreshListRequestedListener);
 
         listContractView = lf;
         mapContractView = mf;

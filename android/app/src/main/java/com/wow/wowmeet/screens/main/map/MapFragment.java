@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
-import com.wow.wowmeet.exceptions.UnexpectedErgunException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 
@@ -183,11 +182,6 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
             }
         } else {
             //TODO EMPTY ELSE?
-            try {
-                throw new UnexpectedErgunException();
-            } catch (Exception e) {
-
-            }
         }
 
 

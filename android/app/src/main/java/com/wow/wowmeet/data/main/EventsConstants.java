@@ -5,5 +5,5 @@ package com.wow.wowmeet.data.main;
  */
 
 public class EventsConstants {
-    static final String EVENTS_ENDPOINT = com.wow.wowmeet.utils.Constants.API_URL;
+    static final String EVENTS_ENDPOINT = com.wow.wowmeet.utils.Constants.API_URL + "/events";
 }

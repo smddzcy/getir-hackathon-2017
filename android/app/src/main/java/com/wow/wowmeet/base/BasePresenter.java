@@ -1,4 +1,4 @@
-package com.wow.wowmeet;
+package com.wow.wowmeet.base;
 
 import android.content.Context;
 import android.content.Intent;

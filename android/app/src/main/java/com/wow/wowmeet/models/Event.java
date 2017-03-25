@@ -82,4 +82,9 @@ public class Event {
     {
         this.creator = creator;
     }
+
+    @Override
+    public String toString() {
+        return getLocation().toString();
+    }
 }

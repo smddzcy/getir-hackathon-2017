@@ -162,7 +162,7 @@ angular.module('MyApp')
 angular.module('MyApp')
 	.controller('HomeCtrl', ["$scope", "Event", function($scope, Event) {
 		$scope.map = {
-			center: { latitude: 11.12413, longitude: 15.14132 },
+			center: { latitude: 11, longitude: 11 },
 			zoom: 8,
 			options: { scrollwheel: false }
 		};

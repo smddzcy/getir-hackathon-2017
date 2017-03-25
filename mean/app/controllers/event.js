@@ -27,12 +27,12 @@ angular.module('MyApp')
 
             $scope.event.location.latitude = lat;
             $scope.event.location.longitude = lng;
-            
+
             uiGmapGoogleMapApi.then(function(maps) {
               latlng = new maps.LatLng(lat, lng);
               geocoder = new maps.Geocoder();
-              geocoder.geocode({'latLng': latlng}, function(results, status) {
-                $scope.$apply(function(){
+              geocoder.geocode({ 'latLng': latlng }, function(results, status) {
+                $scope.$apply(function() {
                   $scope.event.location.name = results[0].formatted_address;
                 });
               });
@@ -42,25 +42,29 @@ angular.module('MyApp')
           }
         }
       },
-      searchbox: { 
-          template:'searchbox.tpl.html', 
-          events:{
-            places_changed: function (searchBox) {
-              var place = searchBox.getPlaces()[0];
-              if (!place) return;
+      searchbox: {
+        template: 'searchbox.tpl.html',
+        events: {
+          places_changed: function(searchBox) {
+            var place = searchBox.getPlaces()[0];
+            if (!place) return;
 
-              // Set input values automatically and put a marker.
-              $scope.event.location.name = place.formatted_address;
-              $scope.event.location.latitude = place.geometry.location.lat();
-              $scope.event.location.longitude = place.geometry.location.lng();
-
-              $scope.marker = {
-                id: Date.now(),
-                coords: $scope.event.location
-              };
+            if (!$scope.event.location) {
+              $scope.event.location = {};
             }
+
+            // Set input values automatically and put a marker.
+            $scope.event.location.name = place.formatted_address;
+            $scope.event.location.latitude = place.geometry.location.lat();
+            $scope.event.location.longitude = place.geometry.location.lng();
+
+            $scope.marker = {
+              id: Date.now(),
+              coords: $scope.event.location
+            };
           }
-        },
+        }
+      },
     });
 
     // Get event types

@@ -93,10 +93,11 @@ app.get('/user/:id', userController.userGet);
 
 // Event endpoints
 app.get('/event/:id', eventController.eventGet);
-app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
+app.post('/event/:id/join', userController.ensureAuthenticated, eventController.eventJoinPost);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);
+app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 
 // Contact endpoints
 app.post('/contact', contactController.contactPost);

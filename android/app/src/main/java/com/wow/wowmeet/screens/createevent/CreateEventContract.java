@@ -1,5 +1,7 @@
 package com.wow.wowmeet.screens.createevent;
 
+import android.support.v4.app.DialogFragment;
+
 import com.wow.wowmeet.base.BasePresenter;
 import com.wow.wowmeet.base.BaseView;
 
@@ -12,6 +14,11 @@ interface CreateEventContract {
 
     interface View extends BaseView<CreateEventContract.Presenter> {
         void updateSuggestions();
+
+        void updateTimeField(int hour, int minute);
+        void updateDateField(int day, int month, int year);
+
+        void showDialog(DialogFragment fragment, String tag);
     }
 
     interface Presenter extends BasePresenter{

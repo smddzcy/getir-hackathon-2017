@@ -47,8 +47,14 @@
                      from="message.from"
                      message="message.message"></message>
             <div class="input-container">
-              <input type="text" class="form-control" placeholder="Your message..."/>
-              <button type="submit" class="btn btn-success" ng-click="alert(123)">Send</button>
+              <input type="text" class="form-control"
+                     placeholder="Your message..."
+                     ng-model="message"
+                     ng-minlength="3"
+                     ng-maxlength="140" />
+              <button type="submit" class="btn btn-success"
+                      ng-click="sendMessage(message)"
+                      ng-disabled="sendingMessage">Send</button>
             </div>
           </div>
         </div>

@@ -26,8 +26,7 @@ angular.module('MyApp')
 				latitude: Number(e.location.latitude),
 				longitude: Number(e.location.longitude)
 			};
-			marker.name = "Type: " + (e.type ? e.type : 'No type') + ", Name: " + (e.location.name ? e.location.name : 'No name');
-			marker.date = e.date;
+      marker.event = e;
 			$scope.markers.push(marker);
 		});
 	});

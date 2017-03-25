@@ -1,17 +1,13 @@
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CRaleway:100,300,600,700,800");
 @import "vendor/bootstrap/bootstrap";
-
 @body-bg: #f4f4f4;
 @line-height-base: 1.57142857;
 @link-color: #1d7cf4;
 @link-hover-decoration: none;
-
 @brand-success: #29b35b;
 @brand-danger: #b61b17;
-
 @font-family-base: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 @headings-font-weight: 600;
-
 @alert-info-border: #31708f;
 @alert-success-border: darken(@brand-success, 12%);
 @alert-success-text: #fff;
@@ -19,7 +15,6 @@
 @alert-danger-border: #b61b17;
 @alert-danger-text: #b61b17;
 @alert-danger-bg: #ffcdd2;
-
 @navbar-height: 56px;
 @navbar-default-bg: #fff;
 @navbar-default-border: #e0e0e0;
@@ -28,11 +23,8 @@
 @navbar-default-link-hover-bg: transparent;
 @navbar-default-link-active-bg: transparent;
 @navbar-default-link-active-color: #262626;
-
 @panel-heading-padding: 20px 30px;
-@panel-body-padding: 30px;
-
-// Scaffolding
+@panel-body-padding: 30px; // Scaffolding
 // -------------------------
 
 html {
@@ -57,14 +49,12 @@ footer {
 .login-container {
   max-width: 555px;
 }
-
 // Alerts
 // -------------------------
 
 .alert {
   border-width: 0 0 0 3px;
 }
-
 // Navbar
 // -------------------------
 
@@ -73,12 +63,15 @@ footer {
   padding-bottom: (@navbar-padding-vertical - 3);
   transition: all 0.25s;
   margin-bottom: 0;
+
   &:hover {
     border-bottom-color: #bdbdbd;
   }
+
   &.navbar-avatar {
     padding-top: @navbar-padding-vertical - 4.5;
     padding-bottom: (@navbar-padding-vertical - 4.5) - 3;
+
     img {
       border-radius: 50%;
       width: 30px;
@@ -90,7 +83,6 @@ footer {
 .navbar-default .navbar-nav > li.active > a {
   border-bottom-color: #3f51b5;
 }
-
 // Panels
 // -------------------------
 
@@ -104,7 +96,12 @@ footer {
 }
 
 .panel-body {
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: 0;
   }
 }
@@ -113,7 +110,6 @@ footer {
   font-size: 18px;
   color: #424242;
 }
-
 // Buttons
 // -------------------------
 
@@ -125,6 +121,7 @@ footer {
 .btn {
   font-weight: 600;
   border-radius: 3px;
+
   &:focus {
     outline: 0 !important;
   }
@@ -134,6 +131,7 @@ footer {
   border-color: #ccc;
   background: #f5f5f5 linear-gradient(to bottom, #fff, #f5f5f5);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), inset 0 -1px 4px rgba(151, 159, 175, 0.2);
+
   &:active {
     background: darken(#f5f5f5, 6%) linear-gradient(to bottom, darken(#fff, 6%), darken(#f5f5f5, 6%));
   }
@@ -143,6 +141,7 @@ footer {
   border-color: #208a46;
   background: #29b35b linear-gradient(to bottom, #2ec866, #29b35b);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(32, 138, 70, 0.3);
+
   &:active {
     background: darken(#29b35b, 6%) linear-gradient(to bottom, darken(#2ec866, 6%), darken(#29b35b, 6%));
   }
@@ -152,6 +151,7 @@ footer {
   border-color: #8c1512;
   background: #b61b17 linear-gradient(to bottom, #cc1e1a, #b61b17);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(140, 21, 18, 0.3);
+
   &:active {
     background: darken(#b61b17, 6%) linear-gradient(to bottom, darken(#cc1e1a, 6%), darken(#b61b17, 6%));
   }
@@ -162,8 +162,9 @@ footer {
   border-color: #335190;
   background: #3b5998 linear-gradient(to bottom, #4263a9, #3b5998);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(59, 89, 152, 0.3);
-  &:hover,
-  &:focus {
+
+  &:focus,
+  &:hover {
     color: #fff;
   }
 }
@@ -173,8 +174,9 @@ footer {
   border-color: #009fdb;
   background: #00aced linear-gradient(to bottom, #05baff, #00aced);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(0, 172, 237, 0.3);
-  &:hover,
-  &:focus {
+
+  &:focus,
+  &:hover {
     color: #fff;
   }
 }
@@ -184,8 +186,9 @@ footer {
   border-color: #d54331;
   background: #dd4b39 linear-gradient(to bottom, #e05d4d, #dd4b39);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(221, 75, 57, 0.3);
-  &:hover,
-  &:focus {
+
+  &:focus,
+  &:hover {
     color: #fff;
   }
 }
@@ -195,8 +198,9 @@ footer {
   border-color: #4f7192;
   background: #587ea3 linear-gradient(to bottom, #678aad, #587ea3);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(79, 113, 146, 0.3);
-  &:hover,
-  &:focus {
+
+  &:focus,
+  &:hover {
     color: #fff;
   }
 }
@@ -206,12 +210,12 @@ footer {
   border-color: #444;
   background: #545454 linear-gradient(to bottom, #616161, #545454);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 4px rgba(68, 68, 68, 0.3);
-  &:hover,
-  &:focus {
+
+  &:focus,
+  &:hover {
     color: #fff;
   }
 }
-
 // Forms
 // -------------------------
 
@@ -262,6 +266,7 @@ textarea {
   h1 {
     color: #333;
   }
+
   h2 {
     color: #555;
   }
@@ -272,32 +277,52 @@ textarea {
   }
 }
 
+.markerDetail {
+  padding-top: 10px;
 
-.markerDetail {
-  text-align: center;
-  .markerHeading {
-    font-size: 22px;
+  .flex-row {
+    margin-bottom: 10px;
   }
+
+  .markerHeading {
+    font-size: 20px;
+    margin: 0;
+    flex-grow: 1;
+  }
+
   .markerBodyContent {
-    .creatorInfo{
-      .creatorImage{
-        height: 60px;
-        margin-bottom: 10px;
-        margin-left: 10px;
-      }
-      .creatorName{
-        margin-top: 15px;
-        font-size: 16px;
+    text-align: left;
+    font-size: 16px;
+    flex-grow: 2;
+
+    .creatorInfo {
+      .creatorImage {
+        max-height: 60px;
+        margin: 0 10px 0 auto;
       }
     }
-    .markerTime{
+
+    .markerTime {
       font-size: 18px;
     }
+
     .marker-info-button {
       padding: 8px 16px;
       margin-bottom: 2px;
+
+      &:nth-of-type(n+2) {
+        margin-left: 10px;
+      }
     }
   }
 }
 
+.flex-row {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
 
+  > * {
+    flex: 1 0 auto;
+  }
+}

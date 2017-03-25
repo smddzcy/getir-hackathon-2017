@@ -60,7 +60,7 @@ exports.userGet = function(req, res, next) {
 
   User.findById(userId, function(err, user) {
     if (!user) {
-      return res.status(404).send({ msg: 'User couldn\'t be found. '});
+      return res.status(404).send({ msg: 'User couldn\'t be found. ' });
     }
     res.send(user);
   })
@@ -71,7 +71,7 @@ exports.userGet = function(req, res, next) {
  */
 var putUserToOnlineUsers = function(user) {
   redisClient.setUserAsOnline(user);
-  userOnlineTimeouts[user._id] = setTimeout(function(){
+  userOnlineTimeouts[user._id] = setTimeout(function() {
     redisClient.setUserAsOffline(user._id);
     delete userOnlineTimeouts[user._id];
   }, 600000);
@@ -95,8 +95,9 @@ exports.loginPost = function(req, res, next) {
 
   User.findOne({ email: req.body.email }, function(err, user) {
     if (!user) {
-      return res.status(401).send({ msg: 'The email address ' + req.body.email + ' is not associated with any account. ' +
-      'Double-check your email address and try again.'
+      return res.status(401).send({
+        msg: 'The email address ' + req.body.email + ' is not associated with any account. ' +
+          'Double-check your email address and try again.'
       });
     }
 
@@ -130,13 +131,22 @@ exports.signupPost = function(req, res, next) {
     if (user) {
       return res.status(400).send({ msg: 'The email address you have entered is already associated with another account.' });
     }
+
+    var gravatarUrl = 'https://gravatar.com/avatar/?s=200&d=retro';
+    if (req.body.email) {
+      gravatarUrl = 'https://gravatar.com/avatar/' +
+        crypto.createHash('md5').update(req.body.email).digest('hex') +
+        '?s=200&d=retro';
+    }
+
     user = new User({
       email: req.body.email,
       password: req.body.password,
       name: req.body.name,
       location: req.body.location,
-      picture: req.body.picture
+      picture: req.body.picture || gravatarUrl
     });
+
     user.save(function(err) {
       res.send({ token: generateToken(user), user: user });
     });
@@ -214,7 +224,7 @@ exports.unlink = function(req, res, next) {
         user.vk = undefined;
         break;
       case 'github':
-          user.github = undefined;
+        user.github = undefined;
         break;
       default:
         return res.status(400).send({ msg: 'Invalid OAuth Provider' });
@@ -270,9 +280,9 @@ exports.forgotPost = function(req, res, next) {
         from: 'support@yourdomain.com',
         subject: '✔ Reset your password on WowMeet',
         text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
         res.send({ msg: 'An email has been sent to ' + user.email + ' with further instructions.' });
@@ -292,7 +302,7 @@ exports.resetPost = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-      return res.status(400).send(errors);
+    return res.status(400).send(errors);
   }
 
   async.waterfall([
@@ -323,7 +333,7 @@ exports.resetPost = function(req, res, next) {
         to: user.email,
         subject: 'Your WowMeet password has been changed',
         text: 'Hello,\n\n' +
-        'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
         res.send({ msg: 'Your password has been changed successfully.' });
@@ -531,43 +541,43 @@ exports.authTwitter = function(req, res) {
       request.get({ url: profileUrl + accessToken.screen_name, oauth: profileOauth, json: true }, function(err, response, profile) {
 
         // Step 5a. Link accounts if user is authenticated.
-      if (req.isAuthenticated()) {
-        User.findOne({ twitter: profile.id }, function(err, user) {
-          if (user) {
-            return res.status(409).send({ msg: 'There is already an existing account linked with Twitter that belongs to you.' });
-          }
-          user = req.user;
-          user.name = user.name || profile.name;
-          user.picture = user.picture || profile.profile_image_url_https;
-          user.location = user.location || profile.location;
-          user.twitter = profile.id;
-          user.save(function(err) {
-            putUserToOnlineUsers(user);
-            res.send({ token: generateToken(user), user: user });
+        if (req.isAuthenticated()) {
+          User.findOne({ twitter: profile.id }, function(err, user) {
+            if (user) {
+              return res.status(409).send({ msg: 'There is already an existing account linked with Twitter that belongs to you.' });
+            }
+            user = req.user;
+            user.name = user.name || profile.name;
+            user.picture = user.picture || profile.profile_image_url_https;
+            user.location = user.location || profile.location;
+            user.twitter = profile.id;
+            user.save(function(err) {
+              putUserToOnlineUsers(user);
+              res.send({ token: generateToken(user), user: user });
+            });
           });
-        });
-      } else {
-        // Step 5b. Create a new user account or return an existing one.
-        User.findOne({ twitter: profile.id }, function(err, user) {
-          if (user) {
-            putUserToOnlineUsers(user);
-            return res.send({ token: generateToken(user), user: user });
-          }
-          // Twitter does not provide an email address, but email is a required field in our User schema.
-          // We can "fake" a Twitter email address as follows: username@twitter.com.
-          user = new User({
-            name: profile.name,
-            email: profile.screen_name + '@twitter.com',
-            location: profile.location,
-            picture: profile.profile_image_url_https,
-            twitter: profile.id
+        } else {
+          // Step 5b. Create a new user account or return an existing one.
+          User.findOne({ twitter: profile.id }, function(err, user) {
+            if (user) {
+              putUserToOnlineUsers(user);
+              return res.send({ token: generateToken(user), user: user });
+            }
+            // Twitter does not provide an email address, but email is a required field in our User schema.
+            // We can "fake" a Twitter email address as follows: username@twitter.com.
+            user = new User({
+              name: profile.name,
+              email: profile.screen_name + '@twitter.com',
+              location: profile.location,
+              picture: profile.profile_image_url_https,
+              twitter: profile.id
+            });
+            user.save(function() {
+              putUserToOnlineUsers(user);
+              res.send({ token: generateToken(user), user: user });
+            });
           });
-          user.save(function() {
-            putUserToOnlineUsers(user);
-            res.send({ token: generateToken(user), user: user });
-          });
-        });
-      }
+        }
       });
     });
   }
@@ -596,9 +606,9 @@ exports.authGithub = function(req, res) {
   request.post(accessTokenUrl, { json: true, form: params }, function(err, response, token) {
     var accessToken = token.access_token;
     var headers = {
-        Authorization: 'Bearer ' + accessToken,
-        'User-Agent': 'WowMeetAgent'
-      };
+      Authorization: 'Bearer ' + accessToken,
+      'User-Agent': 'WowMeetAgent'
+    };
     // Step 2. Retrieve user's profile information.
     request.get({ url: userUrl, headers: headers, json: true }, function(err, response, profile) {
       if (profile.error) {

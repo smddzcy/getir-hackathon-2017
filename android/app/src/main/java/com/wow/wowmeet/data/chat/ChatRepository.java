@@ -4,11 +4,14 @@ import com.wow.wowmeet.exceptions.SendMessageFailedException;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
@@ -45,6 +48,10 @@ public class ChatRepository {
                 }
             }
         });
+    }
+
+    public Socket connectToSocket(String socketUrl) throws URISyntaxException {
+        return IO.socket(socketUrl);
     }
 
 }

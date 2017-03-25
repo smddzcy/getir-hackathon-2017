@@ -15,6 +15,8 @@ interface ChatContract {
     interface View extends BaseView<Presenter> {
         void showMessages(List<Message> messages);
 
+        void showNewMessage(Message message);
+
         void showLoading();
 
         void hideLoading();

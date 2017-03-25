@@ -3,7 +3,8 @@
   <div ng-if="currentUser">
     <h1>Magnificent Map</h1>
 
-    <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options">
+    <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options"
+                        ng-if="map">
       <ui-gmap-marker idKey="marker.id"
                       coords="marker.location"
                       click="marker.isClicked = true"

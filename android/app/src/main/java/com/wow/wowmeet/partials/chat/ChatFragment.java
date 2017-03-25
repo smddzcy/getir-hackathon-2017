@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Message;
@@ -40,6 +42,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @BindView(R.id.fragment_chat_rv)
     RecyclerView chatRecyclerView;
 
+    @BindView(R.id.fragment_chat_edtText)
+    EditText editTextMessage;
+
+    @BindView(R.id.fragment_chat_sendButton)
+    Button buttonSend;
+
     ChatListAdapter chatListAdapter;
 
     private ArrayList<Message> messages;
@@ -61,11 +69,19 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         ChatContract.Presenter presenter = new ChatPresenter(this, messages, userToken);
         this.setPresenter(presenter);
 
-
         messages = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(messages);
         chatRecyclerView.setAdapter(chatListAdapter);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = editTextMessage.getText().toString();
+
+
+            }
+        });
 
         return rootView;
     }

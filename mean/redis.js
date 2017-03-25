@@ -1,4 +1,6 @@
-var client = require('redis').createClient();
+var client = require('redis').createClient({
+  url: process.env.REDIS_URL
+});
 
 /**
  * Sets a user as online in redis.

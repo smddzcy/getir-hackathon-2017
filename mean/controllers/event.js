@@ -1,5 +1,54 @@
 var Event = require('../models/Event');
 var Message = require('../models/Message');
+var LinearRegression = require('../linear_regression');
+var redis = require('../redis');
+var async = require('async');
+
+/**
+ * Train the model of user with given events.
+ */
+var trainModel = function(userId, events) {
+  // If exists, get the model from Redis.
+  // Otherwise, create a new model.
+  var lrModel = redis.hget('lr_model', req.user._id);
+  if (lrModel) {
+    lrModel = LinearRegression.fromJSON(lrModel);
+  } else {
+    lrModel = new LinearRegression({
+      algorithm: GradientDescent
+    });
+  }
+
+  // Build the train inputs and outputs.
+  var x = [];
+  var y = [];
+  [].concat(events).forEach(function(event) {
+    x.push([event.location.latitude, event.location.longitude,
+              toEpoch(event.startTime), toEpoch(event.endTime),
+              event.type.name]);
+
+    // Since this is not a real train data, give a good random
+    // y value which represents how much user likes this event.
+    // It's between 0.75 and 1.
+    y.push(Math.random() / 4 + 0.75);
+  })
+
+  // Train the model.
+  lr.train(x, y);
+
+  // Save the trained model to Redis.
+  redis.hset('lr_model', req.user._id, lr.toJSON());
+
+  // Return the trained model.
+  return lr;
+}
+
+/**
+ * Get epoch time of a valid time string.
+ */
+var toEpoch = function(timeStr) {
+  return (new Date(timeStr)).getTime();
+}
 
 /**
  * GET /event/:lat?/:lng?/:radius?
@@ -14,7 +63,6 @@ exports.eventGetAll = function(req, res, next) {
   Event.find({})
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
-    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
@@ -158,6 +206,11 @@ exports.eventPost = function(req, res, next) {
     req.user.events.addToSet(event);
     req.user.save();
 
+    // Train the user's lr model.
+    setTimeout(function(){
+      trainModel(req.user._id, event);
+    });
+
     res.send(event);
   });
 }
@@ -186,6 +239,11 @@ exports.eventPut = function(req, res, next) {
       if (err) {
         return res.status(400).send({ msg: 'Event couldn\'t be updated.' });
       }
+
+      // Train the user's lr model.
+      setTimeout(function(){
+        trainModel(req.user._id, event);
+      });
 
       res.send({ event: event, msg: 'Event has been updated successfully.' });
     })
@@ -221,6 +279,11 @@ exports.eventJoinPost = function(req, res, next) {
         return res.status(400).send({ msg: 'Event couldn\'t be joined.' });
       }
 
+      // Train the user's lr model.
+      setTimeout(function(){
+        trainModel(req.user._id, event);
+      });
+
       res.send({ event: event, msg: 'Event has been joined successfully.' });
     })
   });
@@ -240,8 +303,40 @@ exports.eventJoinDelete = function(req, res, next) {
       if (err) {
         return res.status(400).send({ msg: 'Event couldn\'t be unjoined.' });
       }
-
       res.send({ event: event, msg: 'Event has been unjoined successfully.' });
     })
   });
+}
+
+/**
+ * GET /event/suggested
+ * Get suggested events for the user.
+ */
+exports.eventSuggestedGet = function(req, res, next) {
+  // Get the trained model from Redis
+  var lrModel = LinearRegression.fromJSON(redis.hget('lr_model', req.user._id));
+
+  Event.find({})
+    .populate('creator', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
+    .exec(function(err, events) {
+      var y = [];
+
+      events.forEach(function(event) {
+        // Don't count user's own events
+        if (event.creator._id === req.user._id) return;
+
+        // Build the prediction input.
+        var x = [event.location.latitude, event.location.longitude,
+                  toEpoch(event.startTime), toEpoch(event.endTime),
+                  event.type.name];
+
+        // Suggest the event if it's a +75% match for the user.
+        if (lrModel.predict(x) > 0.75) {
+          y.push(event);
+        }
+      });
+
+      res.send(y);
+    });
 }

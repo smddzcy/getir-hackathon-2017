@@ -28,8 +28,8 @@ LinearRegression.prototype.train = function(X, Y, callback) {
     throw new Error('Y must be an array');
   }
 
-  this.X = (this.X ? this.X : []).concat(X);
-  this.Y = (this.Y ? this.Y : []).concat(Y);
+  this.X = (this.X ? this.X : []).concat([ X ]);
+  this.Y = (this.Y ? this.Y : []).concat([ Y ]);
 
   if (this.X.length === 0) {
     return callback(new Error('X is empty'));

@@ -10,7 +10,6 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var request = require('request');
-var redis = require('redis');
 
 // Load environment variables from .env file
 dotenv.load();
@@ -25,7 +24,6 @@ var eventController = require('./controllers/event');
 var messageController = require('./controllers/message');
 
 var app = express();
-
 
 /**
  * Database connection

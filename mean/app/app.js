@@ -1,4 +1,5 @@
-angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-maps'])
+angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
+  'uiGmapgoogle-maps', 'btford.socket-io'])
   .config(function($routeProvider, $locationProvider, $authProvider) {
     $locationProvider.html5Mode(true);
 
@@ -43,6 +44,11 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-ma
       .when('/event-details/:id/', {
         templateUrl: 'partials/event_details.html',
         controller: 'EventDetailCtrl'
+      })
+      .when('/public-profile/:id', {
+        templateUrl: 'partials/public_profile.html',
+        controller: 'PublicProfileCtrl',
+        resolve: { loginRequired: loginRequired }
       })
       .otherwise({
         templateUrl: 'partials/404.html'
@@ -90,4 +96,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-ma
       v: '3.20', //defaults to latest 3.X anyhow
       libraries: 'geometry,visualization'
     });
+  })
+  .factory('socket', function (socketFactory) {
+    return socketFactory();
   });

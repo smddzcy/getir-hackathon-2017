@@ -1,5 +1,5 @@
 angular.module('MyApp')
-  .controller('EventCtrl', function($scope, Event) {
+  .controller('EventCtrl', function($scope, $filter, Event) {
     angular.extend($scope, {
       map: {
         center: { latitude: 41.0728162, longitude: 29.0089026 },
@@ -33,8 +33,13 @@ angular.module('MyApp')
         }
       }
     });
-
+    // types
+    $scope.types = ['fun','more fun','more more fun'];
+  
     $scope.sendEventForm = function() {
+      //$scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
+      
+      console.log();
       Event.save($scope.event)
         .$promise
         .then(function(response) {

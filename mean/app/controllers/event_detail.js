@@ -1,6 +1,6 @@
 angular.module('MyApp')
-  .controller('EventDetailCtrl', function($http, $rootScope, $scope, $route, $location,
-      Event, Message) {
+  .controller('EventDetailCtrl', function($http, $rootScope, $scope, $route,
+    $location, Event, Message, socket) {
     var eventId = $route.current.params.id;
 
     if ($location.search().join) {
@@ -45,12 +45,17 @@ angular.module('MyApp')
         to: eventId,
         message: msg
       }).$promise.then(function(message) {
-        $scope.event.messages.push(message);
+        socket.emit('message', message);
+        $scope.message = '';
       }).catch(function(err) {
         console.log(err);
       }).finally(function() {
         $scope.sendingMessage = false;
       });
     }
+
+    socket.on('message', function(message) {
+      $scope.event.messages.push(message);
+    });
 
   });

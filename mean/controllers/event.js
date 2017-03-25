@@ -17,6 +17,7 @@ exports.eventGetAll = function(req, res, next) {
   var lat = req.params.lat;
   var lng = req.params.lng;
   var radius = req.params.radius;
+  if (!radius) { radius = 0.5; }
 
   Event.find({})
     .populate('creator', ['_id', 'name', 'email', 'picture'])
@@ -34,7 +35,13 @@ exports.eventGetAll = function(req, res, next) {
             Math.pow(event.location.longitude - lng, 2)) < radius;
         }));
       }
-      res.send(events);
+
+      Event.populate(events, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, events) {
+        res.send(events);
+      });
     });
 }
 
@@ -50,7 +57,12 @@ exports.eventGet = function(req, res, next) {
     .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .exec(function(err, event) {
-      res.send(event);
+      Event.populate(event, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, event) {
+        res.send(event);
+      });
     })
 }
 
@@ -65,6 +77,8 @@ exports.eventPost = function(req, res, next) {
     creator: req.user,
     type: req.body.type,
     date: req.body.date,
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
     location: req.body.location,
     users: req.body.users,
     messages: req.body.message
@@ -154,3 +168,20 @@ exports.eventJoinDelete = function(req, res, next) {
     })
   });
 }
+
+/**
+ * GET /event/search/:place/:time
+ * Gives the events with proper place and time. 
+ */
+// exports.eventSearch = function(req, res, next){
+//   var date = req.params.date;
+  
+//   Event.find({})
+//     .populate('creator', ['_id', 'name', 'email', 'picture'])
+//     .populate('messages', ['_id', 'from', 'to', 'message'])
+//     .populate('users', ['_id', 'name', 'email', 'picture'])
+//     .exec(function(err, events) {
+//       3600000
+//       res.send(events);
+//     });
+// }

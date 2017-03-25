@@ -1,10 +1,11 @@
-angular.module('MyApp', ['ngRoute', 'satellizer', 'uiGmapgoogle-maps'])
+angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-maps'])
   .config(function($routeProvider, $locationProvider, $authProvider) {
     $locationProvider.html5Mode(true);
 
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/home.html'
+        templateUrl: 'partials/home.html',
+        controller: 'HomeCtrl'
       })
       .when('/contact', {
         templateUrl: 'partials/contact.html',
@@ -47,19 +48,19 @@ angular.module('MyApp', ['ngRoute', 'satellizer', 'uiGmapgoogle-maps'])
     $authProvider.signupUrl = '/signup';
     $authProvider.facebook({
       url: '/auth/facebook',
-      clientId: '980220002068787',
+      clientId: '543731272417479',
       redirectUri: 'http://localhost:3000/auth/facebook/callback'
     });
     $authProvider.google({
       url: '/auth/google',
-      clientId: '631036554609-v5hm2amv4pvico3asfi97f54sc51ji4o.apps.googleusercontent.com'
+      clientId: '7480545046-eb71sosc5ut720e7tcj87cgs5cqkl9ns.apps.googleusercontent.com'
     });
     $authProvider.twitter({
       url: '/auth/twitter'
     });
     $authProvider.github({
       url: '/auth/github',
-      clientId: 'c8d5bf482c0ece46fa1a'
+      clientId: '205acb3615ae3357127e'
     });
 
     function skipIfAuthenticated($location, $auth) {

@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ngRoute', 'satellizer'])
+angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-maps'])
   .config(["$routeProvider", "$locationProvider", "$authProvider", function($routeProvider, $locationProvider, $authProvider) {
     skipIfAuthenticated.$inject = ["$location", "$auth"];
     loginRequired.$inject = ["$location", "$auth"];
@@ -6,7 +6,8 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
 
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/home.html'
+        templateUrl: 'partials/home.html',
+        controller: 'HomeCtrl'
       })
       .when('/contact', {
         templateUrl: 'partials/contact.html',
@@ -49,19 +50,19 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
     $authProvider.signupUrl = '/signup';
     $authProvider.facebook({
       url: '/auth/facebook',
-      clientId: '980220002068787',
+      clientId: '543731272417479',
       redirectUri: 'http://localhost:3000/auth/facebook/callback'
     });
     $authProvider.google({
       url: '/auth/google',
-      clientId: '631036554609-v5hm2amv4pvico3asfi97f54sc51ji4o.apps.googleusercontent.com'
+      clientId: '7480545046-eb71sosc5ut720e7tcj87cgs5cqkl9ns.apps.googleusercontent.com'
     });
     $authProvider.twitter({
       url: '/auth/twitter'
     });
     $authProvider.github({
       url: '/auth/github',
-      clientId: 'c8d5bf482c0ece46fa1a'
+      clientId: '205acb3615ae3357127e'
     });
 
     function skipIfAuthenticated($location, $auth) {
@@ -80,6 +81,13 @@ angular.module('MyApp', ['ngRoute', 'satellizer'])
     if ($window.localStorage.user) {
       $rootScope.currentUser = JSON.parse($window.localStorage.user);
     }
+  }])
+  .config(["uiGmapGoogleMapApiProvider", function(uiGmapGoogleMapApiProvider) {
+    uiGmapGoogleMapApiProvider.configure({
+      key: 'AIzaSyBupogsGuOJ1ckMMIM9K4JsrSl8vksNwG4',
+      v: '3.20', //defaults to latest 3.X anyhow
+      libraries: 'geometry,visualization'
+    });
   }]);
 
 angular.module('MyApp')
@@ -102,7 +110,8 @@ angular.module('MyApp')
 angular.module('MyApp')
   .controller('EventCtrl', ["$scope", "Event", function($scope, Event) {
     $scope.sendEventForm = function() {
-      Event.send($scope.event)
+      Event.save($scope.event)
+        .$promise
         .then(function(response) {
           $scope.messages = {
             success: [{ msg:"Event has been created successfully." }]
@@ -150,6 +159,30 @@ angular.module('MyApp')
     };
   }]);
 
+angular.module('MyApp')
+	.controller('HomeCtrl', ["$scope", "Event", function($scope, Event) {
+		$scope.map = {
+			center: { latitude: 11.12413, longitude: 15.14132 },
+			zoom: 8,
+			options: { scrollwheel: false }
+		};
+		$scope.markers = [];
+
+		Event.query(function(events) {
+			events.forEach(function(e) {
+				var marker = {};
+				marker.id = e._id;
+				marker.location = {
+					latitude: Number(e.location.latitude),
+					longitude: Number(e.location.longitude)
+				};
+				marker.name = "Type: " + (e.type ? e.type : 'No type') + ", Name: " + (e.location.name ? e.location.name : 'No name');
+				console.log(marker.name);
+				$scope.markers.push(marker);
+			});
+		});
+
+	}]);
 angular.module('MyApp')
   .controller('LoginCtrl', ["$scope", "$rootScope", "$location", "$window", "$auth", function($scope, $rootScope, $location, $window, $auth) {
     $scope.login = function() {
@@ -345,10 +378,6 @@ angular.module('MyApp')
     };
   }]);
 angular.module('MyApp')
-  .factory('Event', ["$http", function($http) {
-    return {
-      send: function(data) {
-        return $http.post('/event', data);
-      }
-    };
+  .factory('Event', ["$resource", function($resource) {
+    return $resource('/event/:eventId', { eventId: '@id' });
   }]);

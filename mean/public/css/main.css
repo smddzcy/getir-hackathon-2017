@@ -6867,3 +6867,6 @@ textarea {
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
+.angular-google-map-container {
+  height: 400px;
+}

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -61,12 +62,18 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                map = googleMap;
-                map.setInfoWindowAdapter(infoWindowAdapter);
-                mapReady = true;
-                presenter.requestEventRefresh();
+                initializeMap(googleMap);
             }
         });
+    }
+
+    private void initializeMap(GoogleMap googleMap){
+        map = googleMap;
+        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026);
+        map.setInfoWindowAdapter(infoWindowAdapter);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
+        mapReady = true;
+        presenter.requestEventRefresh();
     }
 
 

@@ -8,5 +8,6 @@
 
     <dimen name="row_horizontal_margin">10dp</dimen>
     <dimen name="row_vertical_margin">10dp</dimen>
+    <dimen name="row_item_vertical_margin">5dp</dimen>
 
 </resources>

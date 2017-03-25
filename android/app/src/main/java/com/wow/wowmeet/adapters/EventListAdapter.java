@@ -47,6 +47,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         //holder.imageViewProfilePhoto.setImageDrawable();
         holder.textViewPlaceName.setText(event.getLocation().getName());
         holder.textViewProfileName.setText(event.getCreator().getEmail());
+        holder.textViewType.setText(event.getType());
+        holder.textViewDate.setText(event.getCreatedAt());
     }
 
     @Override
@@ -63,6 +65,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
         @BindView(R.id.row_event_list_txtProfileName)
         TextView textViewProfileName;
+
+        @BindView(R.id.row_event_list_txtType)
+        TextView textViewType;
+
+        @BindView(R.id.row_event_list_txtDate)
+        TextView textViewDate;
 
         EventListViewHolder(View itemView) {
             super(itemView);

@@ -49,8 +49,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                         @Override
                         public void onError(Throwable e) {
                             view.hideLoading();
-                            throw new RuntimeException(e);
-                            //view.showError(e.getMessage());
+                            view.showError(e.getMessage());
                         }
                     });
 

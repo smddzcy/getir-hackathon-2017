@@ -87,7 +87,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     public void showEventInfo(Event event) {
         this.event = event;
         txtPlace.setText(event.getLocation().getName());
-        txtType.setText(event.getType());
+        txtType.setText(event.getType().getName());
         txtDateTime.setText(event.getCreatedAt());
         txtUsername.setText(event.getCreator().getName());
     }

@@ -4,11 +4,24 @@ import org.junit.Test;
 
 import io.reactivex.Single;
 import io.reactivex.observers.DisposableSingleObserver;
+import io.socket.client.Socket;
 
 /**
  * Created by ergunerdogmus on 25.03.2017.
  */
 public class ChatRepositoryTest {
+    @Test
+    public void socketTry() throws Exception {
+        String roomId = "123";
+        String message = "deneme";
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnZXRpci1oYWNrYXRob24tMjAxNy13b3ctdGVhbS5oZXJva3VhcHAuY29tIiwic3ViIjoiNThkNWQxMGE2ZThjMGRiMTdlMTZlMDEzIiwiaWF0IjoxNDkwNDYxNTg4LCJleHAiOjE0OTEwNjYzODh9.Wn1DXQgR__UUpWyKHoMuaIqBu92QVyKLp9mW7IB_T4M";
+
+        ChatRepository chatRepository = new ChatRepository();
+        Socket socket = chatRepository.connectToSocket();
+        chatRepository.socketListen(socket, roomId);
+        chatRepository.socketTry(socket, roomId, message, token);
+    }
+
     @Test
     public void sendMessage() throws Exception {
         ChatRepository chatRepository = new ChatRepository();

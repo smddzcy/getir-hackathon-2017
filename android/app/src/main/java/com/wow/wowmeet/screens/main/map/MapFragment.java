@@ -33,7 +33,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     private GoogleLocationAPIWrapper.WrapperLocationListener wrapperLocationListener = new GoogleLocationAPIWrapper.WrapperLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 25);
+            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 2);
         }
     };
 
@@ -67,15 +67,14 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         final MapPresenter presenter = new MapPresenter(this);
         setPresenter(presenter);
 
-        presenter.start();
-
         apiWrapper = new GoogleLocationAPIWrapper(getActivity(), new GoogleLocationAPIWrapper.OnWrapperConnectedListener() {
             @Override
             public void onConnected() {
                 if(PermissionChecker.checkLocationPermission(getActivity(), false)) {
                     Location lastLocation = apiWrapper.getLastKnownLocation();
 
-                    presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 25);
+                    if(lastLocation != null)
+                        presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 2);
 
                     requestLocationUpdates();
                 }
@@ -105,6 +104,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     public void onStart() {
         super.onStart();
         apiWrapper.onStart();
+        presenter.start();
     }
 
     private void requestLocationUpdates() {

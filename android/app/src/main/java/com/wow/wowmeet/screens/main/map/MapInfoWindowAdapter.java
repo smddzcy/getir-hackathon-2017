@@ -31,7 +31,7 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         Event e = (Event) marker.getTag();
         txtUsername.setText(e.getCreator().getEmail());
         txtActivityTime.setText(e.getCreatedAt());
-        txtActivityType.setText(e.getType());
+        txtActivityType.setText(e.getType().getName());
 
         return infoView;
     }

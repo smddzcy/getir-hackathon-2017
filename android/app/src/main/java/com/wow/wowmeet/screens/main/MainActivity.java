@@ -11,7 +11,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,12 +18,14 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.base.BaseActivity;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
-import com.wow.wowmeet.screens.main.drawer.DrawerFragment;
 import com.wow.wowmeet.partials.list.ListContract;
 import com.wow.wowmeet.partials.list.ListFragment;
+import com.wow.wowmeet.screens.createevent.CreateEventActivity;
+import com.wow.wowmeet.screens.main.drawer.DrawerFragment;
 import com.wow.wowmeet.screens.main.map.MapContract;
 import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListener = new MapFragment.OnRefreshListRequestedListener() {
         @Override
         public void onRefreshListRequested() {
-            //TODO
+
         }
     };
 
@@ -143,11 +144,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void showError(String errorMessage) {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Hata!")
-                .setMessage(errorMessage)
-                .create();
-        dialog.show();
+        DialogHelper.showAlertDialogWithError(this, errorMessage);
     }
 
     @Override
@@ -157,6 +154,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         listContractView.showEvents(events);
         mapContractView.showEvents(events);
+    }
+
+    @Override
+    public void goCreateEventActivity() {
+        Intent intent = new Intent(this, CreateEventActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Message;
+import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,8 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, rootView);
-
-        ChatContract.Presenter presenter = new ChatPresenter(this);
+        String userToken = SharedPreferencesUtil.getInstance(getContext()).getUserToken();
+        ChatContract.Presenter presenter = new ChatPresenter(this, userToken);
         this.setPresenter(presenter);
 
         //TODO MESSAGES NEED TO PASS FROM EVENT AND USER
@@ -65,6 +66,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.start();
     }
 
     @Override

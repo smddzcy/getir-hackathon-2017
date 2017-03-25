@@ -1,5 +1,7 @@
 package com.wow.wowmeet.data.loginregister;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.wow.wowmeet.exceptions.GetUserFailedException;
 import com.wow.wowmeet.exceptions.LoginFailedException;
@@ -63,6 +65,7 @@ public class LoginRepository {
             public void subscribe(SingleEmitter<User> e) throws Exception {
                 Response response = OkHttpUtils.makeGetRequest(client, USERS_ENDPOINT + "/" + userId);
                 String responseBody = response.body().string();
+                Log.d("response", responseBody);
                 if(response.isSuccessful()){
                     User user = new Gson().fromJson(responseBody, User.class);
                     e.onSuccess(user);

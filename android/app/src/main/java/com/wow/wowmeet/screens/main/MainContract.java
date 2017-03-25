@@ -14,11 +14,13 @@ interface MainContract {
 
     interface View extends BaseView<MainContract.Presenter> {
         void refreshListAndMap(List<Event> arr);
+
+        void goCreateEventActivity();
     }
 
     interface Presenter extends BasePresenter {
         void onAddEventClicked();
-        void onRefreshListAndMap();
+        void onRefreshListAndMap(double lat, double lng, double rad);
 
         void onLogoutClicked();
         void onProfileClicked();

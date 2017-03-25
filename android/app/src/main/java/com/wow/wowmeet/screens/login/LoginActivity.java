@@ -42,8 +42,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         final LoginPresenter presenter = new LoginPresenter(this, sharedPreferencesUtil);
         setPresenter(presenter);
 
-        presenter.start();
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +56,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
     }
 
     @Override

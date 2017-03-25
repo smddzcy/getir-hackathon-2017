@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.partials.chat.ChatFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +46,8 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         showEventInfo(event);
 
         presenter = new EventInfoPresenter(this);
+
+        ChatFragment chatFragment = ChatFragment.newInstance();
 
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override

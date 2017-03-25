@@ -17,11 +17,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChatFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ChatFragment extends Fragment {
 
 
@@ -30,8 +26,10 @@ public class ChatFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ChatFragment newInstance(String param1, String param2) {
+    public static ChatFragment newInstance() {
         ChatFragment fragment = new ChatFragment();
+        Bundle bundle = new Bundle();
+        //bundle.putSerializable("deneme", messages);
         return fragment;
     }
 

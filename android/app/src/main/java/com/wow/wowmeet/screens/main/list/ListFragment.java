@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.adapters.EventListAdapter;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
-import com.wow.wowmeet.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +53,6 @@ public class ListFragment extends Fragment implements ListContract.View {
 
         presenter.start();
         ArrayList<Event> events = new ArrayList<>();
-
-        User user = (User) getActivity().getIntent().getSerializableExtra(Constants.INTENT_EXTRA_USER);
-
 
         eventListAdapter = new EventListAdapter(events, presenter);
         eventList.setLayoutManager(new LinearLayoutManager(getContext()));

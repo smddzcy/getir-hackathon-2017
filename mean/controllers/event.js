@@ -1,11 +1,3 @@
-var async = require('async');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
-var jwt = require('jsonwebtoken');
-var moment = require('moment');
-var request = require('request');
-var qs = require('querystring');
 var Event = require('../models/Event');
 var Message = require('../models/Message');
 
@@ -86,7 +78,7 @@ exports.eventPost = function(req, res, next) {
 
   event.save(function(err) {
     if (err) {
-      return res.status(500).send({ msg: 'Event couldn\'t be created.' })
+      return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
     res.send(event);
   });
@@ -114,7 +106,7 @@ exports.eventPut = function(req, res, next) {
 
     event.save(function(err) {
       if (err) {
-        return res.status(500).send({ msg: 'Event couldn\'t be updated.' });
+        return res.status(400).send({ msg: 'Event couldn\'t be updated.' });
       }
       res.send({ event: event, msg: 'Event has been updated successfully.' });
     })
@@ -143,7 +135,7 @@ exports.eventJoinPost = function(req, res, next) {
 
     event.save(function(err) {
       if (err) {
-        return res.status(500).send({ msg: 'Event couldn\'t be joined.' });
+        return res.status(400).send({ msg: 'Event couldn\'t be joined.' });
       }
       res.send({ event: event, msg: 'Event has been joined successfully.' });
     })
@@ -162,7 +154,7 @@ exports.eventJoinDelete = function(req, res, next) {
 
     event.save(function(err) {
       if (err) {
-        return res.status(500).send({ msg: 'Event couldn\'t be unjoined.' });
+        return res.status(400).send({ msg: 'Event couldn\'t be unjoined.' });
       }
       res.send({ event: event, msg: 'Event has been unjoined successfully.' });
     })
@@ -171,11 +163,11 @@ exports.eventJoinDelete = function(req, res, next) {
 
 /**
  * GET /event/search/:place/:time
- * Gives the events with proper place and time. 
+ * Gives the events with proper place and time.
  */
 // exports.eventSearch = function(req, res, next){
 //   var date = req.params.date;
-  
+
 //   Event.find({})
 //     .populate('creator', ['_id', 'name', 'email', 'picture'])
 //     .populate('messages', ['_id', 'from', 'to', 'message'])

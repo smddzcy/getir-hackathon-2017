@@ -22,6 +22,7 @@ var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
 var eventController = require('./controllers/event');
 var messageController = require('./controllers/message');
+var eventTypeController = require('./controllers/eventType');
 
 var app = express();
 
@@ -104,10 +105,16 @@ app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.post('/contact', contactController.contactPost);
 
 // Message endpoints
-app.get('/message/', userController.ensureAuthenticated, messageController.messageGetAll);
+app.get('/message', userController.ensureAuthenticated, messageController.messageGetAll);
 app.get('/message/:id', messageController.messageGet);
 app.post('/message', userController.ensureAuthenticated, messageController.messagePost);
 app.delete('/message/:id', userController.ensureAuthenticated, messageController.messageDelete);
+
+// EventType endpoints
+app.get('/event-type', eventTypeController.eventTypeGetAll);
+app.get('/event-type/:id', eventTypeController.eventTypeGet);
+app.post('/event-type', userController.ensureAuthenticated, eventTypeController.eventTypePost);
+app.delete('/event-type/:id', userController.ensureAuthenticated, eventTypeController.eventTypeDelete);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));

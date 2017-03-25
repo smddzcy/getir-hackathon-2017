@@ -1,11 +1,4 @@
 var async = require('async');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
-var jwt = require('jsonwebtoken');
-var moment = require('moment');
-var request = require('request');
-var qs = require('querystring');
 var Message = require('../models/Message');
 var Event = require('../models/Event');
 
@@ -66,7 +59,7 @@ exports.messagePost = function(req, res, next) {
     }, function(done) {
       message.save(function(err, message) {
         if (err) {
-          return res.status(500).send({ msg: 'Message couldn\'t be created.' })
+          return res.status(400).send({ msg: 'Message couldn\'t be created.' })
         }
         // Populate the `from` field.
         Message.populate(message, { path: 'from' }, function(err, message) {
@@ -88,7 +81,7 @@ exports.messageDelete = function(req, res, next) {
     if (message.from._id == req.user._id) {
       msg.remove(function(err) {
         if (err) {
-          res.status(500).send({ msg: 'Message couldn\'t be deleted.' })
+          res.status(400).send({ msg: 'Message couldn\'t be deleted.' })
         }
         res.send({ msg: 'Message has been permanently deleted.' });
       });

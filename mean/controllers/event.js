@@ -77,7 +77,6 @@ exports.eventGetAll = function(req, res, next) {
 
   Event.find({})
     .populate('creator', ['_id', 'name', 'email', 'picture'])
-    .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
@@ -107,7 +106,6 @@ exports.eventGet = function(req, res, next) {
 
   Event.findById(eventId)
     .populate('creator', ['id', 'name', 'email', 'picture'])
-    .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, event) {

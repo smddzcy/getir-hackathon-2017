@@ -177,7 +177,7 @@ angular.module('MyApp')
 					longitude: Number(e.location.longitude)
 				};
 				marker.name = "Type: " + (e.type ? e.type : 'No type') + ", Name: " + (e.location.name ? e.location.name : 'No name');
-				console.log(marker.name);
+				marker.time = e.time;
 				$scope.markers.push(marker);
 			});
 		});

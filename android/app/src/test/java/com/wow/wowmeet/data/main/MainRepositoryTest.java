@@ -70,4 +70,24 @@ public class MainRepositoryTest {
         });
     }
 
+    @Test
+    public void getEventsLatLngRad() throws Exception {
+        int lat = 10;
+        int lng = 10;
+        int rad = 2;
+
+        mainRepository.getEvents(lat, lng, rad).subscribeWith(new DisposableSingleObserver<List<Event>>() {
+            @Override
+            public void onSuccess(List<Event> value) {
+                System.out.println(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                System.out.println(e.getMessage());
+            }
+        });
+
+    }
+
 }

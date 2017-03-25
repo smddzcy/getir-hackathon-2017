@@ -16,6 +16,8 @@ public interface EventsRepository {
 
     Single<String> addEvent(Event event);
 
+    Single<List<Event>> getEvents(int lat, int lng, int radius);
+
     Single<String> removeEvent(Event event);
 
     Single<Event> getSingleEvent(String eventId);

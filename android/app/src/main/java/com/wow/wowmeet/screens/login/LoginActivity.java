@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +25,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     private LoginContract.Presenter presenter;
 
     @BindView(R.id.txtUsername) EditText edtUsername;
-    @BindView(R.id.txtPassword) EditText edtPassword;
+    @BindView(R.id.txtInputEdtPassword)
+    TextInputEditText edtPassword;
     @BindView(R.id.btnLogin) Button btnLogin;
     @BindView(R.id.txtRegister) TextView txtRegister;
 

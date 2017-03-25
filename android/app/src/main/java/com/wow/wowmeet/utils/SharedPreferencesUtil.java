@@ -46,7 +46,7 @@ public class SharedPreferencesUtil implements LoginPreferences{
 
     @Override
     public boolean isUserLoggedIn(){
-        return sharedPreferences.getString(PREFS_USER_ID, DEFAULT_NULL).equals(DEFAULT_NULL);
+        return !sharedPreferences.getString(PREFS_USER_ID, DEFAULT_NULL).equals(DEFAULT_NULL);
     }
 
     @Override

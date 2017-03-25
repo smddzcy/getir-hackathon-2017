@@ -21,6 +21,8 @@ public class User implements Serializable {
 
     private String token;
 
+    private String name;
+
     public String getUpdatedAt ()
     {
         return updatedAt;
@@ -95,5 +97,13 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

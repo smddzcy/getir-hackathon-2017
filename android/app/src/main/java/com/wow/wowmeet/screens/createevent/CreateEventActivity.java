@@ -1,10 +1,10 @@
 package com.wow.wowmeet.screens.createevent;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
@@ -32,13 +31,13 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
 
     @BindView(R.id.textInputCreateEventPlace) TextInputLayout textInputPlace;
     @BindView(R.id.textInputDate) TextInputLayout textInputDate;
-    @BindView(R.id.textInputTime) TextInputLayout textInputTime;
+    @BindView(R.id.textInputStartTime) TextInputLayout textInputTime;
     @BindView(R.id.spinnerActivityType) Spinner spinnerActivityType;
     @BindView(R.id.bestPlacesList) RecyclerView suggestionsList;
     @BindView(R.id.btnCreateEvent) Button btnCreateEvent;
 
     @BindView(R.id.edtPlace) EditText edtPlace;
-    @BindView(R.id.edtTime) EditText edtTime;
+    @BindView(R.id.edtStartTime) EditText edtTime;
     @BindView(R.id.edtDate) EditText edtDate;
 
     private ArrayAdapter<CharSequence> spinnerAdapter;
@@ -66,7 +65,6 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
         spinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.event_types_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
         spinnerActivityType.setAdapter(spinnerAdapter);
 

@@ -50,6 +50,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         MapPresenter presenter = new MapPresenter(this);
         setPresenter(presenter);
 
+        presenter.start();
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -88,11 +90,11 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         if(mapReady && map != null) {
             for (Event e : events) {
                 map.addMarker(new MarkerOptions()
-                    .position(new LatLng(e.getLocation().getLat(), e.getLocation().getLang())))
+                    .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongtitude())))
                     .setTag(e);
             }
         } else {
-
+            //TODO EMPTY ELSE?
         }
 
 

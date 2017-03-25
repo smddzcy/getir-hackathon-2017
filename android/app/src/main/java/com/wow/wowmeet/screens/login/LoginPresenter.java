@@ -37,6 +37,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void onLoginClicked(String email, String password) {
+        view.showLoading();
         Single<User> loginSingle = loginRepository.login(email, password);
         disposableSingleObserver = loginSingle.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -44,17 +45,19 @@ public class LoginPresenter implements LoginContract.Presenter {
                     @Override
                     public void onSuccess(User value) {
                         view.onLoginSuccess(value);
+                        view.hideLoading();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         view.onError(e);
+                        view.hideLoading();
                     }
                 });
     }
 
     @Override
     public void onRegisterClicked() {
-
+        view.goRegister();
     }
 }

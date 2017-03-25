@@ -16,10 +16,8 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
     private RegisterContract.Presenter presenter;
 
-    @BindView(R.id.edtUsername) EditText edtUsername;
     @BindView(R.id.edtEmail) EditText edtEmail;
     @BindView(R.id.edtPassword) EditText edtPassword;
-    @BindView(R.id.edtPasswordConfirm) EditText edtPasswordConfirm;
     @BindView(R.id.btnRegister) Button btnRegister;
 
     @Override

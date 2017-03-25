@@ -43,9 +43,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     public void onBindViewHolder(EventListViewHolder holder, int position) {
         Event event = eventList.get(position);
 
+
         //holder.imageViewProfilePhoto.setImageDrawable();
-        holder.textViewPlaceName.setText(event.getLocation().getLocationName());
-        holder.textViewProfileName.setText(event.getUser().getUsername());
+        holder.textViewPlaceName.setText(event.getLocation().getName());
+        holder.textViewProfileName.setText(event.getCreator().getEmail());
     }
 
     @Override

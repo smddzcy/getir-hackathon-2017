@@ -1,8 +1,9 @@
 package com.wow.wowmeet.screens.login;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.screens.main.MainActivity;
+import com.wow.wowmeet.screens.register.RegisterActivity;
+import com.wow.wowmeet.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +74,24 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void onLoginSuccess(User user) {
-        //TODO FRAGMENT GEÇİŞ
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Constants.INTENT_EXTRA_USER, user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void goRegister() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showLoading() {
+        //TODO Mahmut, loading
+    }
+
+    @Override
+    public void hideLoading() {
+        //TODO Mahmut, loading
     }
 }

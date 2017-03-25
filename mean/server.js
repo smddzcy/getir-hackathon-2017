@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var request = require('request');
+var redis = require('redis');
 
 // Load environment variables from .env file
 dotenv.load();
@@ -21,15 +22,23 @@ var User = require('./models/User');
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
 var eventController = require('./controllers/event');
+var messageController = require('./controllers/message');
 
 var app = express();
 
 
+/**
+ * Database connection
+ */
 mongoose.connect(process.env.MONGOLAB_URI);
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);
 });
+
+/**
+ * Express settings
+ */
 app.set('port', process.env.PORT || 3000);
 app.use(compression());
 app.use(logger('dev'));
@@ -39,6 +48,11 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * Authenticate the user by token.
+ * First decrypt the authorization toket by the TOKEN_SECRET,
+ * then query the user and put it to request for the next handlers.
+ */
 app.use(function(req, res, next) {
   req.isAuthenticated = function() {
     var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
@@ -60,11 +74,11 @@ app.use(function(req, res, next) {
   }
 });
 
-app.post('/contact', contactController.contactPost);
+// User endpoints
+app.post('/login', userController.loginPost);
+app.post('/signup', userController.signupPost);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);
-app.post('/signup', userController.signupPost);
-app.post('/login', userController.loginPost);
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.get('/unlink/:provider', userController.ensureAuthenticated, userController.unlink);
@@ -77,18 +91,30 @@ app.get('/auth/twitter/callback', userController.authTwitterCallback);
 app.post('/auth/github', userController.authGithub);
 app.get('/auth/github/callback', userController.authGithubCallback);
 
-// Event resource
-app.get('/event', eventController.eventGetAll);
+app.get('/user/:id', userController.userGet);
+
+// Event endpoints
+app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.get('/event/:id', eventController.eventGet);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);
 
+// Contact endpoints
+app.post('/contact', contactController.contactPost);
+
+// Message endpoints
+app.get('/message/:id', messageController.messageGet);
+app.post('/message', userController.ensureAuthenticated, messageController.messagePost);
+app.delete('/message/:id', userController.ensureAuthenticated, messageController.messageDelete);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));
 });
 
+/**
+ * Leave other endpoints to AngularJS
+ */
 app.get('*', function(req, res) {
   res.redirect('/#' + req.originalUrl);
 });

@@ -2,8 +2,9 @@ package com.wow.wowmeet.screens.main.list;
 
 import com.wow.wowmeet.BasePresenter;
 import com.wow.wowmeet.BaseView;
+import com.wow.wowmeet.models.Event;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mahmutkaraca on 3/24/17.
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 interface ListContract {
 
     interface View extends BaseView<ListContract.Presenter> {
-        void refreshList(ArrayList arr);
+        void showEvents(List<Event> events);
     }
 
     interface Presenter extends BasePresenter {

@@ -36,10 +36,18 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onRegisterClicked();
+                String emailText = edtEmail.getText().toString();
+                String passwordText = edtPassword.getText().toString();
+                presenter.onRegisterClicked(emailText, passwordText);
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
     }
 
     @Override
@@ -67,11 +75,11 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     @Override
     public void showLoading() {
-
+        showLoadingView();
     }
 
     @Override
     public void hideLoading() {
-
+        hideLoadingView();
     }
 }

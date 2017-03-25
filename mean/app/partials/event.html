@@ -4,14 +4,6 @@
       <h3 class="panel-title">Create Event</h3>
     </div>
     <div class="panel-body">
-      <div ng-if="messages.error" role="alert" class="alert alert-danger">
-        <div ng-repeat="error in messages.error">{{error.msg}}</div>
-      </div>
-
-      <div ng-if="messages.success" role="alert" class="alert alert-success">
-        <div ng-repeat="success in messages.success">{{success.msg}}</div>
-      </div>
-
       <form ng-submit="sendEventForm()" class="form-horizontal">
         <div class="form-group">
           <label for="type" class="col-sm-2">Type</label>

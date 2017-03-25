@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="infoWindowBackground">#f0f0f0</color>
+    <color name="drawerBackground">#fafafa</color>
 </resources>

@@ -69,7 +69,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     private void initializeMap(GoogleMap googleMap){
         map = googleMap;
-        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026);
+        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026); //TODO DYNAMIC TAKE
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;

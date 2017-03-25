@@ -161,11 +161,21 @@ angular.module('MyApp')
 
 angular.module('MyApp')
 	.controller('HomeCtrl', ["$scope", "Event", function($scope, Event) {
-		$scope.map = {
-			center: { latitude: 11.12413, longitude: 15.14132 },
-			zoom: 8,
-			options: { scrollwheel: false }
-		};
+    $scope.map = {
+      center: { latitude: 41.0728162, longitude: 29.0089026 },
+      zoom: 12,
+      options: { scrollwheel: false }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position){
+        $scope.map.center = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+      });
+    }
+
 		$scope.markers = [];
 
 		Event.query(function(events) {
@@ -183,6 +193,7 @@ angular.module('MyApp')
 		});
 
 	}]);
+
 angular.module('MyApp')
   .controller('LoginCtrl', ["$scope", "$rootScope", "$location", "$window", "$auth", function($scope, $rootScope, $location, $window, $auth) {
     $scope.login = function() {

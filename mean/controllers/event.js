@@ -24,8 +24,7 @@ exports.eventGetAll = function(req, res, next) {
         return res.send(events.filter(function(event) {
           return Math.sqrt(
             Math.pow(event.location.latitude - lat, 2) +
-            Math.pow(event.location.longitude - lng, 2)
-          ) < radius;
+            Math.pow(event.location.longitude - lng, 2)) < radius;
         }));
       }
       res.send(events);

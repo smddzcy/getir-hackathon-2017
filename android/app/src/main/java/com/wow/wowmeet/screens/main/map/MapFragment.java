@@ -1,23 +1,17 @@
 package com.wow.wowmeet.screens.main.map;
 
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,7 +33,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     private GoogleLocationAPIWrapper.WrapperLocationListener wrapperLocationListener = new GoogleLocationAPIWrapper.WrapperLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-
+            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 25);
         }
     };
 
@@ -68,7 +62,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         View v = inflater.inflate(R.layout.info_window_map, container, false);
         infoWindowAdapter = new MapInfoWindowAdapter(v);
 
-        MapPresenter presenter = new MapPresenter(this);
+        final MapPresenter presenter = new MapPresenter(this);
         setPresenter(presenter);
 
         presenter.start();
@@ -76,7 +70,13 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         apiWrapper = new GoogleLocationAPIWrapper(getActivity(), new GoogleLocationAPIWrapper.OnWrapperConnectedListener() {
             @Override
             public void onConnected() {
-                requestLocationUpdates();
+                if(PermissionChecker.checkLocationPermission(getActivity(), false)) {
+                    Location lastLocation = apiWrapper.getLastKnownLocation();
+
+                    presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 25);
+
+                    requestLocationUpdates();
+                }
             }
         }, new GoogleLocationAPIWrapper.OnWrapperConnectionFailedListener() {
             @Override
@@ -97,19 +97,26 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                 initializeMap(googleMap);
             }
         });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         apiWrapper.onStart();
     }
 
     private void requestLocationUpdates() {
-        
+        LocationRequest request = LocationRequest.create();
+        //request.setSmallestDisplacement(2);
+        apiWrapper.startLocationUpdates(request, wrapperLocationListener);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onStop() {
+        super.onStop();
         apiWrapper.onStop();
     }
+
 
     private void initializeMap(GoogleMap googleMap) {
         map = googleMap;
@@ -126,27 +133,23 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
             }
         });
 
-        if(PermissionChecker.checkLocationPermission(getActivity())) {
-            enableMyLocationOnMap();
-        }
+        enableLocationFeatures();
 
     }
 
-    private void enableMyLocationOnMap() {
-        try {
+    private void enableLocationFeatures() {
+        if(PermissionChecker.checkLocationPermission(getActivity(), true)) {
             map.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
-            // This should never happen
-            Log.wtf("MapFragment", e);
-            showError(e.getMessage());
+            requestLocationUpdates();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(PermissionChecker.onRequestPermissionResult(getActivity(), requestCode, permissions, grantResults)) {
-            enableMyLocationOnMap();
+        PermissionChecker.onRequestPermissionResult(requestCode, permissions, grantResults);
+        if(requestCode == PermissionChecker.LOCATION_PERMISSION_REQUEST_CODE) {
+            enableLocationFeatures();
         }
     }
 
@@ -180,5 +183,10 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         }
 
 
+    }
+
+    @Override
+    public void onPermissionRequestResolved(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        this.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

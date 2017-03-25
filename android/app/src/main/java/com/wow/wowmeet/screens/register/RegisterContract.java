@@ -1,7 +1,7 @@
 package com.wow.wowmeet.screens.register;
 
-import com.wow.wowmeet.BasePresenter;
-import com.wow.wowmeet.BaseView;
+import com.wow.wowmeet.base.BasePresenter;
+import com.wow.wowmeet.base.BaseView;
 
 /**
  * Created by mahmutkaraca on 3/24/17.

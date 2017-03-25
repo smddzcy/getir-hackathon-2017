@@ -1,7 +1,7 @@
 package com.wow.wowmeet.screens.profile;
 
-import com.wow.wowmeet.BasePresenter;
-import com.wow.wowmeet.BaseView;
+import com.wow.wowmeet.base.BasePresenter;
+import com.wow.wowmeet.base.BaseView;
 import com.wow.wowmeet.models.Event;
 
 import java.util.List;

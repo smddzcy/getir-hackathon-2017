@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.main.MainActivity;
+import com.wow.wowmeet.screens.register.RegisterActivity;
 import com.wow.wowmeet.utils.Constants;
 
 import butterknife.BindView;
@@ -75,6 +76,12 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void onLoginSuccess(User user) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_USER, user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void goRegister() {
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 

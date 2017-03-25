@@ -58,6 +58,6 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void onRegisterClicked() {
-
+        view.goRegister();
     }
 }

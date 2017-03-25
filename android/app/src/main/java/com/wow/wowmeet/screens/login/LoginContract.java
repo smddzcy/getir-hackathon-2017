@@ -13,6 +13,8 @@ interface LoginContract {
     interface View extends BaseView<LoginContract.Presenter> {
         public void onLoginSuccess(User user);
 
+        void goRegister();
+
         void showLoading();
 
         void hideLoading();

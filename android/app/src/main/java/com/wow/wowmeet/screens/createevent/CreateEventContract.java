@@ -3,6 +3,7 @@ package com.wow.wowmeet.screens.createevent;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 
+import com.google.android.gms.location.places.Place;
 import com.wow.wowmeet.base.BasePresenter;
 import com.wow.wowmeet.base.BaseView;
 
@@ -18,10 +19,10 @@ interface CreateEventContract {
 
         void updateTimeField(int hour, int minute);
         void updateDateField(int day, int month, int year);
-        void updatePlaceField(Intent placeData);
+        Place updatePlaceField(Intent placeData);
 
         void showDialog(DialogFragment fragment, String tag);
-        void showPlaceAutocompleteDialog();
+        void showPlacePickerDialog();
     }
 
     interface Presenter extends BasePresenter{
@@ -30,7 +31,7 @@ interface CreateEventContract {
         void onDateSelectorClicked();
         void onTimeSelectorClicked();
         void onChooseSuggestion();
-        void onPlaceAutocompleteResult(int resultCode, Intent data);
+        void onPlacePickerResult(int resultCode, Intent data);
     }
 
 }

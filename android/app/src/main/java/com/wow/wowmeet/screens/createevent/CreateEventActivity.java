@@ -6,7 +6,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,6 +16,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
 import com.wow.wowmeet.partials.googleapi.GooglePlacesAPIWrapper;
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 
 public class CreateEventActivity extends AppCompatActivity implements CreateEventContract.View {
 
-    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 0x0101;
+    public static final int PLACE_PICKER_REQUEST_CODE = 0x0101;
 
     private CreateEventContract.Presenter presenter;
 
@@ -84,15 +84,6 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
             public void onFocusChange(View view, boolean hasFocus) {
                 if(hasFocus) {
                     presenter.onTimeSelectorClicked();
-                }
-            }
-        });
-
-        edtPlace.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(hasFocus) {
-                    presenter.onPlaceChooserClicked();
                 }
             }
         });
@@ -169,7 +160,7 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
 
     @Override
     public void updateTimeField(int hour, int minute) {
-        edtTime.setText(hour + ":" + minute);
+        edtTime.setText(((hour < 10) ? "0" : "") + hour + ":" + ((minute < 10) ? "0" : "") + minute);
     }
 
     @Override
@@ -178,9 +169,11 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     }
 
     @Override
-    public void updatePlaceField(Intent placeData) {
-        Place place = PlaceAutocomplete.getPlace(this, placeData);
+    public Place updatePlaceField(Intent placeData) {
+        Place place = PlacePicker.getPlace(this, placeData);
         edtPlace.setText(place.getName());
+
+        return place;
     }
 
     @Override
@@ -189,11 +182,11 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     }
 
     @Override
-    public void showPlaceAutocompleteDialog() {
+    public void showPlacePickerDialog() {
         try {
-            Intent placeAutocompleteIntent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+            Intent placeAutocompleteIntent = new PlacePicker.IntentBuilder()
                     .build(this);
-            startActivityForResult(placeAutocompleteIntent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+            startActivityForResult(placeAutocompleteIntent, PLACE_PICKER_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
             //TODO handle error
@@ -207,8 +200,8 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            presenter.onPlaceAutocompleteResult(resultCode, data);
+        if(requestCode == PLACE_PICKER_REQUEST_CODE) {
+            presenter.onPlacePickerResult(resultCode, data);
         }
     }
 }

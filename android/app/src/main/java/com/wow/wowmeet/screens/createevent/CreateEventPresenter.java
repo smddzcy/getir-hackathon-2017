@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.Calendar;
 
@@ -21,6 +22,8 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     private CreateEventContract.View view;
 
     private Calendar dateTimePickerReference;
+
+    private Place pickedPlace;
 
     TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -62,7 +65,7 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
     @Override
     public void onPlaceChooserClicked() {
-        view.showPlaceAutocompleteDialog();
+        view.showPlacePickerDialog();
     }
 
     @Override
@@ -85,15 +88,15 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     }
 
     @Override
-    public void onPlaceAutocompleteResult(int resultCode, Intent data) {
+    public void onPlacePickerResult(int resultCode, Intent data) {
         if(resultCode == Activity.RESULT_OK) {
-            view.updatePlaceField(data);
-        } else if(resultCode == PlaceAutocomplete.RESULT_ERROR) {
+            Place place = view.updatePlaceField(data);
+            this.pickedPlace = place;
+        } else if(resultCode == PlacePicker.RESULT_ERROR) {
             //TODO handle error
         } else if(resultCode == Activity.RESULT_CANCELED) {
             // TODO Do nothing?
         }
     }
-
 
 }

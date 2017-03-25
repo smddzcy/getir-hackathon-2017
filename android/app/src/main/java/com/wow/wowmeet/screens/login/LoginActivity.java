@@ -63,8 +63,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     @Override
-    public void onError(Throwable t) {
-        String errorMessage = t.getMessage(); //TODO
+    public void showError(String errorMessage) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)
@@ -74,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
 
     @Override
-    public void onLoginSuccess(User user) {
+    public void goMainWithUser(User user) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_USER, user);
         startActivity(intent);

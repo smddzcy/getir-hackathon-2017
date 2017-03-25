@@ -11,7 +11,7 @@ import com.wow.wowmeet.models.User;
 interface LoginContract {
 
     interface View extends BaseView<LoginContract.Presenter> {
-        public void onLoginSuccess(User user);
+        void goMainWithUser(User user);
 
         void goRegister();
 

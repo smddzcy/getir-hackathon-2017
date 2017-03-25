@@ -69,7 +69,7 @@ public class ListFragment extends Fragment implements ListContract.View {
     }
 
     @Override
-    public void onError(Throwable e) {
+    public void showError(String e) {
 
     }
 

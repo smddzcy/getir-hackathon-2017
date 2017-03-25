@@ -104,6 +104,7 @@ app.post('/event', userController.ensureAuthenticated, eventController.eventPost
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);
 app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
+app.get('/event/suggested/:lat/:lng/:radius?', userController.ensureAuthenticated, eventController.eventSuggestedGet);
 
 // Contact endpoints
 app.post('/contact', contactController.contactPost);

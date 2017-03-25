@@ -51,6 +51,21 @@ var toEpoch = function(timeStr) {
 }
 
 /**
+ * Get events in a radius.
+ */
+var filterEventsInRadius = function(events, lat, lng, radius) {
+  return events.filter(function(event) {
+    if (!event.location) {
+      return false;
+    }
+
+    return Math.sqrt(
+      Math.pow(event.location.latitude - lat, 2) +
+      Math.pow(event.location.longitude - lng, 2)) < radius;
+  });
+}
+
+/**
  * GET /event/:lat?/:lng?/:radius?
  * Lists all the events.
  */
@@ -67,15 +82,7 @@ exports.eventGetAll = function(req, res, next) {
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
       if (lat && lng && radius) {
-        events = events.filter(function(event) {
-          if (!event.location) {
-            return false;
-          }
-
-          return Math.sqrt(
-            Math.pow(event.location.latitude - lat, 2) +
-            Math.pow(event.location.longitude - lng, 2)) < radius;
-        })
+        events = filterEventsInRadius(events, lat, lng, radius);
       }
 
       Event.populate(events, {
@@ -309,10 +316,14 @@ exports.eventJoinDelete = function(req, res, next) {
 }
 
 /**
- * GET /event/suggested
+ * GET /event/suggested/:lat/:lng/:radius?
  * Get suggested events for the user.
  */
 exports.eventSuggestedGet = function(req, res, next) {
+  var lat = req.params.lat;
+  var lng = req.params.lng;
+  var radius = req.params.radius || 1;
+
   // Get the trained model from Redis
   var lrModel = LinearRegression.fromJSON(redis.hget('lr_model', req.user._id));
 
@@ -322,7 +333,7 @@ exports.eventSuggestedGet = function(req, res, next) {
     .exec(function(err, events) {
       var y = [];
 
-      events.forEach(function(event) {
+      filterEventsInRadius(events, lat, lng, radius).forEach(function(event) {
         // Don't count user's own events
         if (event.creator._id === req.user._id) return;
 

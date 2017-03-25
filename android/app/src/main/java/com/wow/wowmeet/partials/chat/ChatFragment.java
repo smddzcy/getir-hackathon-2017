@@ -13,14 +13,16 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements ChatContract.View {
 
 
+    private ChatContract.Presenter presenter;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -52,6 +54,11 @@ public class ChatFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, rootView);
 
+        ChatContract.Presenter presenter = new ChatPresenter(this);
+        this.setPresenter(presenter);
+
+        //TODO MESSAGES NEED TO PASS FROM EVENT AND USER
+
         messages = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(messages);
         chatRecyclerView.setAdapter(chatListAdapter);
@@ -60,4 +67,28 @@ public class ChatFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void setPresenter(ChatContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void showError(String e) {
+        //TODO SHOW ERROR
+    }
+
+    @Override
+    public void showMessages(List<Message> messages) {
+        chatListAdapter.changeDataSet(messages);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
 }

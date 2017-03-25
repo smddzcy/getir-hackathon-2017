@@ -21,7 +21,7 @@ interface ChatContract {
     }
 
     interface Presenter extends BasePresenter {
-        void sendMessage(String messageText, String toId);
+        void sendMessage(String messageText, String toId, String token);
     }
 
 }

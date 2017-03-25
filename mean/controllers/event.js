@@ -32,6 +32,10 @@ exports.eventGetAll = function(req, res, next) {
         path: 'messages.from',
         model: 'User'
       }, function(err, events) {
+        if (err) {
+          return res.status(500).send({ msg: 'Events couldn\'t be retrieved.' })
+        }
+
         res.send(events);
       });
     });
@@ -53,6 +57,14 @@ exports.eventGet = function(req, res, next) {
         path: 'messages.from',
         model: 'User'
       }, function(err, event) {
+        if (!event) {
+          return res.status(404).send({ msg: 'Event couldn\'t be found.' })
+        }
+
+        if (err) {
+          return res.status(500).send({ msg: 'Event couldn\'t be retrieved.' })
+        }
+
         res.send(event);
       });
     })
@@ -80,6 +92,7 @@ exports.eventPost = function(req, res, next) {
     if (err) {
       return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
+
     res.send(event);
   });
 }
@@ -108,6 +121,7 @@ exports.eventPut = function(req, res, next) {
       if (err) {
         return res.status(400).send({ msg: 'Event couldn\'t be updated.' });
       }
+
       res.send({ event: event, msg: 'Event has been updated successfully.' });
     })
   });
@@ -137,6 +151,7 @@ exports.eventJoinPost = function(req, res, next) {
       if (err) {
         return res.status(400).send({ msg: 'Event couldn\'t be joined.' });
       }
+
       res.send({ event: event, msg: 'Event has been joined successfully.' });
     })
   });
@@ -156,6 +171,7 @@ exports.eventJoinDelete = function(req, res, next) {
       if (err) {
         return res.status(400).send({ msg: 'Event couldn\'t be unjoined.' });
       }
+
       res.send({ event: event, msg: 'Event has been unjoined successfully.' });
     })
   });

@@ -104,6 +104,7 @@ app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.post('/contact', contactController.contactPost);
 
 // Message endpoints
+app.get('/message/', userController.ensureAuthenticated, messageController.messageGetAll);
 app.get('/message/:id', messageController.messageGet);
 app.post('/message', userController.ensureAuthenticated, messageController.messagePost);
 app.delete('/message/:id', userController.ensureAuthenticated, messageController.messageDelete);

@@ -9,6 +9,19 @@ var qs = require('querystring');
 var Message = require('../models/Message');
 
 /**
+ * GET /message/
+ * Retrieves all messages of the user.
+ */
+exports.messageGetAll = function(req, res, next) {
+  Message.find({ from: req.user })
+    .populate('from', ['id', 'name', 'email', 'picture'])
+    .populate('to', ['id', 'name', 'email', 'picture'])
+    .exec(function(err, messages) {
+      res.send(messages);
+    });
+}
+
+/**
  * GET /message/:id
  * Retrieves a message with the given id.
  */

@@ -59,6 +59,9 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void stop() {
         if(disposableSingleLoginObserver != null)
             disposableSingleLoginObserver.dispose();
+
+        if(disposableSingleUserObserver != null)
+            disposableSingleUserObserver.dispose();
     }
 
     @Override

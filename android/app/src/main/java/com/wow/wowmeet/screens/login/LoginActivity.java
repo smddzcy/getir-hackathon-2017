@@ -41,6 +41,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         final LoginPresenter presenter = new LoginPresenter(this, sharedPreferencesUtil);
         setPresenter(presenter);
 
+        presenter.start();
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

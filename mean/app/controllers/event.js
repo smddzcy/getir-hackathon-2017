@@ -1,5 +1,5 @@
 angular.module('MyApp')
-  .controller('EventCtrl', function($scope, $filter, Event, uiGmapGoogleMapApi, ngToast) {
+  .controller('EventCtrl', function($scope, $filter, Event, $http, uiGmapGoogleMapApi, ngToast) {
     angular.extend($scope, {
       map: {
         center: { latitude: 41.0728162, longitude: 29.0089026 },
@@ -27,6 +27,17 @@ angular.module('MyApp')
 
             $scope.event.location.latitude = lat;
             $scope.event.location.longitude = lng;
+            
+            uiGmapGoogleMapApi.then(function(maps) {
+              latlng = new maps.LatLng(lat, lng);
+              geocoder = new maps.Geocoder();
+              geocoder.geocode({'latLng': latlng}, function(results, status) {
+                $scope.$apply(function(){
+                  $scope.event.location.name = results[0].formatted_address;
+                });
+              });
+            });
+
             $scope.$apply();
           }
         }

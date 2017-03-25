@@ -36,7 +36,6 @@ angular.module('MyApp')
 
     $scope.sendEventForm = function() {
       $scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
-      console.log($filter('date')($scope.event.date, "HH/dd"));
       
       console.log();
       Event.save($scope.event)

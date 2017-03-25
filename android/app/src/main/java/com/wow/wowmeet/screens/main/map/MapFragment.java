@@ -50,6 +50,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         MapPresenter presenter = new MapPresenter(this);
         setPresenter(presenter);
 
+        presenter.start();
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

@@ -17,9 +17,9 @@
         </div>
 
         <div class="form-group">
-          <label for="name" class="col-sm-2">Name</label>
+          <label for="name" class="col-sm-2">Place</label>
           <div class="col-sm-8">
-            <input type="text" name="name" id="name" class="form-control" ng-model="event.location.name">
+            <input type="text" name="name" id="name" class="form-control" ng-model="event.location.name" value="{{ search }}">
           </div>
         </div>
 
@@ -54,11 +54,18 @@
           </div>
         </div>
         <div>
+          <script id="searchbox.tpl.html" type="text/ng-template">
+            <input type="text" placeholder="Search">
+          </script>
           <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" events="map.events">
               <ui-gmap-marker idKey="1" coords="marker.coords"></ui-gmap-marker>
+              <ui-gmap-search-box options="searchbox.options" template="searchbox.template" ng-model="search"
+                            events="searchbox.events" position="searchbox.position"></ui-gmap-search-box>
           </ui-gmap-google-map>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+

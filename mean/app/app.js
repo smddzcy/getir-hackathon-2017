@@ -101,7 +101,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
     uiGmapGoogleMapApiProvider.configure({
       key: 'AIzaSyBupogsGuOJ1ckMMIM9K4JsrSl8vksNwG4',
       v: '3.20', //defaults to latest 3.X anyhow
-      libraries: 'geometry,visualization'
+      libraries: 'geometry,visualization,places,geocoder,weather'
     });
   })
   .factory('socket', function (socketFactory) {

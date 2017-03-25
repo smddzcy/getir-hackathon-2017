@@ -1,5 +1,9 @@
 angular.module('MyApp')
+<<<<<<< b4ae556f6b554df52f29d33afd0132106dfff28f
   .controller('EventCtrl', function($scope, $http, $filter, Event, ngToast) {
+=======
+  .controller('EventCtrl', function($scope, $filter, Event, uiGmapGoogleMapApi) {
+>>>>>>> Create Event Map Options
     angular.extend($scope, {
       map: {
         center: { latitude: 41.0728162, longitude: 29.0089026 },
@@ -27,12 +31,36 @@ angular.module('MyApp')
 
             $scope.event.location.latitude = lat;
             $scope.event.location.longitude = lng;
+<<<<<<< b4ae556f6b554df52f29d33afd0132106dfff28f
+=======
+
+>>>>>>> Create Event Map Options
             $scope.$apply();
           }
         }
-      }
+      },
+      searchbox: { 
+          template:'searchbox.tpl.html', 
+          events:{
+            places_changed: function (searchBox) {
+              var place = searchBox.getPlaces()[0];
+              if (!place) return;
+
+              // Set input values automatically and put a marker.
+              $scope.event.location.name = place.formatted_address;
+              $scope.event.location.latitude = place.geometry.location.lat();
+              $scope.event.location.longitude = place.geometry.location.lng();
+
+              $scope.marker = {
+                id: Date.now(),
+                coords: $scope.event.location
+              };
+            }
+          }
+        },
     });
 
+<<<<<<< b4ae556f6b554df52f29d33afd0132106dfff28f
     // Get event types
     $http.get('/event-type')
       .then(function(eventTypes) {
@@ -42,6 +70,13 @@ angular.module('MyApp')
         ngToast.danger(err.msg);
       });
 
+=======
+
+    // Initialize the empty event object
+    $scope.event = { location: {} };
+    $scope.types = ['fun','more fun','more more fun'];
+  
+>>>>>>> Create Event Map Options
     $scope.sendEventForm = function() {
       //$scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
       Event.save($scope.event)

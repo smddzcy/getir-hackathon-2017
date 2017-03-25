@@ -10,7 +10,7 @@ var async = require('async');
 var trainModel = function(userId, events) {
   // If exists, get the model from Redis.
   // Otherwise, create a new model.
-  var lrModel = redis.hget('lr_model', req.user._id);
+  var lrModel = redis.hget('lr_model', userId);
   if (lrModel) {
     lrModel = LinearRegression.fromJSON(lrModel);
   } else {
@@ -37,7 +37,7 @@ var trainModel = function(userId, events) {
   lr.train(x, y);
 
   // Save the trained model to Redis.
-  redis.hset('lr_model', req.user._id, lr.toJSON());
+  redis.hset('lr_model', userId, lr.toJSON());
 
   // Return the trained model.
   return lr;

@@ -1,7 +1,9 @@
 package com.wow.wowmeet.data.loginregister;
 
+import com.google.gson.Gson;
 import com.wow.wowmeet.exceptions.RegisterFailedException;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.models.UserApiResponse;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
 import java.util.HashMap;
@@ -42,8 +44,11 @@ public class RegisterRepository {
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
                     System.out.println(responseBody);
-                    User user = new User();
-                    e.onSuccess(user);
+                    Gson gson = new Gson();
+                    UserApiResponse apiResponse = gson.fromJson(responseBody, UserApiResponse.class);
+                    //this is trick
+                    apiResponse.getUser().setToken(apiResponse.getToken());
+                    e.onSuccess(apiResponse.getUser());
                 }else{
                     RegisterFailedException registerFailedException =
                             new RegisterFailedException(responseBody);

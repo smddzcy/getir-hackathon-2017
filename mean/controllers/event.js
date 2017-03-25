@@ -69,7 +69,56 @@ exports.eventGet = function(req, res, next) {
 
         res.send(event);
       });
+    });
+}
+
+/**
+ * GET /event/search/type/:typeName
+ * Retrieves all the events that has the given type name.
+ */
+exports.eventSearchTypeGet = function(req, res, next) {
+  var typeName = req.params.typeName;
+
+  Event.find({})
+    .populate({
+      path: 'type',
+      match: {
+        'name': typeName
+      }
     })
+    .populate('creator', ['_id', 'name', 'email', 'picture'])
+    .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('users', ['_id', 'name', 'email', 'picture'])
+    .exec(function(err, events) {
+      if (err) {
+        return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
+      }
+      res.send(events);
+    });
+}
+
+/**
+ * GET /event/search/interval/:startTime/:endTime
+ * Retrieves all the events that is in the given interval.
+ */
+exports.eventSearchIntervalGet = function(req, res, next) {
+  var startTime = req.params.startTime;
+  var endTime = req.params.endTime;
+
+  Event.find({
+      startTime: { $gte: startTime },
+      endTime: { $lt: endTime }
+    })
+    .populate('creator', ['_id', 'name', 'email', 'picture'])
+    .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('users', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
+    .exec(function(err, events) {
+      if (err) {
+        return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
+      }
+      res.send(events);
+    });
 }
 
 /**

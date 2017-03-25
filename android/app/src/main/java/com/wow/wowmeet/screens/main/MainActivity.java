@@ -19,6 +19,7 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.base.BaseActivity;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.screens.createevent.CreateEventActivity;
 import com.wow.wowmeet.screens.main.drawer.DrawerFragment;
 import com.wow.wowmeet.partials.list.ListContract;
 import com.wow.wowmeet.partials.list.ListFragment;
@@ -50,7 +51,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListener = new MapFragment.OnRefreshListRequestedListener() {
         @Override
         public void onRefreshListRequested() {
-            
+
         }
     };
 
@@ -157,6 +158,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         listContractView.showEvents(events);
         mapContractView.showEvents(events);
+    }
+
+    @Override
+    public void goCreateEventActivity() {
+        Intent intent = new Intent(this, CreateEventActivity.class);
+        startActivity(intent);
     }
 
     @Override

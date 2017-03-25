@@ -14,6 +14,8 @@ interface MainContract {
 
     interface View extends BaseView<MainContract.Presenter> {
         void refreshListAndMap(List<Event> arr);
+
+        void goCreateEventActivity();
     }
 
     interface Presenter extends BasePresenter {

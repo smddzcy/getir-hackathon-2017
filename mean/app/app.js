@@ -59,7 +59,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
     $authProvider.facebook({
       url: '/auth/facebook',
       clientId: '543731272417479',
-      redirectUri: 'http://localhost:3000/auth/facebook/callback'
+      redirectUri: 'https://getir-hackathon-2017-wow-team.herokuapp.com/auth/facebook/callback'
     });
     $authProvider.google({
       url: '/auth/google',

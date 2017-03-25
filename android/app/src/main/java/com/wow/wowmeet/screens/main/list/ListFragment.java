@@ -1,6 +1,7 @@
 package com.wow.wowmeet.screens.main.list;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.adapters.EventListAdapter;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 import com.wow.wowmeet.utils.Constants;
 
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class ListFragment extends Fragment implements ListContract.View {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, v);
 
-        ListPresenter presenter = new ListPresenter(this);
+        final ListPresenter presenter = new ListPresenter(this);
         setPresenter(presenter);
 
         presenter.start();
@@ -56,7 +58,8 @@ public class ListFragment extends Fragment implements ListContract.View {
 
         User user = (User) getActivity().getIntent().getSerializableExtra(Constants.INTENT_EXTRA_USER);
 
-        eventListAdapter = new EventListAdapter(events);
+
+        eventListAdapter = new EventListAdapter(events, presenter);
         eventList.setLayoutManager(new LinearLayoutManager(getContext()));
         eventList.setAdapter(eventListAdapter);
 
@@ -76,5 +79,12 @@ public class ListFragment extends Fragment implements ListContract.View {
     @Override
     public void showEvents(List<Event> events) {
         eventListAdapter.changeDataSet(events);
+    }
+
+    @Override
+    public void showEventInfo(Event event) {
+        Intent i = new Intent(getActivity(), EventInfoActivity.class);
+        i.putExtra(EventInfoActivity.EXTRA_EVENT, event);
+        startActivity(i);
     }
 }

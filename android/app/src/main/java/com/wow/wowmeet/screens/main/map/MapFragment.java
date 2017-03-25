@@ -92,7 +92,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     .setTag(e);
             }
         } else {
-
+            //TODO EMPTY ELSE?
         }
 
 

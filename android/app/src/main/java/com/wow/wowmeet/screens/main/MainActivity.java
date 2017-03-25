@@ -16,9 +16,14 @@ import android.widget.FrameLayout;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.base.BaseActivity;
+import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.login.LoginActivity;
 import com.wow.wowmeet.screens.main.drawer.DrawerFragment;
+import com.wow.wowmeet.screens.main.list.ListContract;
+import com.wow.wowmeet.screens.main.list.ListFragment;
+import com.wow.wowmeet.screens.main.map.MapContract;
+import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 
 import java.util.ArrayList;
@@ -35,6 +40,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private MainPagerAdapter mainPagerAdapter;
     private ActionBarDrawerToggle drawerToggle;
+
+    private ListContract.View listContractView;
+    private MapContract.View mapContractView;
+
+    private ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +67,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         MainPresenter presenter = new MainPresenter(this);
         setPresenter(presenter);
 
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        ListFragment lf = ListFragment.newInstance();
+        MapFragment mf = MapFragment.newInstance();
+
+        listContractView = lf;
+        mapContractView = mf;
+
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),
+            lf, mf);
 
         viewPager.setAdapter(mainPagerAdapter);
 
@@ -92,8 +109,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void refreshListAndMap(ArrayList arr) {
+    public void refreshListAndMap(ArrayList<Event> arr) {
+        events.clear();
+        events.addAll(arr);
 
+        listContractView.showEvents(events);
+        mapContractView.showEvents(events);
     }
 
     @Override

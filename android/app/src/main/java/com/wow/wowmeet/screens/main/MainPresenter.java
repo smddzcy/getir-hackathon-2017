@@ -28,12 +28,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void onRefreshList() {
-
-    }
-
-    @Override
-    public void onRefreshMap() {
+    public void onRefreshListAndMap() {
 
     }
 

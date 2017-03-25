@@ -94,7 +94,7 @@ app.get('/user/:id', userController.userGet);
 
 // Event search endpoints
 app.get('/event/search/type/:typeName', eventController.eventSearchTypeGet);
-app.get('/event/search/interval/:typeName', eventController.eventSearchIntervalGet);
+app.get('/event/search/interval/:startTime/:endTime', eventController.eventSearchIntervalGet);
 
 // Event endpoints
 app.get('/event/:id', eventController.eventGet);

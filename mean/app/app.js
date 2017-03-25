@@ -40,6 +40,10 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-ma
         controller: 'ResetCtrl',
         resolve: { skipIfAuthenticated: skipIfAuthenticated }
       })
+      .when('/event/:id/details', {
+        templateUrl: 'partials/event_details.html',
+        controller: 'EventDetailCtrl'
+      })
       .otherwise({
         templateUrl: 'partials/404.html'
       });

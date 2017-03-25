@@ -43,7 +43,9 @@ exports.eventGetAll = function(req, res, next) {
 exports.eventGet = function(req, res, next) {
   var eventId = req.params.id;
 
-  Event.findById(eventId, function(err, event) {
+  Event.findById(eventId)
+    .populate('creator', ['id', 'name', 'email', 'picture'])
+    .exec(function(err, event) {
     res.send(event);
   })
 }
@@ -54,7 +56,7 @@ exports.eventGet = function(req, res, next) {
  */
 exports.eventPost = function(req, res, next) {
   req.assert('location', 'Location cannot be blank').notEmpty();
-  
+
   var event = new Event({
     creator: req.user,
     type: req.body.type,
@@ -110,4 +112,3 @@ exports.eventDelete = function(req, res, next) {
     res.send({ msg: 'Event has been permanently deleted.' });
   });
 }
-

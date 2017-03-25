@@ -16,7 +16,6 @@ var Event = require('../models/Event');
 exports.messageGetAll = function(req, res, next) {
   Message.find({ from: req.user })
     .populate('from', ['id', 'name', 'email', 'picture'])
-    .populate('to', ['id', 'name', 'email', 'picture'])
     .exec(function(err, messages) {
       res.send(messages);
     });
@@ -31,7 +30,6 @@ exports.messageGet = function(req, res, next) {
 
   Message.findById(msgId)
     .populate('from', ['id', 'name', 'email', 'picture'])
-    .populate('to', ['id', 'name', 'email', 'picture'])
     .exec(function(err, message) {
       res.send(message);
     });

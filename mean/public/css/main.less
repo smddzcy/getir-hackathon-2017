@@ -332,11 +332,26 @@ textarea {
   border: 1px solid #e1e1e1;
   border-radius: 2px;
   background-color: #fafafa;
-  padding: 10px;
+  padding: 10px 10px 62px;
   position: relative;
 
   .username {
     font-weight: bold;
+  }
+
+  .messages-container {
+    max-height: 300px;
+    overflow-y: auto;
+
+    .message-container {
+      max-width: 70%;
+
+      &.my-message {
+        text-align: right;
+        float: right;
+        width: 100%;
+      }
+    }
   }
 
   .input-container {

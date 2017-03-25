@@ -1,4 +1,5 @@
-<div class="message-container">
-  <span class="username">{{ from.name || from.email }}</span>:
+<div class="message-container"
+     ng-class='{ "my-message": isMyMessage }'>
+  <span class="username">{{ isMyMessage ? 'Me' : (from.name || from.email) }}</span>:
   <span class="message">{{ message }}</span>
 </div>

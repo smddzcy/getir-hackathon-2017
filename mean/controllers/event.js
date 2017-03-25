@@ -34,7 +34,13 @@ exports.eventGetAll = function(req, res, next) {
             Math.pow(event.location.longitude - lng, 2)) < radius;
         }));
       }
-      res.send(events);
+
+      Event.populate(events, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, events) {
+        res.send(events);
+      });
     });
 }
 
@@ -50,7 +56,12 @@ exports.eventGet = function(req, res, next) {
     .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .exec(function(err, event) {
-      res.send(event);
+      Event.populate(event, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, event) {
+        res.send(event);
+      });
     })
 }
 

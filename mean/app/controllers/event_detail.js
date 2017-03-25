@@ -46,6 +46,7 @@ angular.module('MyApp')
         message: msg
       }).$promise.then(function(message) {
         $scope.event.messages.push(message);
+        $scope.message = '';
       }).catch(function(err) {
         console.log(err);
       }).finally(function() {

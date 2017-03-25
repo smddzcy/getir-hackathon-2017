@@ -30,6 +30,18 @@ exports.ensureAuthenticated = function(req, res, next) {
 };
 
 /**
+ * GET /user/:id
+ * Get a user profile with the given id.
+ */
+exports.userGet = function(req, res, next) {
+  var userId = req.params.id;
+
+  User.findById(userId, function(err, user) {
+    return res.send(user);
+  })
+}
+
+/**
  * POST /login
  * Sign in with email and password
  */

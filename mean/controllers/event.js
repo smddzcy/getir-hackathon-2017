@@ -28,7 +28,7 @@ exports.eventGet = function(req, res, next) {
   var eventId = req.params.id;
 
   Event.findById(eventId, function(err, event) {
-    res.send({ event: event });
+    res.send(event);
   })
 }
 
@@ -49,7 +49,7 @@ exports.eventPost = function(req, res, next) {
     if (err) {
       res.status(500).send({ msg: 'Event couldn\'t be created.' })
     }
-    res.send({ event: event });
+    res.send(event);
   });
 }
 

@@ -60,11 +60,11 @@ app.use(function(req, res, next) {
   }
 });
 
-app.post('/contact', contactController.contactPost);
+// User resource
+app.post('/login', userController.loginPost);
+app.post('/signup', userController.signupPost);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);
-app.post('/signup', userController.signupPost);
-app.post('/login', userController.loginPost);
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.get('/unlink/:provider', userController.ensureAuthenticated, userController.unlink);
@@ -77,6 +77,8 @@ app.get('/auth/twitter/callback', userController.authTwitterCallback);
 app.post('/auth/github', userController.authGithub);
 app.get('/auth/github/callback', userController.authGithubCallback);
 
+app.get('/user/:id', userController.userGet);
+
 // Event resource
 app.get('/event', eventController.eventGetAll);
 app.get('/event/:id', eventController.eventGet);
@@ -84,6 +86,8 @@ app.post('/event', userController.ensureAuthenticated, eventController.eventPost
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);
 
+// Contact
+app.post('/contact', contactController.contactPost);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));

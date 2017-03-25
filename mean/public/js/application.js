@@ -147,11 +147,11 @@ angular.module('MyApp')
     $scope.isActive = function (viewLocation) {
       return viewLocation === $location.path();
     };
-    
+
     $scope.isAuthenticated = function() {
       return $auth.isAuthenticated();
     };
-    
+
     $scope.logout = function() {
       $auth.logout();
       delete $window.localStorage.user;
@@ -161,13 +161,6 @@ angular.module('MyApp')
 
 angular.module('MyApp')
 	.controller('HomeCtrl', ["$scope", "Event", function($scope, Event) {
-<<<<<<< HEAD
-		$scope.map = {
-			center: { latitude: 11, longitude: 11 },
-			zoom: 8,
-			options: { scrollwheel: false }
-		};
-=======
     $scope.map = {
       center: { latitude: 41.0728162, longitude: 29.0089026 },
       zoom: 12,
@@ -183,7 +176,6 @@ angular.module('MyApp')
       });
     }
 
->>>>>>> 56ac0db2601cfa9556177f68b135e4b3db550b6d
 		$scope.markers = [];
 
 		Event.query(function(events) {

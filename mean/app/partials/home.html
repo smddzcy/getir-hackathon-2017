@@ -1,5 +1,4 @@
 <div class="container-fluid">
-<<<<<<< b4bd186492c10a878e79a22230e9aec9366f4fa9
   <div ng-if="currentUser">
     <h1>Magnificent Map</h1>
 
@@ -22,30 +21,6 @@
         </ui-gmap-window>
         </ui-gmap-marker>
     </ui-gmap-google-map>
-=======
-  <div class="row">
-	  <div class="col-md-offset-1 col-md-10 col-sm-12">
-	    <ui-gmap-google-map center='map.center' zoom='map.zoom' options='map.options'>
-	    	<ui-gmap-marker idKey='marker.id'
-		        			coords='marker.location'
-		        			click='marker.isClicked = true'
-		        			ng-repeat='marker in markers'>
-		        <ui-gmap-window coords='marker.location'
-		        				show='marker.isClicked'
-						        closeClick='marker.isClicked = false'>
-			        <div id="content">
-						<div id="siteNotice"></div>
-						<h1 id="firstHeading" class="firstHeading">{{ marker.name }}</h1>
-						<div id="bodyContent">
-							<p>{{ marker.date | date:"MM/dd/yyyy" }}</p>
-
-						</div>
-					</div>
-				</ui-gmap-window>
-			</ui-gmap-marker>
-	    </ui-gmap-google-map>
-	  </div>
->>>>>>> User name
   </div>
 
   <div class="row cta-row text-center" ng-if="!currentUser">

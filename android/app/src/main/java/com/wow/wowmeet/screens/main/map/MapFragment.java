@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
+import com.wow.wowmeet.exceptions.UnexpectedErgunException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 
@@ -33,7 +34,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     private GoogleLocationAPIWrapper.WrapperLocationListener wrapperLocationListener = new GoogleLocationAPIWrapper.WrapperLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 25);
+            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 2);
         }
     };
 
@@ -67,8 +68,6 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         final MapPresenter presenter = new MapPresenter(this);
         setPresenter(presenter);
 
-        presenter.start();
-
         apiWrapper = new GoogleLocationAPIWrapper(getActivity(), new GoogleLocationAPIWrapper.OnWrapperConnectedListener() {
             @Override
             public void onConnected() {
@@ -76,7 +75,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     Location lastLocation = apiWrapper.getLastKnownLocation();
 
                     if(lastLocation != null)
-                        presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 25);
+                        presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 2);
 
                     requestLocationUpdates();
                 }
@@ -106,6 +105,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     public void onStart() {
         super.onStart();
         apiWrapper.onStart();
+        presenter.start();
     }
 
     private void requestLocationUpdates() {
@@ -183,6 +183,11 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
             }
         } else {
             //TODO EMPTY ELSE?
+            try {
+                throw new UnexpectedErgunException();
+            } catch (Exception e) {
+
+            }
         }
 
 

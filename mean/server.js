@@ -103,7 +103,6 @@ app.delete('/event/:id', userController.ensureAuthenticated, eventController.eve
 // Contact endpoints
 app.post('/contact', contactController.contactPost);
 
-
 // Message endpoints
 app.get('/message/:id', messageController.messageGet);
 app.post('/message', userController.ensureAuthenticated, messageController.messagePost);

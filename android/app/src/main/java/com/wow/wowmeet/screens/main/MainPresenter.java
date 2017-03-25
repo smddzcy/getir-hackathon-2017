@@ -1,5 +1,6 @@
 package com.wow.wowmeet.screens.main;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.data.main.MainRepository;
 import com.wow.wowmeet.models.Event;
 
@@ -17,6 +18,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private MainContract.View view;
     private MainRepository mainRepository;
+    private double radius = 12;
 
     public MainPresenter(MainContract.View view) {
         this.view = view;
@@ -25,7 +27,8 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void start() {
-        onRefreshListAndMap();
+        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026); //TODO DYNAMIC TAKE
+        onRefreshListAndMap(mainCoordinates.latitude, mainCoordinates.longitude, radius);
     }
 
     @Override
@@ -39,8 +42,8 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void onRefreshListAndMap() {
-        mainRepository.getEvents().subscribeOn(Schedulers.io())
+    public void onRefreshListAndMap(double lat, double lng, double rad) {
+        mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
                     @Override

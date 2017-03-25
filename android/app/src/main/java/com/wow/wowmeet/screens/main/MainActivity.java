@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListener = new MapFragment.OnRefreshListRequestedListener() {
         @Override
         public void onRefreshListRequested() {
-            //TODO
+            
         }
     };
 

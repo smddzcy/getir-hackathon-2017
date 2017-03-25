@@ -75,7 +75,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                 if(PermissionChecker.checkLocationPermission(getActivity(), false)) {
                     Location lastLocation = apiWrapper.getLastKnownLocation();
 
-                    presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 25);
+                    if(lastLocation != null)
+                        presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 25);
 
                     requestLocationUpdates();
                 }

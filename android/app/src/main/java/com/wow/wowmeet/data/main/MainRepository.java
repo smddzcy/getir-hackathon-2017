@@ -80,7 +80,7 @@ public class MainRepository implements EventsRepository {
     }
 
     @Override
-    public Single<List<Event>> getEvents(int lat, int lng, int radius) {
+    public Single<List<Event>> getEvents(double lat, double lng, double radius) {
         final String endpoint = EVENTS_ENDPOINT + "/" + lat + "/" + lng + "/" + radius;
         return Single.create(new SingleOnSubscribe<List<Event>>() {
             @Override

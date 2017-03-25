@@ -18,7 +18,7 @@ interface MainContract {
 
     interface Presenter extends BasePresenter {
         void onAddEventClicked();
-        void onRefreshListAndMap();
+        void onRefreshListAndMap(double lat, double lng, double rad);
 
         void onLogoutClicked();
         void onProfileClicked();

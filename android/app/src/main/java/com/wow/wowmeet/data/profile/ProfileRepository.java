@@ -1,11 +1,10 @@
 package com.wow.wowmeet.data.profile;
 
-import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 
-import java.util.List;
-
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 
 /**
  * Created by ergunerdogmus on 25.03.2017.
@@ -13,7 +12,12 @@ import io.reactivex.Single;
 
 public class ProfileRepository {
 
-    public Single<List<Event>> getPastEventsOfUser(User user){
-        return null;
+    public Single<User> getUserDetails(User user){
+        return Single.create(new SingleOnSubscribe<User>() {
+            @Override
+            public void subscribe(SingleEmitter<User> e) throws Exception {
+                     
+            }
+        });
     }
 }

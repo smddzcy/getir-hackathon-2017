@@ -17,6 +17,9 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
 
+    <string name="login_register_email_hint">Email</string>
+    <string name="login_register_password_hint">Password</string>
+
     <string-array name="drawer_options_array">
         <item>Home</item>
         <item>Messages</item>

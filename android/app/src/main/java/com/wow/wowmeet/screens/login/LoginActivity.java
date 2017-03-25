@@ -24,7 +24,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     private LoginContract.Presenter presenter;
 
-    @BindView(R.id.txtUsername) EditText edtUsername;
+    @BindView(R.id.login_txtInputEdtEmail)
+    TextInputEditText edtUsername;
     @BindView(R.id.txtInputEdtPassword)
     TextInputEditText edtPassword;
     @BindView(R.id.btnLogin) Button btnLogin;

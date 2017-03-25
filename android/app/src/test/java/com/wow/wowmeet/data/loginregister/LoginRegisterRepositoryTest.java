@@ -57,26 +57,5 @@ public class LoginRegisterRepositoryTest {
         });
     }
 
-    @Test
-    public void register() throws Exception{
-        String email = "deneme111@deneme.com";
-        String password = "123456";
-
-        RegisterRepository registerRepository = new RegisterRepository();
-        Single<User> single = registerRepository.register(email, password);
-
-        single.subscribeWith(new DisposableSingleObserver<User>() {
-            @Override
-            public void onSuccess(User value) {
-                System.out.println("oldu");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                System.out.println("error");
-            }
-        });
-    }
 
 }

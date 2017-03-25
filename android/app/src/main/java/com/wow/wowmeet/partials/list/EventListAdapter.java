@@ -1,4 +1,4 @@
-package com.wow.wowmeet.adapters;
+package com.wow.wowmeet.partials.list;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.partials.list.ListEventClickListener;
 
 import java.util.List;
 

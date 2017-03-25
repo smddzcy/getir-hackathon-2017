@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -21,11 +22,13 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DrawerFragment extends Fragment {
+public class DrawerFragment extends Fragment implements DrawerContract.View {
 
     public static final String ARG_USER = "com.wow.wowmeet.MainActivity.DrawerFragment.User";
 
     private User user;
+
+    private DrawerContract.Presenter presenter;
 
     public static DrawerFragment newInstance(User user) {
         DrawerFragment fragment = new DrawerFragment();
@@ -52,15 +55,31 @@ public class DrawerFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_drawer, container, false);
         ButterKnife.bind(this, v);
 
-        txtUsername.setText(user.getName());
+        txtUsername.setText(user.getEmail());
 
-        String[] options = getResources().getStringArray(R.array.drawer_options_array);
+        final String[] options = getResources().getStringArray(R.array.drawer_options_array);
 
         drawerOptionsArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, options);
         drawerOptions.setAdapter(drawerOptionsArrayAdapter);
+
+        drawerOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                presenter.onItemClick(i, options[i]);
+            }
+        });
 
 
         return v;
     }
 
+    @Override
+    public void setPresenter(DrawerContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void showError(String e) {
+
+    }
 }

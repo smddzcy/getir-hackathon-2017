@@ -1,5 +1,5 @@
 angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
-  'uiGmapgoogle-maps', 'btford.socket-io'])
+  'uiGmapgoogle-maps', 'ngSanitize', 'ngAnimate', 'ngToast', 'btford.socket-io'])
   .config(function($routeProvider, $locationProvider, $authProvider) {
     $locationProvider.html5Mode(true);
 
@@ -90,6 +90,11 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
       $rootScope.currentUser = JSON.parse($window.localStorage.user);
     }
   })
+  .config(['ngToastProvider', function(ngToastProvider) {
+    ngToastProvider.configure({
+      animation: 'fade'
+    });
+  }])
   .config(function(uiGmapGoogleMapApiProvider) {
     uiGmapGoogleMapApiProvider.configure({
       key: 'AIzaSyBupogsGuOJ1ckMMIM9K4JsrSl8vksNwG4',

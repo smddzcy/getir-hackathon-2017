@@ -1,12 +1,17 @@
 package com.wow.wowmeet.screens.main;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.wow.wowmeet.R;
@@ -26,8 +31,10 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private MainContract.Presenter presenter;
 
     @BindView(R.id.viewPager) ViewPager viewPager;
-    MainPagerAdapter mainPagerAdapter;
     @BindView(R.id.drawerLayout) DrawerLayout drawerLayout;
+
+    private MainPagerAdapter mainPagerAdapter;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +49,32 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 .add(R.id.drawerContainer, DrawerFragment.newInstance(user), "DRAWER")
                 .commit();
 
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+                R.string.open_drawer, R.string.close_drawer);
+
+        drawerLayout.addDrawerListener(drawerToggle);
+
         MainPresenter presenter = new MainPresenter(this);
         setPresenter(presenter);
 
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mainPagerAdapter);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

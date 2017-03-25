@@ -14,6 +14,7 @@ import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.main.MainActivity;
 import com.wow.wowmeet.screens.register.RegisterActivity;
 import com.wow.wowmeet.utils.Constants;
+import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,8 +37,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-        final LoginPresenter presenter = new LoginPresenter(this);
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance(this);
+        final LoginPresenter presenter = new LoginPresenter(this, sharedPreferencesUtil);
         setPresenter(presenter);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {

@@ -16,17 +16,21 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private LoginContract.View view;
     private LoginRepository loginRepository;
+    private LoginPreferences loginPreferences;
 
     private DisposableSingleObserver<User> disposableSingleObserver;
 
-    public LoginPresenter(LoginContract.View view) {
+    public LoginPresenter(LoginContract.View view, LoginPreferences loginPreferences) {
         this.view = view;
         this.loginRepository = new LoginRepository();
+        this.loginPreferences = loginPreferences;
     }
 
     @Override
     public void start() {
-
+        if(loginPreferences.isUserLoggedIn()){
+            view.showLoading();
+        }
     }
 
     @Override
@@ -46,6 +50,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     public void onSuccess(User value) {
                         view.onLoginSuccess(value);
                         view.hideLoading();
+                        loginPreferences.saveUserLogin(value.getUserId(), value.getToken());
                     }
 
                     @Override

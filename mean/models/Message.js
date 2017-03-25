@@ -11,7 +11,7 @@ var schemaOptions = {
 
 var messageSchema = new mongoose.Schema({
   from: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  to: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  to: {type: String, index: true},
   message: String
 }, schemaOptions);
 

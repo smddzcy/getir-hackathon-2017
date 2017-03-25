@@ -245,20 +245,3 @@ exports.eventJoinDelete = function(req, res, next) {
     })
   });
 }
-
-/**
- * GET /event/search/:place/:time
- * Gives the events with proper place and time.
- */
-// exports.eventSearch = function(req, res, next){
-//   var date = req.params.date;
-
-//   Event.find({})
-//     .populate('creator', ['_id', 'name', 'email', 'picture'])
-//     .populate('messages', ['_id', 'from', 'to', 'message'])
-//     .populate('users', ['_id', 'name', 'email', 'picture'])
-//     .exec(function(err, events) {
-//       3600000
-//       res.send(events);
-//     });
-// }

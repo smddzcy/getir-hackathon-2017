@@ -19,8 +19,10 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     ListFragment listFragment;
     MapFragment mapFragment;
 
-    public MainPagerAdapter(FragmentManager fm) {
+    public MainPagerAdapter(FragmentManager fm, ListFragment lf, MapFragment mf) {
         super(fm);
+        listFragment = lf;
+        mapFragment = mf;
     }
 
     @Override

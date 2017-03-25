@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -14,8 +15,13 @@ import android.view.MenuItem;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.base.BaseActivity;
+import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.main.drawer.DrawerFragment;
+import com.wow.wowmeet.screens.main.list.ListContract;
+import com.wow.wowmeet.screens.main.list.ListFragment;
+import com.wow.wowmeet.screens.main.map.MapContract;
+import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 
 import java.util.ArrayList;
@@ -32,6 +38,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private MainPagerAdapter mainPagerAdapter;
     private ActionBarDrawerToggle drawerToggle;
+
+    private ListContract.View listContractView;
+    private MapContract.View mapContractView;
+
+    private ArrayList<Event> events;
+
+    @BindView(R.id.fab) FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +64,30 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         drawerToggle.syncState();
         drawerLayout.addDrawerListener(drawerToggle);
 
-        MainPresenter presenter = new MainPresenter(this);
+        final MainPresenter presenter = new MainPresenter(this);
         setPresenter(presenter);
 
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        ListFragment lf = ListFragment.newInstance();
+        MapFragment mf = MapFragment.newInstance();
+
+        listContractView = lf;
+        mapContractView = mf;
+
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),
+            lf, mf);
 
         viewPager.setAdapter(mainPagerAdapter);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onAddEventClicked();
+            }
+        });
     }
 
     @Override
@@ -99,8 +127,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void refreshListAndMap(ArrayList arr) {
+    public void refreshListAndMap(ArrayList<Event> arr) {
+        events.clear();
+        events.addAll(arr);
 
+        listContractView.showEvents(events);
+        mapContractView.showEvents(events);
     }
 
     @Override

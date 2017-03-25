@@ -10,7 +10,7 @@ import java.util.List;
  * Created by mahmutkaraca on 3/24/17.
  */
 
-interface ListContract {
+public interface ListContract {
 
     interface View extends BaseView<ListContract.Presenter> {
         void showEvents(List<Event> events);

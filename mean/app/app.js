@@ -1,4 +1,5 @@
-angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-maps'])
+angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
+  'uiGmapgoogle-maps', 'btford.socket-io'])
   .config(function($routeProvider, $locationProvider, $authProvider) {
     $locationProvider.html5Mode(true);
 
@@ -90,4 +91,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-ma
       v: '3.20', //defaults to latest 3.X anyhow
       libraries: 'geometry,visualization'
     });
+  })
+  .factory('socket', function (socketFactory) {
+    return socketFactory();
   });

@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.adapters.EventListAdapter;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 public class ListFragment extends Fragment implements ListContract.View {
 
     private ListContract.Presenter presenter;
+    private EventListAdapter eventListAdapter;
 
     @BindView(R.id.event_list) RecyclerView eventList;
 
@@ -49,13 +51,12 @@ public class ListFragment extends Fragment implements ListContract.View {
         ListPresenter presenter = new ListPresenter(this);
         setPresenter(presenter);
 
+        presenter.start();
         ArrayList<Event> events = new ArrayList<>();
-        User user = new User.UserBuilder().setUserId("username").setUsername("email").setEmail("pass").createUser();
-        Event event = new Event(new Location("Biga", 15, 15), "deneme", user);
-        for(int i = 0; i < 5; i++){
-            events.add(event);
-        }
-        EventListAdapter eventListAdapter = new EventListAdapter(events);
+
+        User user = (User) getActivity().getIntent().getSerializableExtra(Constants.INTENT_EXTRA_USER);
+
+        eventListAdapter = new EventListAdapter(events);
         eventList.setLayoutManager(new LinearLayoutManager(getContext()));
         eventList.setAdapter(eventListAdapter);
 
@@ -73,7 +74,7 @@ public class ListFragment extends Fragment implements ListContract.View {
     }
 
     @Override
-    public void refreshList(ArrayList arr) {
-
+    public void showEvents(List<Event> events) {
+        eventListAdapter.changeDataSet(events);
     }
 }

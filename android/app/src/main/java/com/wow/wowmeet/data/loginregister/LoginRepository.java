@@ -41,7 +41,7 @@ public class LoginRepository {
                 Response response = OkHttpUtils.makePostRequest(client, LOGIN_ENDPOINT, fieldsMap);
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
-                    User loggedUser = new User.UserBuilder().setUserId("").setUsername(email).setEmail(password).createUser();
+                    User loggedUser = new User.UserBuilder().setUserId("").setName(email).setEmail(password).createUser();
                     e.onSuccess(loggedUser);
                 }else{
                     Throwable throwable = new LoginFailedException(responseBody);

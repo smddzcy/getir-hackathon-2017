@@ -46,7 +46,7 @@ public class MainRepositoryTest {
     public void addEventTest() throws Exception {
         User u = new User.UserBuilder()
                 .setUserId("1")
-                .setUsername("KaracaSoft")
+                .setName("KaracaSoft")
                 .setEmail("coolcocuk@cool.com")
                 .setPassword("asdf")
                 .setToken("token")

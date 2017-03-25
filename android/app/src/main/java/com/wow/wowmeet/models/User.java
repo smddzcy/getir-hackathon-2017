@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private String userId;
-    private String username;
+    private String name;
     private String email;
     private String password;
 
@@ -18,21 +18,21 @@ public class User implements Serializable {
 
     private String token;
 
-    private User(String userId, String username, String email, String password, String token) {
+    private User(String userId, String name, String email, String password, String token) {
         this.userId = userId;
-        this.username = username;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.token = token;
     }
 
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -53,7 +53,7 @@ public class User implements Serializable {
 
     public static class UserBuilder {
         private String userId;
-        private String username;
+        private String name;
         private String email;
         private String password;
         private String token;
@@ -63,8 +63,8 @@ public class User implements Serializable {
             return this;
         }
 
-        public UserBuilder setUsername(String username) {
-            this.username = username;
+        public UserBuilder setName(String name) {
+            this.name = name;
             return this;
         }
 
@@ -84,9 +84,12 @@ public class User implements Serializable {
         }
 
         public User createUser() {
-            return new User(userId, username, email, password, token);
+            return new User(userId, name, email, password, token);
         }
     }
 
-
+    @Override
+    public String toString() {
+        return getEmail() + " " + getName();
+    }
 }

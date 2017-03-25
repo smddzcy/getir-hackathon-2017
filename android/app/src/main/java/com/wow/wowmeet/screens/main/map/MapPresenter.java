@@ -34,7 +34,7 @@ public class MapPresenter implements MapContract.Presenter {
     public void requestEventRefresh() {
         User u = new User.UserBuilder()
                 .setUserId("1")
-                .setUsername("KaracaSoft")
+                .setName("KaracaSoft")
                 .setEmail("coolcocuk@cool.com")
                 .setPassword("asdf")
                 .setToken("token")

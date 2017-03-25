@@ -2,8 +2,6 @@ package com.wow.wowmeet.screens.main.map;
 
 import com.wow.wowmeet.data.main.MainRepository;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.models.Location;
-import com.wow.wowmeet.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,22 +50,6 @@ public class MapPresenter implements MapContract.Presenter {
 
     @Override
     public void requestEventRefresh() {
-        User u = new User.UserBuilder()
-                .setUserId("1")
-                .setName("KaracaSoft")
-                .setEmail("coolcocuk@cool.com")
-                .setPassword("asdf")
-                .setToken("token")
-                .createUser();
-
-        Location loc = new Location("asdf", 23.59, 23.59);
-        Event e = new Event(loc, "denem", u);
-        events.add(e);
-
-        Location loc2 = new Location("qwer", 30.59, 30.59);
-        Event e2 = new Event(loc2, "deneme", u);
-        events.add(e2);
-
-        view.showEvents(events);
+        this.start();
     }
 }

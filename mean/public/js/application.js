@@ -109,6 +109,41 @@ angular.module('MyApp')
 
 angular.module('MyApp')
   .controller('EventCtrl', ["$scope", "Event", function($scope, Event) {
+    angular.extend($scope, {
+        map: {
+            center: {
+                latitude: 42.3349940452867,
+                longitude:-71.0353168884369
+            },
+            zoom: 11,
+            markers: [],
+            events: {
+            click: function (map, eventName, originalEventArgs) {
+                var e = originalEventArgs[0];
+                var lat = e.latLng.lat(),lon = e.latLng.lng();
+                var marker = {
+                    id: Date.now(),
+                    coords: {
+                        latitude: lat,
+                        longitude: lon
+                    }
+                };
+                $scope.map.markers = [];
+                $scope.map.markers.push(marker);
+                console.log($scope.map.markers);
+                $scope.$apply();
+            }
+        }
+        }
+    });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position){
+        $scope.map.center = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+      });
+    }
     $scope.sendEventForm = function() {
       Event.save($scope.event)
         .$promise
@@ -176,24 +211,24 @@ angular.module('MyApp')
       });
     }
 
-		$scope.markers = [];
+	$scope.markers = [];
 
-		Event.query(function(events) {
-			events.forEach(function(e) {
-				console.log(e);
-				var marker = {};
-				marker.id = e._id;
-				marker.location = {
-					latitude: Number(e.location.latitude),
-					longitude: Number(e.location.longitude)
-				};
-				marker.name = "Type: " + (e.type ? e.type : 'No type') + ", Name: " + (e.location.name ? e.location.name : 'No name');
-				marker.date = e.date;
-				$scope.markers.push(marker);
-			});
+	Event.query(function(events) {
+		events.forEach(function(e) {
+			console.log(e);
+			var marker = {};
+			marker.id = e._id;
+			marker.location = {
+				latitude: Number(e.location.latitude),
+				longitude: Number(e.location.longitude)
+			};
+			marker.name = "Type: " + (e.type ? e.type : 'No type') + ", Name: " + (e.location.name ? e.location.name : 'No name');
+			marker.date = e.date;
+			$scope.markers.push(marker);
 		});
+	});
 
-	}]);
+}]);
 
 angular.module('MyApp')
   .controller('LoginCtrl', ["$scope", "$rootScope", "$location", "$window", "$auth", function($scope, $rootScope, $location, $window, $auth) {

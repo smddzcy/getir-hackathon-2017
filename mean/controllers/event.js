@@ -111,3 +111,4 @@ exports.eventDelete = function(req, res, next) {
     res.send({ msg: 'Event has been permanently deleted.' });
   });
 }
+

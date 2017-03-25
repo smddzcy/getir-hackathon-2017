@@ -15,6 +15,7 @@ exports.eventGetAll = function(req, res, next) {
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
       if (lat && lng && radius) {
         return res.send(events.filter(function(event) {
@@ -52,6 +53,7 @@ exports.eventGet = function(req, res, next) {
     .populate('creator', ['id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, event) {
       Event.populate(event, {
         path: 'messages.from',

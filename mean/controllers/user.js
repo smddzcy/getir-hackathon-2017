@@ -59,6 +59,7 @@ exports.userGet = function(req, res, next) {
 
   User.findById(userId)
     .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+    .populate('events.type', ['_id', 'name', 'count'])
     .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
     .populate('events.messages', ['from', 'to', 'message'])
     .populate('messages', ['from', 'to', 'message'])
@@ -99,6 +100,7 @@ exports.loginPost = function(req, res, next) {
 
   User.findOne({ email: req.body.email })
     .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+    .populate('events.type', ['_id', 'name', 'count'])
     .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
     .populate('events.messages', ['from', 'to', 'message'])
     .populate('messages', ['from', 'to', 'message'])
@@ -553,6 +555,7 @@ exports.authTwitter = function(req, res) {
         if (req.isAuthenticated()) {
           User.findOne({ twitter: profile.id })
             .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+            .populate('events.type', ['_id', 'name', 'count'])
             .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
             .populate('events.messages', ['from', 'to', 'message'])
             .populate('messages', ['from', 'to', 'message'])
@@ -574,6 +577,7 @@ exports.authTwitter = function(req, res) {
           // Step 5b. Create a new user account or return an existing one.
           User.findOne({ twitter: profile.id })
             .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+            .populate('events.type', ['_id', 'name', 'count'])
             .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
             .populate('events.messages', ['from', 'to', 'message'])
             .populate('messages', ['from', 'to', 'message'])

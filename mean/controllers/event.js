@@ -20,6 +20,7 @@ exports.eventGetAll = function(req, res, next) {
 
   Event.find({})
     .populate('creator', ['id', 'name', 'email', 'picture'])
+    .populate('messages')
     .exec(function(err, events) {
       if (lat && lng && radius) {
         return res.send(events.filter(function(event) {
@@ -45,9 +46,10 @@ exports.eventGet = function(req, res, next) {
 
   Event.findById(eventId)
     .populate('creator', ['id', 'name', 'email', 'picture'])
+    .populate('messages')
     .exec(function(err, event) {
-    res.send(event);
-  })
+      res.send(event);
+    })
 }
 
 /**
@@ -111,4 +113,25 @@ exports.eventDelete = function(req, res, next) {
   Event.remove({ _id: req.params.id }, function(err) {
     res.send({ msg: 'Event has been permanently deleted.' });
   });
+}
+
+/**
+ * POST /event/:id/join
+ * Joins the event.
+ */
+exports.eventJoinPost = function(req, res, next) {
+  res.send("123");
+  var eventId = req.params.id;
+
+  Event.findById(eventId, function(err, event) {
+    event.users.push(req.user);
+
+    event.save(function(err) {
+      if (err) {
+        return res.status(500).send({ msg: 'Event couldn\'t be joined.' });
+      }
+      res.send({ event: event, msg: 'Event has been joined successfully.' });
+    })
+  });
+
 }

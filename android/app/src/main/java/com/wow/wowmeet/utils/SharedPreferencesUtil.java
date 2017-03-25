@@ -4,12 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.wow.wowmeet.screens.login.LoginPreferences;
+import com.wow.wowmeet.screens.main.drawer.DrawerPreferences;
 
 /**
  * Created by ergunerdogmus on 25.03.2017.
  */
 
-public class SharedPreferencesUtil implements LoginPreferences{
+public class SharedPreferencesUtil implements LoginPreferences, DrawerPreferences{
 
 
 
@@ -30,18 +31,6 @@ public class SharedPreferencesUtil implements LoginPreferences{
 
     private SharedPreferencesUtil(Context context) {
         sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-    }
-
-    private void removeUserId(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(PREFS_USER_ID);
-        editor.apply();
-    }
-
-    private void removeUserToken(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(PREFS_USER_TOKEN);
-        editor.apply();
     }
 
     @Override
@@ -65,5 +54,13 @@ public class SharedPreferencesUtil implements LoginPreferences{
     @Override
     public String getUserToken(){
         return sharedPreferences.getString(PREFS_USER_TOKEN, DEFAULT_NULL);
+    }
+
+    @Override
+    public void removeUserPrefs() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(PREFS_USER_TOKEN);
+        editor.remove(PREFS_USER_ID);
+        editor.apply();
     }
 }

@@ -1,6 +1,7 @@
 package com.wow.wowmeet.screens.main.drawer;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.screens.login.LoginActivity;
+import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +58,9 @@ public class DrawerFragment extends Fragment implements DrawerContract.View {
         View v = inflater.inflate(R.layout.fragment_drawer, container, false);
         ButterKnife.bind(this, v);
 
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance(getContext());
+        presenter = new DrawerPresenter(this, sharedPreferencesUtil);
+
         txtUsername.setText(user.getEmail());
 
         final String[] options = getResources().getStringArray(R.array.drawer_options_array);
@@ -81,5 +87,12 @@ public class DrawerFragment extends Fragment implements DrawerContract.View {
     @Override
     public void showError(String e) {
 
+    }
+
+    @Override
+    public void goLogin() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

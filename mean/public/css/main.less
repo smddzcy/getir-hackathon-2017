@@ -325,3 +325,34 @@ textarea {
     flex: 1 0 auto;
   }
 }
+
+.chat-container {
+  max-width: 600px;
+  min-height: 200px;
+  border: 1px solid #e1e1e1;
+  border-radius: 2px;
+  background-color: #fafafa;
+  padding: 10px;
+  position: relative;
+
+  .username {
+    font-weight: bold;
+  }
+
+  .input-container {
+    position: absolute;
+    width: calc(~'100% - 20px');
+    bottom: 10px;
+
+    input {
+      display: inline;
+      width: 85%;
+      height: 42px;
+    }
+
+    button {
+      width: 14%;
+      height: 42px;
+    }
+  }
+}

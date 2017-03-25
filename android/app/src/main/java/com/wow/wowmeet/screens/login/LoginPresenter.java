@@ -42,8 +42,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                         @Override
                         public void onSuccess(User value) {
                             value.setToken(token);
-                            view.hideLoading();
                             view.goMainWithUser(value);
+                            view.hideLoading();
                         }
 
                         @Override

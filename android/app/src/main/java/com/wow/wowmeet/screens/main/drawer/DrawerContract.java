@@ -10,7 +10,7 @@ import com.wow.wowmeet.base.BaseView;
 interface DrawerContract {
 
     interface View extends BaseView<DrawerContract.Presenter>{
-
+        void goLogin();
     }
 
     interface Presenter extends BasePresenter {

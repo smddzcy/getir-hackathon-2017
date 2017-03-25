@@ -19,6 +19,6 @@ interface RegisterContract {
     }
 
     interface Presenter extends BasePresenter {
-        void onRegisterClicked();
+        void onRegisterClicked(String emailText, String passwordText);
     }
 }

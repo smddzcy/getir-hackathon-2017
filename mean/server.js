@@ -10,7 +10,6 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var request = require('request');
-var redis = require('redis');
 
 // Load environment variables from .env file
 dotenv.load();
@@ -25,7 +24,6 @@ var eventController = require('./controllers/event');
 var messageController = require('./controllers/message');
 
 var app = express();
-
 
 /**
  * Database connection
@@ -94,8 +92,8 @@ app.get('/auth/github/callback', userController.authGithubCallback);
 app.get('/user/:id', userController.userGet);
 
 // Event endpoints
-app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.get('/event/:id', eventController.eventGet);
+app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);

@@ -14,7 +14,6 @@ var eventSchema = new mongoose.Schema({
   type: String,
   date: Date,
   location: {},
-  joinRequests: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
   users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
   messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 }, schemaOptions);

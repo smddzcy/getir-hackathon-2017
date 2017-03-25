@@ -11,7 +11,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-ma
         templateUrl: 'partials/contact.html',
         controller: 'ContactCtrl'
       })
-      .when('/event', {
+      .when('/create-event', {
         templateUrl: 'partials/event.html',
         controller: 'EventCtrl'
       })
@@ -39,6 +39,10 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer', 'uiGmapgoogle-ma
         templateUrl: 'partials/reset.html',
         controller: 'ResetCtrl',
         resolve: { skipIfAuthenticated: skipIfAuthenticated }
+      })
+      .when('/event-details/:id/', {
+        templateUrl: 'partials/event_details.html',
+        controller: 'EventDetailCtrl'
       })
       .otherwise({
         templateUrl: 'partials/404.html'

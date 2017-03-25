@@ -9,13 +9,30 @@ var qs = require('querystring');
 var Event = require('../models/Event');
 
 /**
- * GET /event
+ * GET /event/:lat?/:lng?/:radius?
  * Lists all the events.
  */
 exports.eventGetAll = function(req, res, next) {
-  Event.find({}, function(err, users) {
-    res.send(users);
-  });
+  var lat = req.params.lat;
+  var lng = req.params.lng;
+  var radius = req.params.radius;
+
+  Event.find({})
+    .populate('creator', ['id', 'name', 'email', 'picture'])
+    .exec(function(err, events) {
+      if (lat && lng && radius) {
+        return res.send(events.filter(function(event) {
+          if (!event.location) {
+            return false;
+          }
+
+          return Math.sqrt(
+            Math.pow(event.location.latitude - lat, 2) +
+            Math.pow(event.location.longitude - lng, 2)) < radius;
+        }));
+      }
+      res.send(events);
+    });
 }
 
 /**
@@ -26,13 +43,13 @@ exports.eventGet = function(req, res, next) {
   var eventId = req.params.id;
 
   Event.findById(eventId, function(err, event) {
-    res.send({ event: event });
+    res.send(event);
   })
 }
 
 /**
  * POST /event
- * Create an event with the given values.
+ * Creates an event with the given values.
  */
 exports.eventPost = function(req, res, next) {
   req.assert('location', 'Location cannot be blank').notEmpty();
@@ -40,14 +57,15 @@ exports.eventPost = function(req, res, next) {
   var event = new Event({
     creator: req.user,
     location: req.body.location,
-    type: req.body.type
+    type: req.body.type,
+    date: req.body.date
   });
 
   event.save(function(err) {
     if (err) {
       res.status(500).send({ msg: 'Event couldn\'t be created.' })
     }
-    res.send({ event: event });
+    res.send(event);
   });
 }
 
@@ -65,6 +83,10 @@ exports.eventPut = function(req, res, next) {
 
     if (req.body.type) {
       event.type = req.body.type;
+    }
+
+    if (req.body.date) {
+      event.date = req.body.date;
     }
 
     event.save(function(err) {

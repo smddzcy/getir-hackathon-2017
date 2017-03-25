@@ -1,10 +1,11 @@
 angular.module('MyApp')
   .controller('EventCtrl', function($scope, Event) {
     $scope.sendEventForm = function() {
-      Event.send($scope.event)
+      Event.save($scope.event)
+        .$promise
         .then(function(response) {
           $scope.messages = {
-            success: "Event has been created successfully."
+            success: [{ msg:"Event has been created successfully." }]
           };
         })
         .catch(function(response) {

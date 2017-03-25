@@ -7,6 +7,10 @@
       <form ng-submit="signup()">
         <legend>Create an account</legend>
         <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" placeholder="Username" class="form-control" ng-model="user.name">
+        </div>
+        <div class="form-group">
           <label for="email">Email</label>
           <input type="email" name="email" id="email" placeholder="Email" class="form-control" ng-model="user.email">
         </div>

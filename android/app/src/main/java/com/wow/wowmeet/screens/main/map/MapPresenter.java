@@ -29,8 +29,13 @@ public class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
-    public void requestEventRefresh() {
-        this.start();
+    public void onGPSTimeout() {
+
+    }
+
+    @Override
+    public void requestEventRefresh(double lat, double lng, double radius) {
+        this.start(); // TODO geçici kod
     }
 
     @Override

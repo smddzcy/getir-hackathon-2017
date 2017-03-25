@@ -32,7 +32,9 @@ public class GoogleLocationAPIWrapper {
         @Override
         public void onLocationChanged(Location location) {
             lastKnownLocation = location;
-            wrapperLocationListener.onLocationChanged(location);
+            if(wrapperLocationListener != null) {
+                wrapperLocationListener.onLocationChanged(location);
+            }
         }
     };
 
@@ -97,7 +99,7 @@ public class GoogleLocationAPIWrapper {
         return lastKnownLocation;
     }
 
-    public void startLocationUpdates(LocationRequest request, @NonNull WrapperLocationListener listener) throws SecurityException{
+    public void startLocationUpdates(LocationRequest request, @Nullable WrapperLocationListener listener) throws SecurityException{
         if(!connected) {
             Log.e("GoogleLocAPIWrapper", "API not connected");
             return;

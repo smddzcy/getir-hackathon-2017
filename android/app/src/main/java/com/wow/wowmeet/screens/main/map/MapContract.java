@@ -12,14 +12,15 @@ import java.util.List;
 
 public interface MapContract {
 
-    interface View extends BaseView<MapContract.Presenter>{
+    interface View extends BaseView<MapContract.Presenter> {
         void showEventInfo(Event event);
 
         void showEvents(List<Event> events);
     }
 
-    interface Presenter extends BasePresenter{
-        void requestEventRefresh();
+    interface Presenter extends BasePresenter {
+        void onGPSTimeout();
+        void requestEventRefresh(double lat, double lng, double radius);
         void onEventClick(Event event);
     }
 }

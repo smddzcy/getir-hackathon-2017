@@ -1,14 +1,23 @@
 package com.wow.wowmeet.screens.main.map;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,12 +36,20 @@ import java.util.List;
  */
 public class MapFragment extends SupportMapFragment implements MapContract.View {
 
+    private GoogleLocationAPIWrapper.WrapperLocationListener wrapperLocationListener = new GoogleLocationAPIWrapper.WrapperLocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+    };
+
     MapContract.Presenter presenter;
 
     MapInfoWindowAdapter infoWindowAdapter;
 
     boolean mapReady = false;
     GoogleMap map;
+    GoogleLocationAPIWrapper apiWrapper;
 
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
@@ -56,6 +73,18 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
         presenter.start();
 
+        apiWrapper = new GoogleLocationAPIWrapper(getActivity(), new GoogleLocationAPIWrapper.OnWrapperConnectedListener() {
+            @Override
+            public void onConnected() {
+                requestLocationUpdates();
+            }
+        }, new GoogleLocationAPIWrapper.OnWrapperConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed() {
+                //TODO error message about how bad the internet is...
+            }
+        });
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -68,15 +97,27 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                 initializeMap(googleMap);
             }
         });
+
+        apiWrapper.onStart();
     }
 
-    private void initializeMap(GoogleMap googleMap){
+    private void requestLocationUpdates() {
+        
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        apiWrapper.onStop();
+    }
+
+    private void initializeMap(GoogleMap googleMap) {
         map = googleMap;
         LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026); //TODO DYNAMIC TAKE
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;
-        presenter.requestEventRefresh();
+        presenter.requestEventRefresh(mainCoordinates.latitude, mainCoordinates.longitude, 1.0);
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -84,8 +125,30 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                 presenter.onEventClick((Event) marker.getTag());
             }
         });
+
+        if(PermissionChecker.checkLocationPermission(getActivity())) {
+            enableMyLocationOnMap();
+        }
+
     }
 
+    private void enableMyLocationOnMap() {
+        try {
+            map.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            // This should never happen
+            Log.wtf("MapFragment", e);
+            showError(e.getMessage());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(PermissionChecker.onRequestPermissionResult(getActivity(), requestCode, permissions, grantResults)) {
+            enableMyLocationOnMap();
+        }
+    }
 
     @Override
     public void setPresenter(MapContract.Presenter presenter) {

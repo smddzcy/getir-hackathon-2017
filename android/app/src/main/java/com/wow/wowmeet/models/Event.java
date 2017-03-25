@@ -15,11 +15,11 @@ public class Event implements Serializable {
 
     private String createdAt;
 
-    private String type;
+    private Type type;
 
     private User creator;
 
-    public Event(Location location, String type, User creator) {
+    public Event(Location location, Type type, User creator) {
         this.location = location;
         this.type = type;
         this.creator = creator;
@@ -65,12 +65,12 @@ public class Event implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public String getType()
+    public Type getType()
     {
         return type;
     }
 
-    public void setType(String type)
+    public void setType(Type type)
     {
         this.type = type;
     }

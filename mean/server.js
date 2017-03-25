@@ -92,6 +92,10 @@ app.get('/auth/github/callback', userController.authGithubCallback);
 
 app.get('/user/:id', userController.userGet);
 
+// Event search endpoints
+app.get('/event/search/type/:typeName', eventController.eventSearchTypeGet);
+app.get('/event/search/interval/:typeName', eventController.eventSearchIntervalGet);
+
 // Event endpoints
 app.get('/event/:id', eventController.eventGet);
 app.post('/event/:id/join', userController.ensureAuthenticated, eventController.eventJoinPost);

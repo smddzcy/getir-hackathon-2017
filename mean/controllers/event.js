@@ -46,7 +46,7 @@ exports.eventGet = function(req, res, next) {
 
 /**
  * POST /event
- * Create an event with the given values.
+ * Creates an event with the given values.
  */
 exports.eventPost = function(req, res, next) {
   req.assert('location', 'Location cannot be blank').notEmpty();
@@ -81,7 +81,7 @@ exports.eventPut = function(req, res, next) {
     if (req.body.type) {
       event.type = req.body.type;
     }
-    
+
     if (req.body.date) {
       event.date = req.body.date;
     }

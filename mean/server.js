@@ -22,6 +22,7 @@ var User = require('./models/User');
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
 var eventController = require('./controllers/event');
+var messageController = require('./controllers/message');
 
 var app = express();
 
@@ -101,6 +102,12 @@ app.delete('/event/:id', userController.ensureAuthenticated, eventController.eve
 
 // Contact endpoints
 app.post('/contact', contactController.contactPost);
+
+
+// Message endpoints
+app.get('/message/:id', messageController.messageGet);
+app.post('/message', userController.ensureAuthenticated, messageController.messagePost);
+app.delete('/message/:id', userController.ensureAuthenticated, messageController.messageDelete);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));

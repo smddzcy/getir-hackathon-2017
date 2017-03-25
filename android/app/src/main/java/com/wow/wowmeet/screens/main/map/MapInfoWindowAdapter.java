@@ -2,7 +2,6 @@ package com.wow.wowmeet.screens.main.map;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +23,6 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
-        ImageView imgProfile = (ImageView) infoView.findViewById(R.id.imgMapProfilePicture);
         TextView txtUsername = (TextView) infoView.findViewById(R.id.txtMapUsername);
         TextView txtActivityType = (TextView) infoView.findViewById(R.id.txtActivityType);
         TextView txtActivityTime = (TextView) infoView.findViewById(R.id.txtActivityTime);
@@ -32,6 +30,7 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         Event e = (Event) marker.getTag();
         txtUsername.setText(e.getCreator().getEmail());
+        txtActivityTime.setText(e.getCreatedAt());
         txtActivityType.setText(e.getType());
 
         return infoView;

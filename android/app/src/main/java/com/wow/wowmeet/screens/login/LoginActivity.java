@@ -84,6 +84,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_USER, user);
         startActivity(intent);
+        finish();
     }
 
     @Override

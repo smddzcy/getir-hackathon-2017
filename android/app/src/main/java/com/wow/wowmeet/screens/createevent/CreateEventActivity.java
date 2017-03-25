@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -23,6 +24,8 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     @BindView(R.id.spinnerActivityType) Spinner spinnerActivityType;
     @BindView(R.id.bestPlacesList) RecyclerView suggestionsList;
     @BindView(R.id.btnCreateEvent) Button btnCreateEvent;
+
+    private ArrayAdapter<CharSequence> spinnerAdapter;
 
 
     @Override
@@ -43,6 +46,12 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
             }
         });
 
+        spinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.event_types_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        spinnerActivityType.setAdapter(spinnerAdapter);
     }
 
     @Override

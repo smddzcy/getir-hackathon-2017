@@ -43,5 +43,10 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
     }
 
+    @Override
+    public void onChooseSuggestion() {
+
+    }
+
 
 }

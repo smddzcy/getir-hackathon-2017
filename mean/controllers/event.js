@@ -60,7 +60,6 @@ exports.eventPost = function(req, res, next) {
     type: req.body.type,
     date: req.body.date,
     location: req.body.location,
-    joinRequests: req.body.joinRequests,
     users: req.body.users,
     messages: req.body.message
   });

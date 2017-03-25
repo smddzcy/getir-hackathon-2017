@@ -80,7 +80,8 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         messages = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(messages);
         chatRecyclerView.setAdapter(chatListAdapter);
-        chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        chatRecyclerView.setLayoutManager(linearLayoutManager);
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +119,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @Override
     public void showNewMessage(Message message) {
         chatListAdapter.addItem(message);
+        chatRecyclerView.scrollToPosition(chatListAdapter.getItemCount() - 1);
     }
 
     @Override

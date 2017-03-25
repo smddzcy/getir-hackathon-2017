@@ -41,11 +41,11 @@ public class MapPresenter implements MapContract.Presenter {
                 .createUser();
 
         Location loc = new Location("asdf", 23.59, 23.59);
-        Event e = new Event(u, loc);
+        Event e = new Event(loc, "denem", u);
         events.add(e);
 
         Location loc2 = new Location("qwer", 30.59, 30.59);
-        Event e2 = new Event(u, loc2);
+        Event e2 = new Event(loc2, "deneme", u);
         events.add(e2);
 
         view.showEvents(events);

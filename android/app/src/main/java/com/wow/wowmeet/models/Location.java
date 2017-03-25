@@ -5,36 +5,36 @@ package com.wow.wowmeet.models;
  */
 
 public class Location {
-    String locationName;
-    double lat, lang;
+    String name;
+    double latitude, longtitude;
 
-    public Location(String locationName, double lat, double lang) {
-        this.locationName = locationName;
-        this.lat = lat;
-        this.lang = lang;
+    public Location(String name, double latitude, double longtitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longtitude = longtitude;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public String getName() {
+        return name;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public double getLat() {
-        return lat;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public double getLang() {
-        return lang;
+    public double getLongtitude() {
+        return longtitude;
     }
 
-    public void setLang(double lang) {
-        this.lang = lang;
+    public void setLongtitude(double longtitude) {
+        this.longtitude = longtitude;
     }
 }

@@ -51,7 +51,7 @@ public class ListFragment extends Fragment implements ListContract.View {
 
         ArrayList<Event> events = new ArrayList<>();
         User user = new User.UserBuilder().setUserId("username").setUsername("email").setEmail("pass").createUser();
-        Event event = new Event(user, new Location("Biga", 122, 123));
+        Event event = new Event(new Location("Biga", 15, 15), "deneme", user);
         for(int i = 0; i < 5; i++){
             events.add(event);
         }

@@ -63,14 +63,16 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
     });
     $authProvider.google({
       url: '/auth/google',
-      clientId: '7480545046-eb71sosc5ut720e7tcj87cgs5cqkl9ns.apps.googleusercontent.com'
+      clientId: '7480545046-eb71sosc5ut720e7tcj87cgs5cqkl9ns.apps.googleusercontent.com',
+      redirectUri: 'https://getir-hackathon-2017-wow-team.herokuapp.com/auth/google/callback'
     });
     $authProvider.twitter({
       url: '/auth/twitter'
     });
     $authProvider.github({
       url: '/auth/github',
-      clientId: '205acb3615ae3357127e'
+      clientId: '205acb3615ae3357127e',
+      redirectUri: 'https://getir-hackathon-2017-wow-team.herokuapp.com/auth/github/callback'
     });
 
     function skipIfAuthenticated($location, $auth) {

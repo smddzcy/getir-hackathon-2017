@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.screens.main.list.ListEventClickListener;
+import com.wow.wowmeet.partials.list.ListEventClickListener;
 
 import java.util.List;
 

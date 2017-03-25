@@ -1,4 +1,4 @@
-package com.wow.wowmeet.screens.main.list;
+package com.wow.wowmeet.partials.list;
 
 import com.wow.wowmeet.models.Event;
 

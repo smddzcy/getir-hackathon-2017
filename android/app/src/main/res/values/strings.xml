@@ -45,5 +45,7 @@
     <string name="starting_hour">Starting Hour:</string>
     <string name="ending_hour">Ending Hour:</string>
     <string name="ok">OK</string>
+    <string name="filter">Filter</string>
+    <string name="radius">Radius:</string>
 
 </resources>

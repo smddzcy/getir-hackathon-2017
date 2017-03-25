@@ -94,6 +94,7 @@ app.get('/user/:id', userController.userGet);
 // Event endpoints
 app.get('/event/:id', eventController.eventGet);
 app.post('/event/:id/join', userController.ensureAuthenticated, eventController.eventJoinPost);
+app.delete('/event/:id/join', userController.ensureAuthenticated, eventController.eventJoinDelete);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);

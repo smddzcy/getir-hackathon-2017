@@ -122,7 +122,6 @@ exports.eventDelete = function(req, res, next) {
  * Joins the event.
  */
 exports.eventJoinPost = function(req, res, next) {
-  res.send("123");
   var eventId = req.params.id;
 
   Event.findById(eventId, function(err, event) {
@@ -135,5 +134,23 @@ exports.eventJoinPost = function(req, res, next) {
       res.send({ event: event, msg: 'Event has been joined successfully.' });
     })
   });
+}
 
+/**
+ * DELETE /event/:id/join
+ * Removes the user from an event.
+ */
+exports.eventJoinDelete = function(req, res, next) {
+  var eventId = req.params.id;
+
+  Event.findById(eventId, function(err, event) {
+    event.users.pull(req.user);
+
+    event.save(function(err) {
+      if (err) {
+        return res.status(500).send({ msg: 'Event couldn\'t be unjoined.' });
+      }
+      res.send({ event: event, msg: 'Event has been unjoined successfully.' });
+    })
+  });
 }

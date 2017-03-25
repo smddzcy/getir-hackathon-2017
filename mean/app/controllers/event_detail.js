@@ -24,4 +24,16 @@ angular.module('MyApp')
         });
     }
 
+    $scope.removeJoinedUser = function() {
+      $http.delete('/event/' + eventId + '/join')
+      .then(function(res) {
+        // Redirect the user to event details page
+        $location.search({});
+        $location.path('/event-details/' + eventId);
+      })
+      .catch(function(err) {
+        console.log("Event couldn't be unjoined.");
+      });
+    }
+
   });

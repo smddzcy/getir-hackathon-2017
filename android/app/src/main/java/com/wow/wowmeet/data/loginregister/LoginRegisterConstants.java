@@ -13,5 +13,5 @@ class LoginRegisterConstants {
 
     static final String EMAIL_PARAM_NAME = "email";
     static final String PASSWORD_PARAM_NAME = "password";
-    static final String CONFIRM_PASSWORD_PARAM_NAME = "confirmPassword";
+    static final String USERNAME_PARAM_NAME = "username";
 }

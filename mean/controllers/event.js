@@ -19,8 +19,9 @@ exports.eventGetAll = function(req, res, next) {
   var radius = req.params.radius;
 
   Event.find({})
-    .populate('creator', ['id', 'name', 'email', 'picture'])
-    .populate('messages')
+    .populate('creator', ['_id', 'name', 'email', 'picture'])
+    .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('users', ['_id', 'name', 'email', 'picture'])
     .exec(function(err, events) {
       if (lat && lng && radius) {
         return res.send(events.filter(function(event) {
@@ -46,7 +47,8 @@ exports.eventGet = function(req, res, next) {
 
   Event.findById(eventId)
     .populate('creator', ['id', 'name', 'email', 'picture'])
-    .populate('messages')
+    .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('users', ['_id', 'name', 'email', 'picture'])
     .exec(function(err, event) {
       res.send(event);
     })

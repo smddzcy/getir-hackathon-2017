@@ -1,10 +1,12 @@
 package com.wow.wowmeet.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ergunerdogmus on 25.03.2017.
  */
 
-public class Type {
+public class Type implements Serializable{
     private String id;
 
     private String count;

@@ -1,5 +1,5 @@
 angular.module('MyApp')
-  .controller('EventDetailCtrl', function($http, $rootScope, $scope, $route,
+  .controller('EventDetailsCtrl', function($http, $rootScope, $scope, $route,
     $location, Event, Message, socket) {
     var eventId = $route.current.params.id;
 

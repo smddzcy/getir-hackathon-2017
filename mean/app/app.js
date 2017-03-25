@@ -43,7 +43,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
       })
       .when('/event-details/:id/', {
         templateUrl: 'partials/event_details.html',
-        controller: 'EventDetailCtrl'
+        controller: 'EventDetailsCtrl'
       })
       .when('/public-profile/:id', {
         templateUrl: 'partials/public_profile.html',

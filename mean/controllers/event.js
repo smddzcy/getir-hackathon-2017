@@ -1,6 +1,6 @@
 var Event = require('../models/Event');
 var Message = require('../models/Message');
-var LinearRegression = require('../linear_regression');
+var LinearRegression = require('../linear_regression').LinearRegression;
 var redis = require('../redis');
 var async = require('async');
 
@@ -34,13 +34,13 @@ var trainModel = function(userId, events) {
   })
 
   // Train the model.
-  lr.train(x, y);
+  lrModel.train(x, y);
 
   // Save the trained model to Redis.
-  redis.hset('lr_model', userId, lr.toJSON());
+  redis.hset('lr_model', userId, lrModel.toJSON());
 
   // Return the trained model.
-  return lr;
+  return lrModel;
 }
 
 /**

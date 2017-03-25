@@ -2,6 +2,7 @@ package com.wow.wowmeet.data.main;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wow.wowmeet.exceptions.AddEventFailedException;
 import com.wow.wowmeet.exceptions.GetEventsFailedException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
@@ -57,7 +58,16 @@ public class MainRepository implements EventsRepository {
                 User user = event.getCreator();
 
                 Gson gson = new Gson();
-                
+                String json = gson.toJson(event);
+
+                Response response = OkHttpUtils.makePostRequestWithUserJson(client, EventsConstants.EVENTS_ENDPOINT, json, user);
+                String responseBody = response.body().string();
+                if(response.isSuccessful()){
+                    e.onSuccess("");
+                }else{
+                    AddEventFailedException addEventFailedException = new AddEventFailedException(responseBody);
+                    e.onError(addEventFailedException);
+                }
             }
         });
     }

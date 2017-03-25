@@ -1,5 +1,7 @@
 package com.wow.wowmeet.partials.chat;
 
+import android.util.Log;
+
 import com.wow.wowmeet.data.chat.ChatRepository;
 import com.wow.wowmeet.models.Message;
 
@@ -10,7 +12,6 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.socket.client.Socket;
 
 /**
  * Created by ergunerdogmus on 25.03.2017.
@@ -25,9 +26,10 @@ public class ChatPresenter implements ChatContract.Presenter {
     private String userToken;
     private List<Message> messages;
 
-    public ChatPresenter(ChatContract.View view, List<Message> messages, String userToken) {
+    public ChatPresenter(ChatContract.View view, String toId, List<Message> messages,
+                         String userToken) throws URISyntaxException {
         this.messages = messages;
-        this.chatRepository = new ChatRepository();
+        this.chatRepository = new ChatRepository(toId);
         this.view = view;
         this.userToken = userToken;
     }
@@ -36,20 +38,14 @@ public class ChatPresenter implements ChatContract.Presenter {
     public void start() {
         view.showMessages(messages);
 
-        try {
-            Socket socket = chatRepository.connectToSocket();
-            chatRepository.socketListen(socket, "58d5d1206e8c0db17e16e014");
-            chatRepository.socketTry(socket, "5qwe8d5d1206e8c0db17e16e014", "mesaj", userToken);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
     public void stop() {
         if(disposableSingleChatMessageObserver != null)
             disposableSingleChatMessageObserver.dispose();
+
+        chatRepository.socketDisconnect();
     }
 
     @Override
@@ -60,7 +56,7 @@ public class ChatPresenter implements ChatContract.Presenter {
                 .subscribeWith(new DisposableSingleObserver<String>() {
                     @Override
                     public void onSuccess(String value) {
-
+                        Log.d("MessageSend", value);
                     }
 
                     @Override

@@ -15,6 +15,7 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Message;
 import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,8 +67,15 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         String userToken = SharedPreferencesUtil.getInstance(getContext()).getUserToken();
         ChatMessageProvider chatMessageProvider = (ChatMessageProvider) getArguments().getSerializable("deneme");
         List<Message> messages = chatMessageProvider.getMessages();
-        ChatContract.Presenter presenter = new ChatPresenter(this, messages, userToken);
-        this.setPresenter(presenter);
+        final String toId = chatMessageProvider.getToId();
+
+        try {
+            final ChatContract.Presenter presenter = new ChatPresenter(this, toId, messages, userToken);
+            this.setPresenter(presenter);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            //TODO exception handle
+        }
 
         messages = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(messages);
@@ -79,7 +87,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
             public void onClick(View v) {
                 String message = editTextMessage.getText().toString();
 
-
+                presenter.sendMessage(message, toId);
             }
         });
 

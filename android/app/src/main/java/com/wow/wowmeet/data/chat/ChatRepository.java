@@ -33,7 +33,19 @@ public class ChatRepository {
     private static final String SOCKET_EVENT_JOIN = "join";
     private static final String SOCKET_EVENT_MESSAGE = "message";
 
+    private Socket socket;
+    private String toId;
+
+    public ChatRepository(String toId) throws URISyntaxException {
+        this.socket = getSocket();
+        this.toId = toId;
+
+        joinChannel();
+        socketListen();
+    }
+
     public Single<String> sendMessage(final String message, final String toId, final String token){
+
         return Single.create(new SingleOnSubscribe<String>() {
             @Override
             public void subscribe(SingleEmitter<String> e) throws Exception {
@@ -48,6 +60,7 @@ public class ChatRepository {
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
                     e.onSuccess(responseBody);
+                    emitMessage(responseBody);
                 }else{
                     SendMessageFailedException sendMessageFailedException =
                             new SendMessageFailedException(responseBody);
@@ -58,29 +71,21 @@ public class ChatRepository {
         });
     }
 
-    public Socket connectToSocket() throws URISyntaxException {
+    private Socket getSocket() throws URISyntaxException {
         return IO.socket(SOCKET_ENDPOINT);
     }
 
-    private void joinChannel(Socket socket, String roomId){
+    private void joinChannel(){
         socket.connect();
-        socket.emit(SOCKET_EVENT_JOIN, roomId);
+        socket.emit(SOCKET_EVENT_JOIN, toId);
     }
 
-    private void emitMessage(Socket socket, String roomId, String message, String token){
-        socket.emit(SOCKET_EVENT_MESSAGE, roomId, message);
+    private void emitMessage(String messageJson){
+        socket.emit(SOCKET_EVENT_MESSAGE, toId, messageJson);
     }
 
-    private void disconnectFromSocket(Socket socket){
-        socket.disconnect();
-    }
 
-    public void socketTry(Socket socket, String roomId, String message, String token) throws URISyntaxException {
-        joinChannel(socket, roomId);
-        emitMessage(socket, roomId, message, token);
-    }
-
-    public void socketListen(Socket socket, String roomId){
+    private void socketListen(){
         socket.on(SOCKET_EVENT_MESSAGE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -88,6 +93,10 @@ public class ChatRepository {
                 Log.d("SOCKET", args[0].toString());
             }
         });
+    }
+
+    public void socketDisconnect(){
+        socket.disconnect();
     }
 
 }

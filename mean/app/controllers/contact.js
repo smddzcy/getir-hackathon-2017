@@ -1,16 +1,15 @@
 angular.module('MyApp')
-  .controller('ContactCtrl', function($scope, Contact) {
+  .controller('ContactCtrl', function($scope, Contact, ngToast) {
     $scope.sendContactForm = function() {
       Contact.send($scope.contact)
         .then(function(response) {
-          $scope.messages = {
-            success: [response.data]
-          };
+          ngToast.success(response.data.msg);
+          $scope.contact = {};
         })
         .catch(function(response) {
-          $scope.messages = {
-            error: Array.isArray(response.data) ? response.data : [response.data]
-          };
+          [].concat(response.data).forEach(function(msg) {
+            ngToast.danger(response.data.msg);
+          });
         });
     };
   });

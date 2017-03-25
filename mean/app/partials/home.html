@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div ng-if="currentUser">
-    <h1>Near Events</h1>
+    <h1>Nearby Events</h1>
 
     <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options"
                         ng-if="map">
@@ -21,12 +21,17 @@
 
             <div class="flex-row">
               <h1 class="markerHeading">Type:</h1>
-              <div class="markerBodyContent">{{ marker.event.type || 'No type' }}</div>
+              <div class="markerBodyContent">{{ marker.event.type.name || 'No type' }}</div>
             </div>
 
             <div class="flex-row">
-              <h1 class="markerHeading">Date:</h1>
-              <div class="markerBodyContent">{{ marker.event.date | date:"MM/dd/yyyy" }}</div>
+              <h1 class="markerHeading">Start Time:</h1>
+              <div class="markerBodyContent">{{ marker.event.startTime | date:"hh:mm MM/dd/yyyy" }}</div>
+            </div>
+
+            <div class="flex-row">
+              <h1 class="markerHeading">End Time:</h1>
+              <div class="markerBodyContent">{{ marker.event.endTime | date:"hh:mm MM/dd/yyyy" }}</div>
             </div>
 
             <div class="markerBodyContent">

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.wow.wowmeet.R;
@@ -29,6 +30,8 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     @BindView(R.id.txtDateTime) TextView txtDateTime;
     @BindView(R.id.txtUsernameEventInfo) TextView txtUsername;
     @BindView(R.id.btnJoin) Button btnJoin;
+    @BindView(R.id.activity_event_info_chatContainer)
+    FrameLayout chatContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         presenter = new EventInfoPresenter(this);
 
         ChatFragment chatFragment = ChatFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.activity_event_info_chatContainer, chatFragment).commit();
 
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override

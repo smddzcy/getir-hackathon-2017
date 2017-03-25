@@ -33,7 +33,8 @@
               <span>{{ user.name || user.email }}</span>
               <span class="btn btn-danger"
                     style="padding: 0 8px"
-                    ng-click="removeJoinedUser()">x</span>
+                    ng-click="removeJoinedUser()"
+                    ng-if="user._id === currentUser._id">x</span>
             </div>
           </div>
         </div>
@@ -51,9 +52,7 @@
             <div class="input-container">
               <input type="text" class="form-control"
                      placeholder="Your message..."
-                     ng-model="message"
-                     ng-minlength="3"
-                     ng-maxlength="140" />
+                     ng-model="message" />
               <button type="submit" class="btn btn-success"
                       ng-click="sendMessage(message)"
                       ng-disabled="sendingMessage">Send</button>

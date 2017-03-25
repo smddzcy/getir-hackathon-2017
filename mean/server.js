@@ -143,7 +143,7 @@ io.on('connection', function(socket) {
   console.log(socket);
 
   socket.on('message', function(message) {
-    io.emit('message', message);
+    io.sockets.emit('message', message);
   });
 
   socket.on('disconnect', function() {

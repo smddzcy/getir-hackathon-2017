@@ -37,7 +37,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".screens.profile.ProfileActivity" />
-        <activity android:name=".screens.createevent.CreateEvent" />
+        <activity android:name=".screens.createevent.CreateEventActivity" />
         <activity android:name=".screens.eventinfo.EventInfoActivity"></activity>
     </application>
 

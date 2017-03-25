@@ -9,13 +9,25 @@ var qs = require('querystring');
 var Event = require('../models/Event');
 
 /**
- * GET /event
+ * GET /event/:lat?/:lng?/:radius?
  * Lists all the events.
  */
 exports.eventGetAll = function(req, res, next) {
+  var lat = req.params.lat;
+  var lng = req.params.lng;
+  var radius = req.params.radius;
+
   Event.find({})
     .populate('creator', ['id', 'name', 'picture'])
     .exec(function(err, events) {
+      if (lat && lng && radius) {
+        return res.send(events.filter(function(event) {
+          return Math.sqrt(
+            Math.pow(event.location.latitude - lat, 2) +
+            Math.pow(event.location.longitude - lng, 2)
+          ) < radius;
+        }));
+      }
       res.send(events);
     });
 }

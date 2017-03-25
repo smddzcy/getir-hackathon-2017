@@ -80,7 +80,7 @@ app.get('/auth/github/callback', userController.authGithubCallback);
 app.get('/user/:id', userController.userGet);
 
 // Event resource
-app.get('/event', eventController.eventGetAll);
+app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.get('/event/:id', eventController.eventGet);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);

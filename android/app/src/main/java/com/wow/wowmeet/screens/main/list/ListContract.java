@@ -14,10 +14,14 @@ public interface ListContract {
 
     interface View extends BaseView<ListContract.Presenter> {
         void showEvents(List<Event> events);
+
+        void showEventInfo(Event event);
     }
 
     interface Presenter extends BasePresenter {
         void onSwipeRefresh();
+
+        void onEventClicked(Event event);
     }
 
 }

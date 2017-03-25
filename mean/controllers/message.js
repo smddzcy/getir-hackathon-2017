@@ -7,6 +7,20 @@ var moment = require('moment');
 var request = require('request');
 var qs = require('querystring');
 var Message = require('../models/Message');
+var Event = require('../models/Event');
+
+/**
+ * GET /message/
+ * Retrieves all messages of the user.
+ */
+exports.messageGetAll = function(req, res, next) {
+  Message.find({ from: req.user })
+    .populate('from', ['id', 'name', 'email', 'picture'])
+    .populate('to', ['id', 'name', 'email', 'picture'])
+    .exec(function(err, messages) {
+      res.send(messages);
+    });
+}
 
 /**
  * GET /message/:id
@@ -37,12 +51,32 @@ exports.messagePost = function(req, res, next) {
     message: req.body.message
   });
 
-  message.save(function(err) {
-    if (err) {
-      res.status(500).send({ msg: 'Message couldn\'t be created.' })
+  async.waterfall([
+    function(done) {
+      Event.findById(req.body.to, function(err, event) {
+        if (!event) { return; }
+        event.messages.addToSet(message);
+        event.save(function(err, event) {
+          done(err);
+        });
+      });
+    }, function(done) {
+      req.user.messages.addToSet(message);
+      req.user.save(function(err, user) {
+        done(err);
+      });
+    }, function(done) {
+      message.save(function(err, message) {
+        if (err) {
+          return res.status(500).send({ msg: 'Message couldn\'t be created.' })
+        }
+        // Populate the `from` field.
+        Message.populate(message, { path: 'from' }, function(err, message) {
+          res.send(message);
+        });
+      });
     }
-    res.send(message);
-  });
+  ])
 }
 
 /**
@@ -53,7 +87,7 @@ exports.messageDelete = function(req, res, next) {
   var msgId = req.params.id;
 
   Message.findById(msgId, function(err, message) {
-    if (message.from._id === req.user._id) {
+    if (message.from._id == req.user._id) {
       msg.remove(function(err) {
         if (err) {
           res.status(500).send({ msg: 'Message couldn\'t be deleted.' })

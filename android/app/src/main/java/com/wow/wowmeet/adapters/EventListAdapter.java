@@ -1,5 +1,6 @@
 package com.wow.wowmeet.adapters;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.screens.main.list.ListEventClickListener;
 
 import java.util.List;
 
@@ -22,9 +24,11 @@ import butterknife.ButterKnife;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.EventListViewHolder> {
 
     private List<Event> eventList;
+    private ListEventClickListener eventClickListener;
 
-    public EventListAdapter(List<Event> eventList) {
+    public EventListAdapter(List<Event> eventList, ListEventClickListener eventClickListener) {
         this.eventList = eventList;
+        this.eventClickListener = eventClickListener;
     }
 
     public void changeDataSet(List<Event> eventList){
@@ -72,9 +76,20 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         @BindView(R.id.row_event_list_txtDate)
         TextView textViewDate;
 
+        @BindView(R.id.row_event_list_cardView)
+        CardView cardView;
+
         EventListViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Event event = eventList.get(getAdapterPosition());
+                    eventClickListener.onEventClicked(event);
+                }
+            });
         }
 
     }

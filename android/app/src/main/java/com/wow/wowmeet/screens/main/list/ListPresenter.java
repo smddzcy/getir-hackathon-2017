@@ -1,10 +1,12 @@
 package com.wow.wowmeet.screens.main.list;
 
+import com.wow.wowmeet.models.Event;
+
 /**
  * Created by mahmutkaraca on 3/24/17.
  */
 
-public class ListPresenter implements ListContract.Presenter {
+public class ListPresenter implements ListContract.Presenter, ListEventClickListener {
 
     private ListContract.View view;
 
@@ -25,5 +27,10 @@ public class ListPresenter implements ListContract.Presenter {
     @Override
     public void onSwipeRefresh() {
 
+    }
+
+    @Override
+    public void onEventClicked(Event event) {
+        view.showEventInfo(event);
     }
 }

@@ -1,13 +1,56 @@
 angular.module('MyApp')
-  .controller('EventDetailCtrl', function($scope, $route, Event) {
+  .controller('EventDetailCtrl', function($http, $rootScope, $scope, $route, $location,
+      Event, Message) {
     var eventId = $route.current.params.id;
 
-    Event.get({}, {id: eventId})
-      .$promise
-      .then(function(event) {
-        $scope.event = event;
-      })
-      .catch(function(response) {
-        console.log(response.data);
+    if ($location.search().join) {
+      $http.post('/event/' + eventId + '/join')
+        .then(function(res) {
+          // Redirect the user to event details page
+          $location.search({});
+          $location.path('/event-details/' + eventId);
+        })
+        .catch(function(err)  {
+          console.log("Event couldn't be joined.");
+        });
+    } else {
+      Event.get({}, { id: eventId })
+        .$promise
+        .then(function(event) {
+          $scope.event = event;
+          console.log(event);
+        })
+        .catch(function(response) {
+          console.log(response.data);
+        });
+    }
+
+    $scope.removeJoinedUser = function() {
+      $http.delete('/event/' + eventId + '/join')
+        .then(function(res) {
+          // Redirect the user to event details page
+          $location.search({});
+          $location.path('/event-details/' + eventId);
+        })
+        .catch(function(err)  {
+          console.log("Event couldn't be unjoined.");
+        });
+    }
+
+    $scope.sendMessage = function(msg) {
+      $scope.sendingMessage = true;
+
+      Message.save({
+        from: $rootScope.currentUser._id,
+        to: eventId,
+        message: msg
+      }).$promise.then(function(message) {
+        $scope.event.messages.push(message);
+      }).catch(function(err) {
+        console.log(err);
+      }).finally(function() {
+        $scope.sendingMessage = false;
       });
+    }
+
   });

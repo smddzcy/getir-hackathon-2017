@@ -55,7 +55,8 @@
                        from="message.from"
                        message="message.message"></message>
             </div>
-            <div class="input-container">
+            <div class="input-container"
+                 ng-if="currentUser">
               <input type="text" class="form-control"
                      placeholder="Your message..."
                      ng-model="message" />

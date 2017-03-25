@@ -11,11 +11,15 @@ interface CreateEventContract {
 
 
     interface View extends BaseView<CreateEventContract.Presenter> {
-        
+        void updateSuggestions();
     }
 
     interface Presenter extends BasePresenter{
-
+        void onCreateEvent(/*TODO event bilgileri */);
+        void onChoosePlace();
+        void onDateSelectorClicked();
+        void onTimeSelectorClicked();
+        void onChooseSuggestion();
     }
 
 }

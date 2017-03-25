@@ -5,6 +5,14 @@ package com.wow.wowmeet.screens.createevent;
  */
 
 public class CreateEventPresenter implements CreateEventContract.Presenter {
+
+    CreateEventContract.View view;
+
+    public CreateEventPresenter(CreateEventContract.View view) {
+        this.view = view;
+    }
+
+
     @Override
     public void start() {
 
@@ -14,4 +22,26 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     public void stop() {
 
     }
+
+    @Override
+    public void onCreateEvent() {
+
+    }
+
+    @Override
+    public void onChoosePlace() {
+
+    }
+
+    @Override
+    public void onDateSelectorClicked() {
+
+    }
+
+    @Override
+    public void onTimeSelectorClicked() {
+
+    }
+
+
 }

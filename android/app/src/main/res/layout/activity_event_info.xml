@@ -50,34 +50,8 @@
         app:layout_constraintTop_toBottomOf="@+id/txtType"
         app:layout_constraintHorizontal_bias="0.0" />
 
-    <Button
-        android:id="@+id/button2"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="0dp">
-
-    </FrameLayout>
-
     <TextView
-        android:id="@+id/txtUsername"
+        android:id="@+id/txtUsernameEventInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -87,4 +61,32 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtDateTime" />
+
+    <Button
+        android:id="@+id/btnJoin"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsernameEventInfo" />
+
+    <FrameLayout
+        android:id="@+id/chatContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnJoin">
+
+    </FrameLayout>
+
 </android.support.constraint.ConstraintLayout>

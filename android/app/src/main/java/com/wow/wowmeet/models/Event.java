@@ -1,10 +1,12 @@
 package com.wow.wowmeet.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ergunerdogmus on 24.03.2017.
  */
 
-public class Event {
+public class Event implements Serializable {
     private String updatedAt;
 
     private String _id;

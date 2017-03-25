@@ -52,4 +52,9 @@ public class MapPresenter implements MapContract.Presenter {
     public void requestEventRefresh() {
         this.start();
     }
+
+    @Override
+    public void onEventClick(Event event) {
+        view.showEventInfo(event);
+    }
 }

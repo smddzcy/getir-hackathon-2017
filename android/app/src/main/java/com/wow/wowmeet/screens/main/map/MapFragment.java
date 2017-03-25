@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.main.map;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,9 +13,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 
 import java.util.List;
 
@@ -65,6 +68,13 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                 map.setInfoWindowAdapter(infoWindowAdapter);
                 mapReady = true;
                 presenter.requestEventRefresh();
+
+                map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        presenter.onEventClick((Event) marker.getTag());
+                    }
+                });
             }
         });
     }
@@ -82,7 +92,9 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     @Override
     public void showEventInfo(Event event) {
-
+        Intent i = new Intent(getActivity(), EventInfoActivity.class);
+        i.putExtra(EventInfoActivity.EXTRA_EVENT, event);
+        startActivity(i);
     }
 
     @Override

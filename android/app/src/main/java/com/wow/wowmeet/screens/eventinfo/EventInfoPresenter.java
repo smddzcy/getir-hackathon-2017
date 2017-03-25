@@ -5,6 +5,13 @@ package com.wow.wowmeet.screens.eventinfo;
  */
 
 public class EventInfoPresenter implements EventInfoContract.Presenter {
+
+    private EventInfoContract.View view;
+
+    public EventInfoPresenter(EventInfoContract.View view) {
+        this.view = view;
+    }
+
     @Override
     public void start() {
 

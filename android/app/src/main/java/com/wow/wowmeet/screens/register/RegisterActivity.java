@@ -2,10 +2,11 @@ package com.wow.wowmeet.screens.register;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.base.BaseActivity;
@@ -20,8 +21,13 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     private RegisterContract.Presenter presenter;
 
-    @BindView(R.id.edtEmail) EditText edtEmail;
-    @BindView(R.id.edtPassword) EditText edtPassword;
+    @BindView(R.id.register_txtInputEdtEmail)
+    TextInputEditText edtEmail;
+    @BindView(R.id.register_txtInputEdtPassword)
+    TextInputEditText edtPassword;
+    @BindView(R.id.register_txtInputEdtUsername)
+    TextInputEditText edtUsername;
+
     @BindView(R.id.btnRegister) Button btnRegister;
 
     @Override
@@ -29,6 +35,9 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
         final RegisterPresenter presenter = new RegisterPresenter(this);
         setPresenter(presenter);

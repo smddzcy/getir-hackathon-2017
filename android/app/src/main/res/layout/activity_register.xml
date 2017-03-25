@@ -7,36 +7,78 @@
     tools:context=".screens.register.RegisterActivity">
 
 
-    <EditText
-        android:id="@+id/edtEmail"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_txtInputLayoutUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintHorizontal_bias="0.0">
 
-    <EditText
-        android:id="@+id/edtPassword"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/register_txtInputEdtUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/login_register_username_hint"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_txtInputLayoutEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/register_txtInputLayoutUsername"
+        android:layout_marginTop="16dp"
+        app:layout_constraintHorizontal_bias="0.0">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/register_txtInputEdtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:hint="@string/login_register_email_hint"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_txtInputLayoutPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="7dp"
-        android:ems="10"
-        android:inputType="textPassword"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail"
+        app:layout_constraintTop_toBottomOf="@+id/register_txtInputLayoutEmail"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/register_txtInputEdtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:hint="@string/login_register_password_hint"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <!--TODO BURALAR HEP TextInputLayout OLACAK -->
     <Button
@@ -52,6 +94,6 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/edtPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/register_txtInputLayoutPassword" />
 
 </android.support.constraint.ConstraintLayout>

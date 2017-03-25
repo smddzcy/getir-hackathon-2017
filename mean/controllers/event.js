@@ -112,3 +112,23 @@ exports.eventDelete = function(req, res, next) {
     res.send({ msg: 'Event has been permanently deleted.' });
   });
 }
+
+/**
+ * POST /event/:id/join
+ * Joins the event.
+ */
+exports.eventJoinPost = function(req, res, next) {
+  var eventId = req.params.id;
+
+  Event.findById(eventId, function(err, event) {
+    event.users.push(req.user);
+
+    event.save(function(err) {
+      if (err) {
+        return res.status(500).send({ msg: 'Event couldn\'t be joined.' });
+      }
+      res.send({ event: event, msg: 'Event has been joined successfully.' });
+    })
+  });
+
+}

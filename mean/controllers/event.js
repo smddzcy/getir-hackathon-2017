@@ -22,6 +22,10 @@ exports.eventGetAll = function(req, res, next) {
     .exec(function(err, events) {
       if (lat && lng && radius) {
         return res.send(events.filter(function(event) {
+          if (!event.location) {
+            return false;
+          }
+
           return Math.sqrt(
             Math.pow(event.location.latitude - lat, 2) +
             Math.pow(event.location.longitude - lng, 2)) < radius;

@@ -55,7 +55,7 @@ exports.eventPost = function(req, res, next) {
     creator: req.user,
     location: req.body.location,
     type: req.body.type,
-    time: req.body.time
+    date: req.body.date
   });
 
   event.save(function(err) {
@@ -82,8 +82,8 @@ exports.eventPut = function(req, res, next) {
       event.type = req.body.type;
     }
     
-    if (req.body.time) {
-      event.time = req.body.time;
+    if (req.body.date) {
+      event.date = req.body.date;
     }
 
     event.save(function(err) {

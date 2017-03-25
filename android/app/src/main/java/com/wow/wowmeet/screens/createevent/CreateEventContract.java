@@ -1,5 +1,6 @@
 package com.wow.wowmeet.screens.createevent;
 
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 
 import com.wow.wowmeet.base.BasePresenter;
@@ -17,16 +18,19 @@ interface CreateEventContract {
 
         void updateTimeField(int hour, int minute);
         void updateDateField(int day, int month, int year);
+        void updatePlaceField(Intent placeData);
 
         void showDialog(DialogFragment fragment, String tag);
+        void showPlaceAutocompleteDialog();
     }
 
     interface Presenter extends BasePresenter{
         void onCreateEvent(/*TODO event bilgileri */);
-        void onChoosePlace();
+        void onPlaceChooserClicked();
         void onDateSelectorClicked();
         void onTimeSelectorClicked();
         void onChooseSuggestion();
+        void onPlaceAutocompleteResult(int resultCode, Intent data);
     }
 
 }

@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
+import com.wow.wowmeet.partials.googleapi.GoogleLocationAPIWrapper;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 
 import java.util.List;
@@ -67,7 +69,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         final MapPresenter presenter = new MapPresenter(this);
         setPresenter(presenter);
 
-        apiWrapper = new GoogleLocationAPIWrapper(getActivity(), new GoogleLocationAPIWrapper.OnWrapperConnectedListener() {
+        apiWrapper = new GoogleLocationAPIWrapper(getActivity(), new GoogleApiProvider.OnProviderConnectedListener() {
             @Override
             public void onConnected() {
                 if(PermissionChecker.checkLocationPermission(getActivity(), false)) {
@@ -79,7 +81,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     requestLocationUpdates();
                 }
             }
-        }, new GoogleLocationAPIWrapper.OnWrapperConnectionFailedListener() {
+        }, new GoogleApiProvider.OnProviderConnectionFailedListener() {
             @Override
             public void onConnectionFailed() {
                 //TODO error message about how bad the internet is...

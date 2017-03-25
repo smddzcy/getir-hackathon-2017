@@ -13,6 +13,7 @@ import io.reactivex.observers.DisposableSingleObserver;
  * Created by ergunerdogmus on 26.03.2017.
  */
 public class CreateEventRepositoryTest {
+
     @Test
     public void getTypes() throws Exception {
         CreateEventRepository createEventRepository = new CreateEventRepository();

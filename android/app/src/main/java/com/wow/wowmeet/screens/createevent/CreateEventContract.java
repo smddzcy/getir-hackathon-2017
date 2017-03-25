@@ -11,7 +11,7 @@ interface CreateEventContract {
 
 
     interface View extends BaseView<CreateEventContract.Presenter> {
-
+        
     }
 
     interface Presenter extends BasePresenter{

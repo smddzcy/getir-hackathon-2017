@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".screens.login.LoginActivity"></activity>
+        <activity android:name=".screens.login.LoginActivity" />
         <activity android:name=".screens.register.RegisterActivity" />
         <activity android:name=".screens.main.MainActivity">
             <intent-filter>
@@ -21,13 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <activity android:name=".screens.profile.ProfileActivity"></activity>
+
+        <activity android:name=".screens.profile.ProfileActivity" />
+        <activity android:name=".screens.createevent.CreateEvent"></activity>
     </application>
 
 </manifest>

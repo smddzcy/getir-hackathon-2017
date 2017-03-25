@@ -13,8 +13,8 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li ng-class="{ active: isActive('/')}"><a href="/">Home</a></li>
+        <li ng-class="{ active: isActive('/create-event')}"><a href="/create-event">Create Event</a></li>
         <li ng-class="{ active: isActive('/contact')}"><a href="/contact">Contact</a></li>
-        <li ng-class="{ active: isActive('/event')}"><a href="/event">Event</a></li>
       </ul>
       <ul ng-if="isAuthenticated()" class="nav navbar-nav navbar-right">
         <li class="dropdown">

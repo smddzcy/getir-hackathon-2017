@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div ng-if="currentUser">
-    <h1>Magnificent Map</h1>
+    <h1>Near Events</h1>
 
     <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options"
                         ng-if="map">
@@ -42,7 +42,7 @@
                 <a class="btn btn-primary cta-button marker-info-button"
                    href="/event/join">Join Now</a>
                <a class="btn btn-primary cta-button marker-info-button"
-                  href="/event/{{marker.id}}/details">Show Details</a>
+                  href="/event-details/{{marker.id}}">Show Details</a>
               </div>
             </div>
           </div>

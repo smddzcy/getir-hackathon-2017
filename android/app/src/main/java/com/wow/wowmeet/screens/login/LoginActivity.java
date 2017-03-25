@@ -16,6 +16,7 @@ import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.main.MainActivity;
 import com.wow.wowmeet.screens.register.RegisterActivity;
 import com.wow.wowmeet.utils.Constants;
+import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,8 +39,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-        final LoginPresenter presenter = new LoginPresenter(this);
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance(this);
+        final LoginPresenter presenter = new LoginPresenter(this, sharedPreferencesUtil);
         setPresenter(presenter);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -64,8 +65,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     }
 
     @Override
-    public void onError(Throwable t) {
-        String errorMessage = t.getMessage();
+    public void showError(String errorMessage) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)
@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
 
     @Override
-    public void onLoginSuccess(User user) {
+    public void goMainWithUser(User user) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Constants.INTENT_EXTRA_USER, user);
         startActivity(intent);

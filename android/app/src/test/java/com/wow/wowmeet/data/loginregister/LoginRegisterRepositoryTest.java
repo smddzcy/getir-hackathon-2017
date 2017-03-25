@@ -14,8 +14,8 @@ public class LoginRegisterRepositoryTest {
 
     @Test
     public void login() throws Exception {
-        String email = "deneme@deneme.com";
-        String password = "12345";
+        String email = "murat@murat.com";
+        String password = "murat";
 
         LoginRepository loginRepository = new LoginRepository();
         Single<User> single = loginRepository.login(email, password);
@@ -23,6 +23,29 @@ public class LoginRegisterRepositoryTest {
         single.subscribeWith(new DisposableSingleObserver<User>() {
             @Override
             public void onSuccess(User value) {
+                System.out.println(value.toString());
+                System.out.println("oldu");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                System.out.println("error");
+            }
+        });
+    }
+
+    @Test
+    public void getUser() throws Exception {
+        String userId = "58d62160bb1e27001a792701";
+
+        LoginRepository loginRepository = new LoginRepository();
+        Single<User> single = loginRepository.getUser(userId);
+
+        single.subscribeWith(new DisposableSingleObserver<User>() {
+            @Override
+            public void onSuccess(User value) {
+                System.out.println(value.toString());
                 System.out.println("oldu");
             }
 

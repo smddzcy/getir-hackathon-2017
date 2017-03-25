@@ -56,9 +56,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void onError(Throwable t) {
-        String errorMessage = t.getMessage(); //TODO
-
+    public void showError(String errorMessage) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Hata!")
                 .setMessage(errorMessage)

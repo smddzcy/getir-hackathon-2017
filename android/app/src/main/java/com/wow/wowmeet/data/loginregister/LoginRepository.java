@@ -1,7 +1,10 @@
 package com.wow.wowmeet.data.loginregister;
 
+import com.google.gson.Gson;
+import com.wow.wowmeet.exceptions.GetUserFailedException;
 import com.wow.wowmeet.exceptions.LoginFailedException;
 import com.wow.wowmeet.models.User;
+import com.wow.wowmeet.models.UserApiResponse;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
 import java.util.HashMap;
@@ -15,6 +18,7 @@ import okhttp3.Response;
 import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.EMAIL_PARAM_NAME;
 import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.LOGIN_ENDPOINT;
 import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.PASSWORD_PARAM_NAME;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.USERS_ENDPOINT;
 
 
 /**
@@ -29,7 +33,6 @@ public class LoginRepository {
         this.client = new OkHttpClient();
     }
 
-
     public Single<User> login(final String email, final String password){
         return Single.create(new SingleOnSubscribe<User>() {
             @Override
@@ -41,11 +44,31 @@ public class LoginRepository {
                 Response response = OkHttpUtils.makePostRequest(client, LOGIN_ENDPOINT, fieldsMap);
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
-                    User loggedUser = new User.UserBuilder().setUserId("").setName(email).setEmail(password).createUser();
-                    e.onSuccess(loggedUser);
+                    Gson gson = new Gson();
+                    UserApiResponse apiResponse = gson.fromJson(responseBody, UserApiResponse.class);
+                    //this is trick
+                    apiResponse.getUser().setToken(apiResponse.getToken());
+                    e.onSuccess(apiResponse.getUser());
                 }else{
                     Throwable throwable = new LoginFailedException(responseBody);
                     e.onError(throwable);
+                }
+            }
+        });
+    }
+
+    public Single<User> getUser(final String userId){
+        return Single.create(new SingleOnSubscribe<User>() {
+            @Override
+            public void subscribe(SingleEmitter<User> e) throws Exception {
+                Response response = OkHttpUtils.makeGetRequest(client, USERS_ENDPOINT + "/" + userId);
+                String responseBody = response.body().string();
+                if(response.isSuccessful()){
+                    User user = new Gson().fromJson(responseBody, User.class);
+                    e.onSuccess(user);
+                }else{
+                    GetUserFailedException getUserFailedException = new GetUserFailedException(responseBody);
+                    e.onError(getUserFailedException);
                 }
             }
         });

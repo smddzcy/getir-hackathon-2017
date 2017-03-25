@@ -6,5 +6,5 @@ package com.wow.wowmeet.base;
 
 public interface BaseView<T extends BasePresenter> {
     void setPresenter(T presenter);
-    void onError(Throwable e);
+    void showError(String e);
 }

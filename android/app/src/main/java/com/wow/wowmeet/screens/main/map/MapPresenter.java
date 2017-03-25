@@ -38,7 +38,7 @@ public class MapPresenter implements MapContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.onError(e);
+                        view.showError(e.getMessage());
                     }
                 });
     }

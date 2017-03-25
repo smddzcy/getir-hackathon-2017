@@ -76,7 +76,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     }
 
     @Override
-    public void onError(Throwable e) {
+    public void showError(String e) {
 
     }
 

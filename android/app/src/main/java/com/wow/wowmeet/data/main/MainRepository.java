@@ -67,7 +67,7 @@ public class MainRepository implements EventsRepository {
                 Gson gson = new Gson();
                 String json = gson.toJson(event);
 
-                Response response = OkHttpUtils.makePostRequestWithUserJson(client, EVENTS_ENDPOINT, json, user);
+                Response response = OkHttpUtils.makePostRequestWithUserJson(client, EVENTS_ENDPOINT, json, user.getToken());
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
                     e.onSuccess(responseBody);

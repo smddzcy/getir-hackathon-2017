@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 var request = require('request');
+var redis = require('redis');
 
 // Load environment variables from .env file
 dotenv.load();
@@ -25,11 +26,18 @@ var eventController = require('./controllers/event');
 var app = express();
 
 
+/**
+ * Database connection
+ */
 mongoose.connect(process.env.MONGOLAB_URI);
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);
 });
+
+/**
+ * Express settings
+ */
 app.set('port', process.env.PORT || 3000);
 app.use(compression());
 app.use(logger('dev'));
@@ -39,6 +47,11 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * Authenticate the user by token.
+ * First decrypt the authorization toket by the TOKEN_SECRET,
+ * then query the user and put it to request for the next handlers.
+ */
 app.use(function(req, res, next) {
   req.isAuthenticated = function() {
     var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
@@ -60,7 +73,7 @@ app.use(function(req, res, next) {
   }
 });
 
-// User resource
+// User endpoints
 app.post('/login', userController.loginPost);
 app.post('/signup', userController.signupPost);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
@@ -79,20 +92,23 @@ app.get('/auth/github/callback', userController.authGithubCallback);
 
 app.get('/user/:id', userController.userGet);
 
-// Event resource
+// Event endpoints
 app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.get('/event/:id', eventController.eventGet);
 app.post('/event', userController.ensureAuthenticated, eventController.eventPost);
 app.put('/event/:id', userController.ensureAuthenticated, eventController.eventPut);
 app.delete('/event/:id', userController.ensureAuthenticated, eventController.eventDelete);
 
-// Contact
+// Contact endpoints
 app.post('/contact', contactController.contactPost);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));
 });
 
+/**
+ * Leave other endpoints to AngularJS
+ */
 app.get('*', function(req, res) {
   res.redirect('/#' + req.originalUrl);
 });

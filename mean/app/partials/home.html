@@ -1,23 +1,30 @@
 <div class="container-fluid">
-  <div class="row">
-    <ui-gmap-google-map center='map.center' zoom='map.zoom' options='map.options'>
-    	<ui-gmap-marker idKey='marker.id'
-	        			coords='marker.location'
-	        			click='marker.isClicked = true'
-	        			ng-repeat='marker in markers'>
-	        <ui-gmap-window coords='marker.location'
-	        				show='marker.isClicked'
-					        closeClick='marker.isClicked = false'>
-		        <div id="content">
-					<div id="siteNotice"></div>
-					<h1 id="firstHeading" class="firstHeading">{{ marker.name }}</h1>
-					<div id="bodyContent">
-						<p>{{ marker.date | date:"MM/dd/yyyy" }}</p>
+  <div ng-if="currentUser">
+    <h1>Magnificent Map</h1>
 
-					</div>
-				</div>
-			</ui-gmap-window>
-		</ui-gmap-marker>
+    <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options">
+      <ui-gmap-marker idKey="marker.id"
+                      coords="marker.location"
+                      click="marker.isClicked = true"
+                      ng-repeat="marker in markers">
+        <ui-gmap-window coords="marker.location"
+                        show="marker.isClicked"
+                        closeClick="marker.isClicked = false">
+          <div id="content">
+            <div id="siteNotice"></div>
+            <h1 id="firstHeading" class="firstHeading">{{ marker.name }}</h1>
+            <div id="bodyContent">
+              <p>{{ marker.date | date:"MM/dd/yyyy" }}</p>
+            </div>
+          </div>
+        </ui-gmap-window>
+        </ui-gmap-marker>
     </ui-gmap-google-map>
+  </div>
+
+  <div class="row cta-row text-center" ng-if="!currentUser">
+    <h1>Meeting with people has never been easier.</h1>
+    <h2>Explore the city, meet with new people.</h2>
+    <a class="btn btn-primary cta-button" href="/signup">Sign Up Now</a>
   </div>
 </div>

@@ -3,7 +3,7 @@ angular.module('MyApp')
     return {
       restrict: 'E',
       replace: true,
-      template: 'partials/message.html',
+      templateUrl: 'partials/message.html',
       scope: {
         from: '=',
         message: '='

@@ -14,8 +14,8 @@ var eventSchema = new mongoose.Schema({
   type: String,
   date: Date,
   location: {},
-  users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-  messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+  users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User', unique: true}],
+  messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message', unique: true}]
 }, schemaOptions);
 
 var Event = mongoose.model('Event', eventSchema);

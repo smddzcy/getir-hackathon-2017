@@ -33,14 +33,14 @@ angular.module('MyApp')
 
 		$scope.joinEvent = function(eventId) {
 			console.log(eventId);
-			// $http.post('/event/:id/join', { id: eventId })
-			// 	.$promise
-			// 	.then(function(res) {
-			// 		// Redirect the user to event details page
-			// 		$location.path('/event-details/' + eventId);
-			// 	})
-			// 	.catch(function(err) {
-			// 		console.log("Event couldn't be joined.");
-			// 	});
+			$http.post('/event/:id/join', { id: eventId })
+				.$promise
+				.then(function(res) {
+					// Redirect the user to event details page
+					$location.path('/event-details/' + eventId);
+				})
+				.catch(function(err) {
+					console.log("Event couldn't be joined.");
+				});
 		};
 });

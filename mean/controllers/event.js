@@ -120,6 +120,7 @@ exports.eventDelete = function(req, res, next) {
  * Joins the event.
  */
 exports.eventJoinPost = function(req, res, next) {
+  res.send("123");
   var eventId = req.params.id;
 
   Event.findById(eventId, function(err, event) {

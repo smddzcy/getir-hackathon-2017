@@ -32,8 +32,8 @@ LinearRegression.prototype.train = function(X, Y, callback) {
     throw new Error('Y must be an array');
   }
 
-  this.X = (this.X ? this.X : []).concat([ X ]);
-  this.Y = (this.Y ? this.Y : []).concat([ Y ]);
+  this.X = (this.X ? this.X : []).concat(X);
+  this.Y = (this.Y ? this.Y : []).concat(Y);
 
   if (this.X.length === 0) {
     return callback(new Error('X is empty'));
@@ -49,7 +49,7 @@ LinearRegression.prototype.train = function(X, Y, callback) {
   if (this.X.length === 1) {
     this.theta = $M([0, this.Y[0]]);
     this.trained = true;
-    return callback();
+    return callback(this);
   }
 
   if (this.algorithm === 'GradientDescent') {
@@ -142,6 +142,7 @@ LinearRegression.prototype.gradientDescent = function(X, Y, theta, learningRate,
       var temp = theta.e(j, 1) - (learningRate / m) * sum;
       tempArray.push([temp]);
     }
+    this.tempArray = tempArray;
     theta = $M(tempArray);
     if (this.saveCosts) {
       this.costs.push(LinearRegression.computeCost(normalizedX, Y, theta));
@@ -167,7 +168,7 @@ LinearRegression.prototype.trainWithGradientDescent = function(callback) {
   this.theta = this.gradientDescent(x, y, this.theta, learningRate, numberOfIterations);
   this.normalized = true;
   this.trained = true;
-  return callback();
+  return callback(this);
 };
 
 LinearRegression.prototype.predict = function(input) {
@@ -184,7 +185,7 @@ LinearRegression.prototype.predict = function(input) {
     }
 
     var xInput = $V([1]).augment(input);
-    var output = self.theta.transpose().x(xInput);
+    var output = $M(self.theta).transpose().x(xInput);
     return output.e(1, 1);
   } else {
     throw new Error('Cannot predict before training');
@@ -198,13 +199,16 @@ LinearRegression.prototype.toJSON = function() {
   return JSON.stringify({
     theta: this.theta,
     trained: this.trained,
+    normalized: this.normalized,
     X: this.X,
     Y: this.Y,
     costs: this.costs,
     algorithm: this.algorithm,
     saveCosts: this.saveCosts,
     costs: this.costs,
-    options: this.options
+    options: this.options,
+    means: this.means,
+    ranges: this.ranges
   });
 };
 
@@ -215,12 +219,15 @@ LinearRegression.fromJSON = function(json) {
   var lr = new LinearRegression(json.options);
   lr.theta = json.theta;
   lr.trained = json.trained;
+  lr.normalized = json.normalized;
   lr.X = json.X;
   lr.Y = json.Y;
   lr.costs = json.costs;
   lr.algorithm = json.algorithm;
   lr.saveCosts = json.saveCosts;
-  lr.costs = json.costs;
+  lr.means = json.means;
+  lr.ranges = json.ranges;
+  lr.train(json.X, json.Y);
   return lr;
 }
 

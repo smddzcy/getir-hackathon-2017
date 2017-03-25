@@ -124,7 +124,7 @@ exports.eventJoinPost = function(req, res, next) {
   var eventId = req.params.id;
 
   Event.findById(eventId, function(err, event) {
-    event.users.push(req.user);
+    event.users.addToSet(req.user);
 
     event.save(function(err) {
       if (err) {

@@ -1,19 +1,19 @@
 angular.module('MyApp')
 	.controller('HomeCtrl', function($scope, $http, $location, Event) {
-	    $scope.map = {
-	      center: { latitude: 41.0728162, longitude: 29.0089026 },
-	      zoom: 12,
-	      options: { scrollwheel: false }
-	    };
+    $scope.map = {
+      center: { latitude: 41.0728162, longitude: 29.0089026 },
+      zoom: 12,
+      options: { scrollwheel: false }
+    };
 
-	    if (navigator.geolocation) {
-	      navigator.geolocation.getCurrentPosition(function(position){
-	        $scope.map.center = {
-	          latitude: position.coords.latitude,
-	          longitude: position.coords.longitude
-	        };
-	      });
-	    }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position){
+        $scope.map.center = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+      });
+    }
 
 		$scope.markers = [];
 
@@ -30,17 +30,4 @@ angular.module('MyApp')
 				$scope.markers.push(marker);
 			});
 		});
-
-		$scope.joinEvent = function(eventId) {
-			console.log(eventId);
-			$http.post('/event/:id/join', { id: eventId })
-				.$promise
-				.then(function(res) {
-					// Redirect the user to event details page
-					$location.path('/event-details/' + eventId);
-				})
-				.catch(function(err) {
-					console.log("Event couldn't be joined.");
-				});
-		};
 });

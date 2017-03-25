@@ -10,6 +10,10 @@ exports.messageGetAll = function(req, res, next) {
   Message.find({ from: req.user })
     .populate('from', ['id', 'name', 'email', 'picture'])
     .exec(function(err, messages) {
+      if (err) {
+        return res.status(500).send({ msg: 'Messages couldn\'t be retrieved.' })
+      }
+
       res.send(messages);
     });
 }
@@ -24,6 +28,14 @@ exports.messageGet = function(req, res, next) {
   Message.findById(msgId)
     .populate('from', ['id', 'name', 'email', 'picture'])
     .exec(function(err, message) {
+      if (!message) {
+        return res.status(404).send({ msg: 'Message couldn\'t be found.' })
+      }
+
+      if (err) {
+        return res.status(500).send({ msg: 'Message couldn\'t be retrieved.' })
+      }
+
       res.send(message);
     });
 }
@@ -86,7 +98,7 @@ exports.messageDelete = function(req, res, next) {
         res.send({ msg: 'Message has been permanently deleted.' });
       });
     } else {
-      res.status(403).send({ msg: 'Unauthorized.' });
+      res.status(401).send({ msg: 'Unauthorized.' });
     }
   });
 }

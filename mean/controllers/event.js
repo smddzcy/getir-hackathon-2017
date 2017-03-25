@@ -53,6 +53,7 @@ exports.eventGet = function(req, res, next) {
   Event.findById(eventId)
     .populate('creator', ['id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, event) {
@@ -89,6 +90,7 @@ exports.eventSearchTypeGet = function(req, res, next) {
     })
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .exec(function(err, events) {
       if (err) {
@@ -112,6 +114,7 @@ exports.eventSearchIntervalGet = function(req, res, next) {
     })
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {

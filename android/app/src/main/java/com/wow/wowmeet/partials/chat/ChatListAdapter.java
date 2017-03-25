@@ -31,6 +31,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         notifyDataSetChanged();
     }
 
+    public void addItem(Message message){
+        messages.add(message);
+        notifyItemInserted(messages.size() - 1);
+    }
+
     @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View vhView = LayoutInflater.from(parent.getContext())

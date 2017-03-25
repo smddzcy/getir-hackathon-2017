@@ -117,7 +117,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     @Override
     public void showNewMessage(Message message) {
-
+        chatListAdapter.addItem(message);
     }
 
     @Override

@@ -8,8 +8,10 @@ import com.wow.wowmeet.models.Message;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -37,6 +39,28 @@ public class ChatPresenter implements ChatContract.Presenter {
     @Override
     public void start() {
         view.showMessages(messages);
+
+        Observable<Message> socketObservable = chatRepository.socketListen();
+
+        socketObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<Message>() {
+            @Override
+            public void onNext(Message value) {
+                view.showNewMessage(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                view.showError(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
 
     }
 

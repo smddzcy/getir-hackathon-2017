@@ -80,7 +80,6 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <!--TODO BURALAR HEP TextInputLayout OLACAK -->
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="0dp"

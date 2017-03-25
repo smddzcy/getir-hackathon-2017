@@ -47,7 +47,8 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
             public void onClick(View view) {
                 String emailText = edtEmail.getText().toString();
                 String passwordText = edtPassword.getText().toString();
-                presenter.onRegisterClicked(emailText, passwordText);
+                String usernameText = edtUsername.getText().toString();
+                presenter.onRegisterClicked(usernameText, emailText, passwordText);
             }
         });
 

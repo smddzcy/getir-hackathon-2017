@@ -36,10 +36,10 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     }
 
     @Override
-    public void onRegisterClicked(String emailText, String passwordText) {
+    public void onRegisterClicked(String usernameText, String emailText, String passwordText) {
         view.showLoading();
 
-        Single<User> singleUser = registerRepository.register(emailText, passwordText);
+        Single<User> singleUser = registerRepository.register(usernameText, emailText, passwordText);
 
         singleUser.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -54,6 +54,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                     public void onError(Throwable e) {
                         view.hideLoading();
                         view.showError(e.getMessage());
+                        e.printStackTrace();
                     }
                 });
     }

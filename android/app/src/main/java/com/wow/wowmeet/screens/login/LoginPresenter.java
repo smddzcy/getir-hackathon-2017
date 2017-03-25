@@ -50,6 +50,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                         public void onError(Throwable e) {
                             view.hideLoading();
                             view.showError(e.getMessage());
+                            e.printStackTrace();
                         }
                     });
 
@@ -83,6 +84,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     public void onError(Throwable e) {
                         view.showError(e.getMessage());
                         view.hideLoading();
+                        e.printStackTrace();
                     }
                 });
     }

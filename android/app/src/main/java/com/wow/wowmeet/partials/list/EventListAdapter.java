@@ -51,7 +51,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         holder.textViewPlaceName.setText(event.getLocation().getName());
         holder.textViewProfileName.setText(event.getCreator().getEmail());
         holder.textViewType.setText(event.getType().getName());
-        holder.textViewDate.setText(event.getCreatedAt());
+        holder.textViewDate.setText(event.getStartTime());
     }
 
     @Override

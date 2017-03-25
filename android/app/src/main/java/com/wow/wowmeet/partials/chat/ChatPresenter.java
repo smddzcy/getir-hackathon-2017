@@ -1,8 +1,10 @@
 package com.wow.wowmeet.partials.chat;
 
 import com.wow.wowmeet.data.chat.ChatRepository;
+import com.wow.wowmeet.models.Message;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -21,8 +23,10 @@ public class ChatPresenter implements ChatContract.Presenter {
     private DisposableSingleObserver<String> disposableSingleChatMessageObserver;
     private ChatContract.View view;
     private String userToken;
+    private List<Message> messages;
 
-    public ChatPresenter(ChatContract.View view, String userToken) {
+    public ChatPresenter(ChatContract.View view, List<Message> messages, String userToken) {
+        this.messages = messages;
         this.chatRepository = new ChatRepository();
         this.view = view;
         this.userToken = userToken;
@@ -30,10 +34,12 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     @Override
     public void start() {
+        view.showMessages(messages);
+
         try {
             Socket socket = chatRepository.connectToSocket();
             chatRepository.socketListen(socket, "58d5d1206e8c0db17e16e014");
-            chatRepository.socketTry(socket, "58d5d1206e8c0db17e16e014", "mesaj", userToken);
+            chatRepository.socketTry(socket, "5qwe8d5d1206e8c0db17e16e014", "mesaj", userToken);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -60,6 +66,7 @@ public class ChatPresenter implements ChatContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         view.showError(e.getMessage());
+                        e.printStackTrace();
                     }
                 });
     }

@@ -15,6 +15,7 @@ import okhttp3.Response;
 import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.EMAIL_PARAM_NAME;
 import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.PASSWORD_PARAM_NAME;
 import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.REGISTER_ENDPOINT;
+import static com.wow.wowmeet.data.loginregister.LoginRegisterConstants.USERNAME_PARAM_NAME;
 
 /**
  * Created by ergunerdogmus on 24.03.2017.
@@ -28,13 +29,14 @@ public class RegisterRepository {
         this.client = new OkHttpClient();
     }
 
-    public Single<User> register(final String email, final String password){
+    public Single<User> register(final String username, final String email, final String password){
         return Single.create(new SingleOnSubscribe<User>() {
             @Override
             public void subscribe(SingleEmitter<User> e) throws Exception {
-                HashMap<String, String> fieldsMap = new HashMap<String, String>();
+                HashMap<String, String> fieldsMap = new HashMap<>();
                 fieldsMap.put(EMAIL_PARAM_NAME, email);
                 fieldsMap.put(PASSWORD_PARAM_NAME, password);
+                fieldsMap.put(USERNAME_PARAM_NAME, username);
 
                 Response response = OkHttpUtils.makePostRequest(client, REGISTER_ENDPOINT, fieldsMap);
                 String responseBody = response.body().string();

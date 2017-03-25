@@ -77,7 +77,7 @@ public class ChatRepository {
 
     public void socketTry(Socket socket, String roomId, String message, String token) throws URISyntaxException {
         joinChannel(socket, roomId);
-        emitMessage(socket, roomId, "deneme", token);
+        emitMessage(socket, roomId, message, token);
     }
 
     public void socketListen(Socket socket, String roomId){

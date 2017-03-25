@@ -7,31 +7,32 @@ import java.io.Serializable;
  */
 
 public class Message implements Serializable{
-
-    User fromUser;
-    String toId;
+    String _id;
+    User from;
+    String to;
     String message;
 
-    public Message(User fromUser, String toId, String message) {
-        this.fromUser = fromUser;
-        this.toId = toId;
+    public Message(User from, String _id, String to, String message) {
+        this.from = from;
+        this.to = to;
         this.message = message;
+        this._id = _id;
     }
 
-    public User getFromUser() {
-        return fromUser;
+    public User getFrom() {
+        return from;
     }
 
-    public void setFromUser(User fromUser) {
-        this.fromUser = fromUser;
+    public void setFrom(User from) {
+        this.from = from;
     }
 
-    public String getToId() {
-        return toId;
+    public String getTo() {
+        return to;
     }
 
-    public void setToId(String toId) {
-        this.toId = toId;
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getMessage() {
@@ -40,5 +41,13 @@ public class Message implements Serializable{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 }

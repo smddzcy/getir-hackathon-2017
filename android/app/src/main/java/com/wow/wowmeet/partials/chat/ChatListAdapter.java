@@ -43,7 +43,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         Message message = messages.get(position);
 
         holder.textViewMessage.setText(message.getMessage());
-        holder.textViewUsername.setText(message.getFromUser().getEmail());
+        holder.textViewUsername.setText(message.getFrom().getEmail());
     }
 
     @Override

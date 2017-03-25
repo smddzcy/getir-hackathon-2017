@@ -54,6 +54,7 @@ public class MainPresenter implements MainContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         view.showError(e.getMessage());
+                        e.printStackTrace();
                     }
                 });
     }

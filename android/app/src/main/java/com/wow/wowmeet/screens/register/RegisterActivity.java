@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,6 +12,7 @@ import com.wow.wowmeet.base.BaseActivity;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.main.MainActivity;
 import com.wow.wowmeet.utils.Constants;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,11 +66,7 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     @Override
     public void showError(String errorMessage) {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Hata!")
-                .setMessage(errorMessage)
-                .create();
-        dialog.show();
+        DialogHelper.showAlertDialogWithError(this, errorMessage);
     }
 
 

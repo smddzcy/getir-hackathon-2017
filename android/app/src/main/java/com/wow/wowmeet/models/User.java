@@ -17,8 +17,6 @@ public class User implements Serializable {
 
     private String createdAt;
 
-    private String[] messages;
-
     private String token;
 
     private String name;
@@ -74,21 +72,11 @@ public class User implements Serializable {
     }
 
 
-    public String[] getMessages ()
-    {
-        return messages;
-    }
-
-    public void setMessages (String[] messages)
-    {
-        this.messages = messages;
-    }
-
     @Override
     public String toString()
     {
         return "ClassPojo [updatedAt = "+updatedAt+", _id = "+_id+", email = "+email+", " +
-                "events = "+events+", createdAt = "+createdAt+", messages = "+messages+"]";
+                "events = "+events+", createdAt = "+createdAt+"";
     }
 
     public String getToken() {

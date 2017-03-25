@@ -19,7 +19,7 @@ exports.eventGetAll = function(req, res, next) {
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
       if (lat && lng && radius) {
-        return res.send(events.filter(function(event) {
+        events = events.filter(function(event) {
           if (!event.location) {
             return false;
           }
@@ -27,7 +27,7 @@ exports.eventGetAll = function(req, res, next) {
           return Math.sqrt(
             Math.pow(event.location.latitude - lat, 2) +
             Math.pow(event.location.longitude - lng, 2)) < radius;
-        }));
+        })
       }
 
       Event.populate(events, {
@@ -53,7 +53,6 @@ exports.eventGet = function(req, res, next) {
   Event.findById(eventId)
     .populate('creator', ['id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
-    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, event) {
@@ -90,13 +89,17 @@ exports.eventSearchTypeGet = function(req, res, next) {
     })
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
-    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .exec(function(err, events) {
-      if (err) {
-        return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
-      }
-      res.send(events);
+      Event.populate(events, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, events) {
+        if (err) {
+          return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
+        }
+        res.send(events);
+      });
     });
 }
 
@@ -114,14 +117,18 @@ exports.eventSearchIntervalGet = function(req, res, next) {
     })
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
-    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
     .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
-      if (err) {
-        return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
-      }
-      res.send(events);
+      Event.populate(events, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, events) {
+        if (err) {
+          return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
+        }
+        res.send(events);
+      });
     });
 }
 

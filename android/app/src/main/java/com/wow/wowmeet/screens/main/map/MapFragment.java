@@ -90,7 +90,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         if(mapReady && map != null) {
             for (Event e : events) {
                 map.addMarker(new MarkerOptions()
-                    .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongtitude())))
+                    .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongitude())))
                     .setTag(e);
             }
         } else {

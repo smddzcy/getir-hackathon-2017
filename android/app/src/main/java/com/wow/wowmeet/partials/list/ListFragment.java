@@ -1,4 +1,4 @@
-package com.wow.wowmeet.screens.main.list;
+package com.wow.wowmeet.partials.list;
 
 
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wow.wowmeet.R;
-import com.wow.wowmeet.adapters.EventListAdapter;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 

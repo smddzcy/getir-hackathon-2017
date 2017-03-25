@@ -9,7 +9,12 @@ angular.module('MyApp')
         message: '='
       },
       link: function(scope, element, attributes) {
-        scope.isMyMessage = $rootScope.currentUser._id === from._id;
+        scope.isMyMessage = (function() {
+          if (typeof scope.from === 'object') {
+            var fromId = scope.from._id;
+          }
+          return $rootScope.currentUser._id == fromId;
+        })();
       }
     }
   });

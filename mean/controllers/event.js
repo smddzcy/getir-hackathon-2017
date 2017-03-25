@@ -80,7 +80,6 @@ exports.eventPost = function(req, res, next) {
   var event = new Event({
     creator: req.user,
     type: req.body.type,
-    date: req.body.date,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
     location: req.body.location,

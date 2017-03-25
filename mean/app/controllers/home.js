@@ -15,19 +15,19 @@ angular.module('MyApp')
       });
     }
 
-		$scope.markers = [];
+	$scope.markers = [];
 
-		Event.query(function(events) {
-			events.forEach(function(e) {
-				console.log(e);
-				var marker = {};
-				marker.id = e._id;
-				marker.location = {
-					latitude: Number(e.location.latitude),
-					longitude: Number(e.location.longitude)
-				};
-	      marker.event = e;
-				$scope.markers.push(marker);
-			});
+	Event.query(function(events) {
+		events.forEach(function(e) {
+			console.log(e);
+			var marker = {};
+			marker.id = e._id;
+			marker.location = {
+				latitude: Number(e.location.latitude),
+				longitude: Number(e.location.longitude)
+			};
+      marker.event = e;
+			$scope.markers.push(marker);
 		});
+	});
 });

@@ -7,6 +7,7 @@ var moment = require('moment');
 var request = require('request');
 var qs = require('querystring');
 var Event = require('../models/Event');
+var Message = require('../models/Message');
 
 /**
  * GET /event/:lat?/:lng?/:radius?
@@ -56,14 +57,17 @@ exports.eventPost = function(req, res, next) {
 
   var event = new Event({
     creator: req.user,
-    location: req.body.location,
     type: req.body.type,
-    date: req.body.date
+    date: req.body.date,
+    location: req.body.location,
+    joinRequests: req.body.joinRequests,
+    users: req.body.users,
+    messages: req.body.message
   });
 
   event.save(function(err) {
     if (err) {
-      res.status(500).send({ msg: 'Event couldn\'t be created.' })
+      return res.status(500).send({ msg: 'Event couldn\'t be created.' })
     }
     res.send(event);
   });

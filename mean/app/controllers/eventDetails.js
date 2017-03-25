@@ -45,7 +45,7 @@ angular.module('MyApp')
         to: eventId,
         message: msg
       }).$promise.then(function(message) {
-        socket.emit('message', message);
+        socket.emit('message', eventId, message);
         $scope.message = '';
       }).catch(function(err) {
         console.log(err);
@@ -54,8 +54,9 @@ angular.module('MyApp')
       });
     }
 
+    socket.emit('join', eventId);
+
     socket.on('message', function(message) {
       $scope.event.messages.push(message);
     });
-
   });

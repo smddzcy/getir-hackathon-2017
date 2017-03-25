@@ -143,18 +143,16 @@ var io = require('socket.io').listen(http, {
   cookie: false
 });
 
+var chatIO = io.of('/chat');
 
 // Socket connections
-io.on('connection', function(socket) {
-  console.log("user connected");
-  console.log(socket);
-
-  socket.on('message', function(message) {
-    io.sockets.emit('message', message);
+chatIO.on('connection', function(socket) {
+  socket.on('join', function(roomId) {
+    socket.join(roomId);
   });
 
-  socket.on('disconnect', function() {
-    console.log('user disconnected');
+  socket.on('message', function(roomId, message) {
+    chatIO.to(roomId).emit('message', message);
   });
 });
 

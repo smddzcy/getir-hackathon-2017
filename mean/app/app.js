@@ -105,5 +105,8 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
     });
   })
   .factory('socket', function (socketFactory) {
-    return socketFactory();
+    var socket = io.connect('/chat');
+    return socketFactory({
+      ioSocket: socket
+    });
   });

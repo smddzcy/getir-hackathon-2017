@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".screens.register.RegisterActivity" />
-        <activity android:name=".screens.main.MainActivity"></activity>
+        <activity android:name=".screens.main.MainActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -31,6 +31,7 @@
 
         <activity android:name=".screens.profile.ProfileActivity" />
         <activity android:name=".screens.createevent.CreateEvent" />
+        <activity android:name=".screens.eventinfo.EventInfoActivity"></activity>
     </application>
 
 </manifest>

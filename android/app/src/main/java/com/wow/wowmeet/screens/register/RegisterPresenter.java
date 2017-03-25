@@ -54,6 +54,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                     public void onError(Throwable e) {
                         view.hideLoading();
                         view.showError(e.getMessage());
+                        e.printStackTrace();
                     }
                 });
     }

@@ -17,7 +17,7 @@ import com.wow.wowmeet.partials.chat.ChatFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventInfoActivity extends AppCompatActivity implements EventInfoContract.View {
+public class EventInfoActivity extends AppCompatActivity implements EventInfoContract.View{
 
     public static final String EXTRA_EVENT = "com.wow.wowmeet.screens.eventinfo.EventInfoActivity.event";
 
@@ -50,7 +50,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
 
         presenter = new EventInfoPresenter(this);
 
-        ChatFragment chatFragment = ChatFragment.newInstance();
+        ChatFragment chatFragment = ChatFragment.newInstance(event);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_event_info_chatContainer, chatFragment).commit();
 
         btnJoin.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,9 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         this.event = event;
         txtPlace.setText(event.getLocation().getName());
         txtType.setText(event.getType().getName());
-        txtDateTime.setText(event.getCreatedAt());
+        txtDateTime.setText(event.getStartTime());
         txtUsername.setText(event.getCreator().getName());
     }
+
+
 }

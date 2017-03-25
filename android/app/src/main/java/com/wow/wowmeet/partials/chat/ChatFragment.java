@@ -29,10 +29,11 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         // Required empty public constructor
     }
 
-    public static ChatFragment newInstance() {
+    public static ChatFragment newInstance(ChatMessageProvider chatMessageProvider) {
         ChatFragment fragment = new ChatFragment();
         Bundle bundle = new Bundle();
-        //bundle.putSerializable("deneme", messages);
+        bundle.putSerializable("deneme", chatMessageProvider);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -55,10 +56,11 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         ButterKnife.bind(this, rootView);
         String userToken = SharedPreferencesUtil.getInstance(getContext()).getUserToken();
-        ChatContract.Presenter presenter = new ChatPresenter(this, userToken);
+        ChatMessageProvider chatMessageProvider = (ChatMessageProvider) getArguments().getSerializable("deneme");
+        List<Message> messages = chatMessageProvider.getMessages();
+        ChatContract.Presenter presenter = new ChatPresenter(this, messages, userToken);
         this.setPresenter(presenter);
 
-        //TODO MESSAGES NEED TO PASS FROM EVENT AND USER
 
         messages = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(messages);

@@ -1,5 +1,7 @@
 package com.wow.wowmeet.data.main;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wow.wowmeet.exceptions.AddEventFailedException;
@@ -35,7 +37,9 @@ public class MainRepository implements EventsRepository {
 
     private void getEventsForEmitter(SingleEmitter<List<Event>> e, String endpoint) throws IOException {
         Response response = OkHttpUtils.makeGetRequest(client, endpoint);
+        Log.d("WHERE", endpoint);
         String responseBody = response.body().string();
+        Log.d("RESPONSE", responseBody);
         if(response.isSuccessful()){
             Gson gson = new Gson();
             Type eventsType = new TypeToken<ArrayList<Event>>(){}.getType();

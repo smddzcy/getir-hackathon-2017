@@ -1,38 +1,39 @@
 package com.wow.wowmeet.models;
 
+import com.wow.wowmeet.partials.chat.ChatMessageProvider;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by ergunerdogmus on 24.03.2017.
  */
 
-public class Event implements Serializable {
-    private String updatedAt;
-
+public class Event extends ChatMessageProvider implements Serializable {
     private String _id;
 
     private Location location;
-
-    private String createdAt;
 
     private Type type;
 
     private User creator;
 
-    public Event(Location location, Type type, User creator) {
+    private List<Message> messages;
+
+    private String startTime;
+
+    private String endTime;
+
+    private List<User> users;
+
+    public Event(Location location, List<Message> messages, Type type, User creator, String startTime, String endTime, List<User> users) {
         this.location = location;
         this.type = type;
         this.creator = creator;
-    }
-
-    public String getUpdatedAt ()
-    {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt (String updatedAt)
-    {
-        this.updatedAt = updatedAt;
+        this.messages = messages;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.users = users;
     }
 
     public String get_id ()
@@ -55,15 +56,6 @@ public class Event implements Serializable {
         this.location = location;
     }
 
-    public String getCreatedAt()
-    {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt)
-    {
-        this.createdAt = createdAt;
-    }
 
     public Type getType()
     {
@@ -85,8 +77,41 @@ public class Event implements Serializable {
         this.creator = creator;
     }
 
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return getLocation().toString();
+    }
+
+    @Override
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

@@ -64,9 +64,7 @@ public class LoginRepository {
                 Response response = OkHttpUtils.makeGetRequest(client, USERS_ENDPOINT + "/" + userId);
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
-                    UserApiResponse apiResponse = new Gson().fromJson(responseBody, UserApiResponse.class);
-                    User user = apiResponse.getUser();
-                    user.setToken(apiResponse.getToken());
+                    User user = new Gson().fromJson(responseBody, User.class);
                     e.onSuccess(user);
                 }else{
                     GetUserFailedException getUserFailedException = new GetUserFailedException(responseBody);

@@ -4,7 +4,7 @@ import com.wow.wowmeet.base.BasePresenter;
 import com.wow.wowmeet.base.BaseView;
 import com.wow.wowmeet.models.Event;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mahmutkaraca on 3/24/17.
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 interface MainContract {
 
     interface View extends BaseView<MainContract.Presenter> {
-        void refreshListAndMap(ArrayList<Event> arr);
+        void refreshListAndMap(List<Event> arr);
     }
 
     interface Presenter extends BasePresenter {

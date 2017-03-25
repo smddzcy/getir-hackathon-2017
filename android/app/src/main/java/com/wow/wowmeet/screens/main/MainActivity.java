@@ -26,6 +26,7 @@ import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +44,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private ListContract.View listContractView;
     private MapContract.View mapContractView;
 
-    private ArrayList<Event> events;
+    private ArrayList<Event> events = new ArrayList<>();
 
     @BindView(R.id.fab) FloatingActionButton fab;
 
@@ -92,6 +93,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(drawerToggle.onOptionsItemSelected(item)){
@@ -128,7 +141,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void refreshListAndMap(ArrayList<Event> arr) {
+    public void refreshListAndMap(List<Event> arr) {
         events.clear();
         events.addAll(arr);
 

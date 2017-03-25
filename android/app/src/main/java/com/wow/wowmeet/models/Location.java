@@ -8,12 +8,12 @@ import java.io.Serializable;
 
 public class Location implements Serializable{
     String name;
-    double latitude, longtitude;
+    double latitude, longitude;
 
-    public Location(String name, double latitude, double longtitude) {
+    public Location(String name, double latitude, double longitude) {
         this.name = name;
         this.latitude = latitude;
-        this.longtitude = longtitude;
+        this.longitude = longitude;
     }
 
     public String getName() {
@@ -32,11 +32,16 @@ public class Location implements Serializable{
         this.latitude = latitude;
     }
 
-    public double getLongtitude() {
-        return longtitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(double longtitude) {
+        this.longitude = longtitude;
+    }
+
+    @Override
+    public String toString() {
+        return getLatitude() + " " + getLongitude();
     }
 }

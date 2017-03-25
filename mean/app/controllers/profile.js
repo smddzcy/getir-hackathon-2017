@@ -1,6 +1,19 @@
 angular.module('MyApp')
-  .controller('ProfileCtrl', function($scope, $rootScope, $location, $window, $auth, Account) {
+  .controller('ProfileCtrl', function($scope, $rootScope, $location, $window, $auth,
+    Account, Event) {
     $scope.profile = $rootScope.currentUser;
+
+    for (var i = 0; i < $scope.profile.events.length; i++) {
+      (function(i){
+        if (typeof $scope.profile.events[i] !== 'object') {
+          Event.get({ }, { id: $scope.profile.events[i] })
+            .$promise.then(function(event) {
+              $scope.profile.events[i] = event;
+              $rootScope.currentUser = $scope.profile;
+            });
+        }
+      })(i);
+    }
 
     $scope.updateProfile = function() {
       Account.updateProfile($scope.profile)

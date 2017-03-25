@@ -11,4 +11,6 @@ import java.util.List;
 
 public abstract class ChatMessageProvider implements Serializable {
     public abstract List<Message> getMessages();
+
+    public abstract String getToId();
 }

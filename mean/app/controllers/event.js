@@ -1,5 +1,5 @@
 angular.module('MyApp')
-  .controller('EventCtrl', function($scope, $filter, Event) {
+  .controller('EventCtrl', function($scope, $filter, Event, $http, uiGmapGoogleMapApi, ngToast) {
     angular.extend($scope, {
       map: {
         center: { latitude: 41.0728162, longitude: 29.0089026 },
@@ -27,30 +27,64 @@ angular.module('MyApp')
 
             $scope.event.location.latitude = lat;
             $scope.event.location.longitude = lng;
-            console.log($scope.marker);
+            
+            uiGmapGoogleMapApi.then(function(maps) {
+              latlng = new maps.LatLng(lat, lng);
+              geocoder = new maps.Geocoder();
+              geocoder.geocode({'latLng': latlng}, function(results, status) {
+                $scope.$apply(function(){
+                  $scope.event.location.name = results[0].formatted_address;
+                });
+              });
+            });
+
             $scope.$apply();
           }
         }
-      }
+      },
+      searchbox: { 
+          template:'searchbox.tpl.html', 
+          events:{
+            places_changed: function (searchBox) {
+              var place = searchBox.getPlaces()[0];
+              if (!place) return;
+
+              // Set input values automatically and put a marker.
+              $scope.event.location.name = place.formatted_address;
+              $scope.event.location.latitude = place.geometry.location.lat();
+              $scope.event.location.longitude = place.geometry.location.lng();
+
+              $scope.marker = {
+                id: Date.now(),
+                coords: $scope.event.location
+              };
+            }
+          }
+        },
     });
-    // types
-    $scope.types = ['fun','more fun','more more fun'];
-  
+
+    // Get event types
+    $http.get('/event-type')
+      .then(function(eventTypes) {
+        $scope.types = eventTypes.data;
+      })
+      .catch(function(err) {
+        ngToast.danger(err.msg);
+      });
+
+    // Initialize the empty event object
+    $scope.event = { location: {} };
+
     $scope.sendEventForm = function() {
       //$scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
-      
-      console.log();
       Event.save($scope.event)
         .$promise
         .then(function(response) {
-          $scope.messages = {
-            success: [{ msg: "Event has been created successfully." }]
-          };
+          ngToast.success("Event has been created successfully.");
+          $scope.event = {};
         })
         .catch(function(response) {
-          $scope.messages = {
-            error: [response.data.msg]
-          };
+          ngToast.danger(response.data.msg);
         });
     };
   });

@@ -1,5 +1,3 @@
-var crypto = require('crypto');
-var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
 
 var schemaOptions = {
@@ -11,10 +9,9 @@ var schemaOptions = {
 
 var eventSchema = new mongoose.Schema({
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-  type: String,
-  date: Date,
-  startTime : String,
-  endTime : String,
+  type: {type: mongoose.Schema.Types.ObjectId, ref: 'EventType'},
+  startTime : Date,
+  endTime : Date,
   location: {},
   users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User', unique: true}],
   messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message', unique: true}]

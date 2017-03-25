@@ -31,10 +31,15 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         notifyDataSetChanged();
     }
 
+    public void addItem(Message message){
+        messages.add(message);
+        notifyItemInserted(messages.size() - 1);
+    }
+
     @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View vhView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_event_list, parent, false);
+                .inflate(R.layout.row_chat, parent, false);
         return new ChatViewHolder(vhView);
     }
 
@@ -43,7 +48,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         Message message = messages.get(position);
 
         holder.textViewMessage.setText(message.getMessage());
-        holder.textViewUsername.setText(message.getFrom().getEmail());
+        holder.textViewUsername.setText(message.getFrom().getName());
     }
 
     @Override

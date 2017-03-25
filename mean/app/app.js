@@ -1,5 +1,5 @@
 angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
-  'uiGmapgoogle-maps', 'btford.socket-io'])
+  'uiGmapgoogle-maps', 'ngSanitize', 'ngAnimate', 'ngToast', 'btford.socket-io'])
   .config(function($routeProvider, $locationProvider, $authProvider) {
     $locationProvider.html5Mode(true);
 
@@ -43,7 +43,7 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
       })
       .when('/event-details/:id/', {
         templateUrl: 'partials/event_details.html',
-        controller: 'EventDetailCtrl'
+        controller: 'EventDetailsCtrl'
       })
       .when('/public-profile/:id', {
         templateUrl: 'partials/public_profile.html',
@@ -59,18 +59,20 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
     $authProvider.facebook({
       url: '/auth/facebook',
       clientId: '543731272417479',
-      redirectUri: 'http://localhost:3000/auth/facebook/callback'
+      redirectUri: 'https://getir-hackathon-2017-wow-team.herokuapp.com/auth/facebook/callback'
     });
     $authProvider.google({
       url: '/auth/google',
-      clientId: '7480545046-eb71sosc5ut720e7tcj87cgs5cqkl9ns.apps.googleusercontent.com'
+      clientId: '7480545046-eb71sosc5ut720e7tcj87cgs5cqkl9ns.apps.googleusercontent.com',
+      redirectUri: 'https://getir-hackathon-2017-wow-team.herokuapp.com/auth/google/callback'
     });
     $authProvider.twitter({
       url: '/auth/twitter'
     });
     $authProvider.github({
       url: '/auth/github',
-      clientId: '205acb3615ae3357127e'
+      clientId: '205acb3615ae3357127e',
+      redirectUri: 'https://getir-hackathon-2017-wow-team.herokuapp.com/auth/github/callback'
     });
 
     function skipIfAuthenticated($location, $auth) {
@@ -90,13 +92,21 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
       $rootScope.currentUser = JSON.parse($window.localStorage.user);
     }
   })
+  .config(['ngToastProvider', function(ngToastProvider) {
+    ngToastProvider.configure({
+      animation: 'fade'
+    });
+  }])
   .config(function(uiGmapGoogleMapApiProvider) {
     uiGmapGoogleMapApiProvider.configure({
       key: 'AIzaSyBupogsGuOJ1ckMMIM9K4JsrSl8vksNwG4',
       v: '3.20', //defaults to latest 3.X anyhow
-      libraries: 'geometry,visualization'
+      libraries: 'geometry,visualization,places,geocoder,weather'
     });
   })
   .factory('socket', function (socketFactory) {
-    return socketFactory();
+    var socket = io.connect('/chat');
+    return socketFactory({
+      ioSocket: socket
+    });
   });

@@ -1,11 +1,3 @@
-var async = require('async');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
-var jwt = require('jsonwebtoken');
-var moment = require('moment');
-var request = require('request');
-var qs = require('querystring');
 var Event = require('../models/Event');
 var Message = require('../models/Message');
 
@@ -22,10 +14,12 @@ exports.eventGetAll = function(req, res, next) {
   Event.find({})
     .populate('creator', ['_id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('messages.from', ['_id', 'name', 'email', 'picture'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, events) {
       if (lat && lng && radius) {
-        return res.send(events.filter(function(event) {
+        events = events.filter(function(event) {
           if (!event.location) {
             return false;
           }
@@ -33,13 +27,17 @@ exports.eventGetAll = function(req, res, next) {
           return Math.sqrt(
             Math.pow(event.location.latitude - lat, 2) +
             Math.pow(event.location.longitude - lng, 2)) < radius;
-        }));
+        })
       }
 
       Event.populate(events, {
         path: 'messages.from',
         model: 'User'
       }, function(err, events) {
+        if (err) {
+          return res.status(500).send({ msg: 'Events couldn\'t be retrieved.' })
+        }
+
         res.send(events);
       });
     });
@@ -56,14 +54,82 @@ exports.eventGet = function(req, res, next) {
     .populate('creator', ['id', 'name', 'email', 'picture'])
     .populate('messages', ['_id', 'from', 'to', 'message'])
     .populate('users', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
     .exec(function(err, event) {
       Event.populate(event, {
         path: 'messages.from',
         model: 'User'
       }, function(err, event) {
+        if (!event) {
+          return res.status(404).send({ msg: 'Event couldn\'t be found.' })
+        }
+
+        if (err) {
+          return res.status(500).send({ msg: 'Event couldn\'t be retrieved.' })
+        }
+
         res.send(event);
       });
+    });
+}
+
+/**
+ * GET /event/search/type/:typeName
+ * Retrieves all the events that has the given type name.
+ */
+exports.eventSearchTypeGet = function(req, res, next) {
+  var typeName = req.params.typeName;
+
+  Event.find({})
+    .populate({
+      path: 'type',
+      match: {
+        'name': typeName
+      }
     })
+    .populate('creator', ['_id', 'name', 'email', 'picture'])
+    .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('users', ['_id', 'name', 'email', 'picture'])
+    .exec(function(err, events) {
+      Event.populate(events, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, events) {
+        if (err) {
+          return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
+        }
+        res.send(events);
+      });
+    });
+}
+
+/**
+ * GET /event/search/interval/:startTime/:endTime
+ * Retrieves all the events that is in the given interval.
+ */
+exports.eventSearchIntervalGet = function(req, res, next) {
+  var startTime = req.params.startTime;
+  var endTime = req.params.endTime;
+
+  Event.find({
+      startTime: { $gte: startTime },
+      endTime: { $lt: endTime }
+    })
+    .populate('creator', ['_id', 'name', 'email', 'picture'])
+    .populate('messages', ['_id', 'from', 'to', 'message'])
+    .populate('users', ['_id', 'name', 'email', 'picture'])
+    .populate('type', ['_id', 'name', 'count'])
+    .exec(function(err, events) {
+      Event.populate(events, {
+        path: 'messages.from',
+        model: 'User'
+      }, function(err, events) {
+        if (err) {
+          return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
+        }
+        res.send(events);
+      });
+    });
 }
 
 /**
@@ -76,7 +142,6 @@ exports.eventPost = function(req, res, next) {
   var event = new Event({
     creator: req.user,
     type: req.body.type,
-    date: req.body.date,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
     location: req.body.location,
@@ -86,8 +151,13 @@ exports.eventPost = function(req, res, next) {
 
   event.save(function(err) {
     if (err) {
-      return res.status(500).send({ msg: 'Event couldn\'t be created.' })
+      return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
+
+    // Add the event to the user
+    req.user.events.addToSet(event);
+    req.user.save();
+
     res.send(event);
   });
 }
@@ -114,8 +184,9 @@ exports.eventPut = function(req, res, next) {
 
     event.save(function(err) {
       if (err) {
-        return res.status(500).send({ msg: 'Event couldn\'t be updated.' });
+        return res.status(400).send({ msg: 'Event couldn\'t be updated.' });
       }
+
       res.send({ event: event, msg: 'Event has been updated successfully.' });
     })
   });
@@ -127,6 +198,10 @@ exports.eventPut = function(req, res, next) {
  */
 exports.eventDelete = function(req, res, next) {
   Event.remove({ _id: req.params.id }, function(err) {
+    // Remove the event from user too.
+    req.user.events.pull(req.params.id);
+    req.user.save();
+
     res.send({ msg: 'Event has been permanently deleted.' });
   });
 }
@@ -143,8 +218,9 @@ exports.eventJoinPost = function(req, res, next) {
 
     event.save(function(err) {
       if (err) {
-        return res.status(500).send({ msg: 'Event couldn\'t be joined.' });
+        return res.status(400).send({ msg: 'Event couldn\'t be joined.' });
       }
+
       res.send({ event: event, msg: 'Event has been joined successfully.' });
     })
   });
@@ -162,26 +238,10 @@ exports.eventJoinDelete = function(req, res, next) {
 
     event.save(function(err) {
       if (err) {
-        return res.status(500).send({ msg: 'Event couldn\'t be unjoined.' });
+        return res.status(400).send({ msg: 'Event couldn\'t be unjoined.' });
       }
+
       res.send({ event: event, msg: 'Event has been unjoined successfully.' });
     })
   });
 }
-
-/**
- * GET /event/search/:place/:time
- * Gives the events with proper place and time. 
- */
-// exports.eventSearch = function(req, res, next){
-//   var date = req.params.date;
-  
-//   Event.find({})
-//     .populate('creator', ['_id', 'name', 'email', 'picture'])
-//     .populate('messages', ['_id', 'from', 'to', 'message'])
-//     .populate('users', ['_id', 'name', 'email', 'picture'])
-//     .exec(function(err, events) {
-//       3600000
-//       res.send(events);
-//     });
-// }

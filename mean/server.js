@@ -22,6 +22,7 @@ var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
 var eventController = require('./controllers/event');
 var messageController = require('./controllers/message');
+var eventTypeController = require('./controllers/eventType');
 
 var app = express();
 
@@ -91,6 +92,10 @@ app.get('/auth/github/callback', userController.authGithubCallback);
 
 app.get('/user/:id', userController.userGet);
 
+// Event search endpoints
+app.get('/event/search/type/:typeName', eventController.eventSearchTypeGet);
+app.get('/event/search/interval/:startTime/:endTime', eventController.eventSearchIntervalGet);
+
 // Event endpoints
 app.get('/event/:id', eventController.eventGet);
 app.post('/event/:id/join', userController.ensureAuthenticated, eventController.eventJoinPost);
@@ -104,18 +109,22 @@ app.get('/event/:lat?/:lng?/:radius?', eventController.eventGetAll);
 app.post('/contact', contactController.contactPost);
 
 // Message endpoints
-app.get('/message/', userController.ensureAuthenticated, messageController.messageGetAll);
+app.get('/message', userController.ensureAuthenticated, messageController.messageGetAll);
 app.get('/message/:id', messageController.messageGet);
 app.post('/message', userController.ensureAuthenticated, messageController.messagePost);
 app.delete('/message/:id', userController.ensureAuthenticated, messageController.messageDelete);
+
+// EventType endpoints
+app.get('/event-type', eventTypeController.eventTypeGetAll);
+app.get('/event-type/:id', eventTypeController.eventTypeGet);
+app.post('/event-type', userController.ensureAuthenticated, eventTypeController.eventTypePost);
+app.delete('/event-type/:id', userController.ensureAuthenticated, eventTypeController.eventTypeDelete);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));
 });
 
-/**
- * Leave other endpoints to AngularJS
- */
+// Leave other endpoints to AngularJS
 app.get('*', function(req, res) {
   res.redirect('/#' + req.originalUrl);
 });
@@ -132,22 +141,21 @@ var http = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+// Socket connections
+
 var io = require('socket.io').listen(http, {
   cookie: false
 });
 
+var chatIO = io.of('/chat');
 
-// Socket connections
-io.on('connection', function(socket) {
-  console.log("user connected");
-  console.log(socket);
-
-  socket.on('message', function(message) {
-    io.sockets.emit('message', message);
+chatIO.on('connection', function(socket) {
+  socket.on('join', function(roomId) {
+    socket.join(roomId);
   });
 
-  socket.on('disconnect', function() {
-    console.log('user disconnected');
+  socket.on('message', function(roomId, message) {
+    chatIO.to(roomId).emit('message', message);
   });
 });
 

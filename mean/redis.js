@@ -3,39 +3,92 @@ var client = require('redis').createClient({
 });
 
 /**
- * Sets a user as online in redis.
+ * The missing `hvals` function in node-redis.
+ */
+client.hvals = function(key, callback) {
+  client.hgetall(key, function(obj) {
+    callback(Object.values(obj));
+  });
+}
+
+/**
+ * Set a user as online in redis.
  */
 client.setUserAsOnline = function(user) {
-  // User must be an object
-  if (typeof user !== 'object') {
-    return false;
-  }
-  console.log("Setting user as online: " + user._id);
   return client.hset('onlineUsers', user._id.toString(), JSON.stringify(user));
 };
 
 /**
- * Sets a user as offline in redis.
+ * Set a user as offline in redis.
  */
 client.setUserAsOffline = function(userId) {
-  // If a user object is given, convert it to user id.
-  if (typeof userId === 'object') {
-    userId = userId._id;
-  }
-
-  // Check if the user id is valid.
-  if (!userId || userId.length > 5) {
-    return false;
-  }
-  console.log("Setting user as offline: " + userId);
   return client.hdel('onlineUsers', userId.toString());
 };
 
 /**
- * Gives all the online users.
+ * Get all the online users.
  */
 client.getOnlineUsers = function() {
   return client.hgetall('onlineUsers');
 };
+
+/**
+ * Add an event to cache.
+ */
+client.addEvent = function(event) {
+  return client.hset('events', event._id.toString(), JSON.stringify(event));
+}
+
+/**
+ * Add multiple events to cache.
+ */
+client.addEvents = function(events) {
+  return [].concat(events).forEach(client.addEvent);
+}
+
+/**
+ * Delete an event from cache by id.
+ */
+client.addEvent = function(id) {
+  return client.hdel('events', id);
+}
+
+/**
+ * Get a single event by id.
+ */
+client.getEventById = function(id) {
+  return client.hget('events', id);
+}
+
+/**
+ * Get all events or the events in a radius.
+ * If `lat` and `lng` are not given, it gives all the events.
+ * Returns a Promise that resolves with the events.
+ */
+client.getEvents = function(lat, lng, radius) {
+  var deferred = new Promise();
+
+  // If no lat and lng is given, return all the events.
+  if (!lat && !lng) {
+    return client.hvals('events', deferred.resolve);
+  }
+
+  // Find the events in the given area.
+  radius = radius || 0.5;
+  client.hvals('events', function(events) {
+    // Get events in the radius.
+    var eventsInRadius = events.filter(function(event) {
+      // If event has no location info, do not include it.
+      if (!event.location) { return false; }
+      return Math.sqrt(Math.pow(event.location.latitude - lat, 2) +
+                       Math.pow(event.location.longitude - lng, 2)) < radius;
+    });
+
+    // Resolve the promise with filtered events.
+    deferred.resolve(eventsInRadius);
+  });
+
+  return deferred;
+}
 
 module.exports = client;

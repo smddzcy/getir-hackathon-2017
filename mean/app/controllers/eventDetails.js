@@ -1,5 +1,5 @@
 angular.module('MyApp')
-  .controller('EventDetailCtrl', function($http, $rootScope, $scope, $route,
+  .controller('EventDetailsCtrl', function($http, $rootScope, $scope, $route,
     $location, Event, Message, socket) {
     var eventId = $route.current.params.id;
 
@@ -18,7 +18,6 @@ angular.module('MyApp')
         .$promise
         .then(function(event) {
           $scope.event = event;
-          console.log(event);
         })
         .catch(function(response) {
           console.log(response.data);
@@ -45,7 +44,7 @@ angular.module('MyApp')
         to: eventId,
         message: msg
       }).$promise.then(function(message) {
-        socket.emit('message', message);
+        socket.emit('message', eventId, message);
         $scope.message = '';
       }).catch(function(err) {
         console.log(err);
@@ -54,8 +53,9 @@ angular.module('MyApp')
       });
     }
 
+    socket.emit('join', eventId);
+
     socket.on('message', function(message) {
       $scope.event.messages.push(message);
     });
-
   });

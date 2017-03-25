@@ -8,11 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Message;
 import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @BindView(R.id.fragment_chat_rv)
     RecyclerView chatRecyclerView;
 
+    @BindView(R.id.fragment_chat_edtText)
+    EditText editTextMessage;
+
+    @BindView(R.id.fragment_chat_sendButton)
+    Button buttonSend;
+
     ChatListAdapter chatListAdapter;
 
     private ArrayList<Message> messages;
@@ -58,14 +67,30 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         String userToken = SharedPreferencesUtil.getInstance(getContext()).getUserToken();
         ChatMessageProvider chatMessageProvider = (ChatMessageProvider) getArguments().getSerializable("deneme");
         List<Message> messages = chatMessageProvider.getMessages();
-        ChatContract.Presenter presenter = new ChatPresenter(this, messages, userToken);
-        this.setPresenter(presenter);
+        final String toId = chatMessageProvider.getToId();
 
+        try {
+            final ChatContract.Presenter presenter = new ChatPresenter(this, toId, messages, userToken);
+            this.setPresenter(presenter);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            //TODO exception handle
+        }
 
         messages = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(messages);
         chatRecyclerView.setAdapter(chatListAdapter);
-        chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        chatRecyclerView.setLayoutManager(linearLayoutManager);
+
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = editTextMessage.getText().toString();
+                editTextMessage.setText("");
+                presenter.sendMessage(message, toId);
+            }
+        });
 
         return rootView;
     }
@@ -93,7 +118,8 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     @Override
     public void showNewMessage(Message message) {
-
+        chatListAdapter.addItem(message);
+        chatRecyclerView.scrollToPosition(chatListAdapter.getItemCount() - 1);
     }
 
     @Override

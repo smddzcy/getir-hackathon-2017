@@ -4,61 +4,33 @@
       <h3 class="panel-title">Create Event</h3>
     </div>
     <div class="panel-body">
-      <div ng-if="messages.error" role="alert" class="alert alert-danger">
-        <div ng-repeat="error in messages.error">{{error.msg}}</div>
-      </div>
-
-      <div ng-if="messages.success" role="alert" class="alert alert-success">
-        <div ng-repeat="success in messages.success">{{success.msg}}</div>
-      </div>
-
       <form ng-submit="sendEventForm()" class="form-horizontal">
         <div class="form-group">
           <label for="type" class="col-sm-2">Type</label>
           <div class="col-sm-8">
-            <select name="type" style="width: 100%" class="form-control">
-              <option ng-model="event.type" ng-repeat="type in types" value={{type}} >{{type}}</option>
+            <select name="type" style="width: 100%" class="form-control"
+                    ng-options="type as type.name for type in types track by type._id"
+                    ng-model="event.type">
             </select>
            <!-- <input type="text" name="type" id="type" class="form-control" ng-model="event.type" autofocus> -->
           </div>
         </div>
 
         <div class="form-group">
-          <label for="name" class="col-sm-2">Name</label>
+          <label for="name" class="col-sm-2">Place</label>
           <div class="col-sm-8">
-            <input type="text" name="name" id="name" class="form-control" ng-model="event.location.name">
-          </div>
-        </div>
-
-       <div class="form-group">
-          <label for="date" class="col-sm-2">Date</label>
-          <div class="col-sm-8">
-            <input type="date" name="date" id="date" class="form-control" ng-model="event.date">
+            <input type="text" name="name" id="name" class="form-control" ng-model="event.location.name" value="{{ search }}">
           </div>
         </div>
 
         <div class="form-group">
           <label for="startTime" class="col-sm-2">Start Time</label>
           <div class="col-sm-3">
-            <input type="time" name="startTime" id="startTime" class="form-control" ng-model="event.startTime">
+            <input type="datetime-local" name="startTime" id="startTime" class="form-control" ng-model="event.startTime">
           </div>
           <label for="endTime" class="col-sm-2">End Time</label>
           <div class="col-sm-3">
-            <input type="time" name="endTime" id="endTime" class="form-control" ng-model="event.endTime">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="latitude" class="col-sm-2">Latitude</label>
-          <div class="col-sm-8">
-            <input type="text" name="latitude" id="latitude" class="form-control" ng-model="event.location.latitude">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="longitude" class="col-sm-2">Longitude</label>
-          <div class="col-sm-8">
-            <input type="text" name="longitude" id="longitude" class="form-control" ng-model="event.location.longitude">
+            <input type="datetime-local" name="endTime" id="endTime" class="form-control" ng-model="event.endTime">
           </div>
         </div>
 
@@ -68,11 +40,18 @@
           </div>
         </div>
         <div>
+          <script id="searchbox.tpl.html" type="text/ng-template">
+            <input type="text" class="searchbox" placeholder="Search">
+          </script>
           <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" events="map.events">
               <ui-gmap-marker idKey="1" coords="marker.coords"></ui-gmap-marker>
+              <ui-gmap-search-box options="searchbox.options" template="searchbox.template" ng-model="search"
+                            events="searchbox.events" position="searchbox.position"></ui-gmap-search-box>
           </ui-gmap-google-map>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+

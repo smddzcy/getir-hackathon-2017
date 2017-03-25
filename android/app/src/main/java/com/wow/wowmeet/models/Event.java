@@ -107,6 +107,11 @@ public class Event extends ChatMessageProvider implements Serializable {
         return messages;
     }
 
+    @Override
+    public String getToId() {
+        return get_id();
+    }
+
     public List<User> getUsers() {
         return users;
     }

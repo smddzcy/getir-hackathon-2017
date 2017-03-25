@@ -1,15 +1,17 @@
 package com.wow.wowmeet.data.chat;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.wow.wowmeet.exceptions.SendMessageFailedException;
+import com.wow.wowmeet.models.Message;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
@@ -33,7 +35,18 @@ public class ChatRepository {
     private static final String SOCKET_EVENT_JOIN = "join";
     private static final String SOCKET_EVENT_MESSAGE = "message";
 
+    private Socket socket;
+    private String toId;
+
+    public ChatRepository(String toId) throws URISyntaxException {
+        this.socket = getSocket();
+        this.toId = toId;
+
+        joinChannel();
+    }
+
     public Single<String> sendMessage(final String message, final String toId, final String token){
+
         return Single.create(new SingleOnSubscribe<String>() {
             @Override
             public void subscribe(SingleEmitter<String> e) throws Exception {
@@ -48,6 +61,7 @@ public class ChatRepository {
                 String responseBody = response.body().string();
                 if(response.isSuccessful()){
                     e.onSuccess(responseBody);
+                    emitMessage(responseBody);
                 }else{
                     SendMessageFailedException sendMessageFailedException =
                             new SendMessageFailedException(responseBody);
@@ -58,36 +72,40 @@ public class ChatRepository {
         });
     }
 
-    public Socket connectToSocket() throws URISyntaxException {
+    private Socket getSocket() throws URISyntaxException {
         return IO.socket(SOCKET_ENDPOINT);
     }
 
-    private void joinChannel(Socket socket, String roomId){
+    private void joinChannel(){
         socket.connect();
-        socket.emit(SOCKET_EVENT_JOIN, roomId);
+        socket.emit(SOCKET_EVENT_JOIN, toId);
     }
 
-    private void emitMessage(Socket socket, String roomId, String message, String token){
-        socket.emit(SOCKET_EVENT_MESSAGE, roomId, message);
+    private void emitMessage(String messageJson){
+        socket.emit(SOCKET_EVENT_MESSAGE, toId, messageJson);
     }
 
-    private void disconnectFromSocket(Socket socket){
-        socket.disconnect();
-    }
 
-    public void socketTry(Socket socket, String roomId, String message, String token) throws URISyntaxException {
-        joinChannel(socket, roomId);
-        emitMessage(socket, roomId, message, token);
-    }
-
-    public void socketListen(Socket socket, String roomId){
-        socket.on(SOCKET_EVENT_MESSAGE, new Emitter.Listener() {
+    public Observable<Message> socketListen(){
+        return Observable.create(new ObservableOnSubscribe<Message>() {
             @Override
-            public void call(Object... args) {
-                Gson gson = new Gson();
-                Log.d("SOCKET", args[0].toString());
+            public void subscribe(ObservableEmitter<Message> e) throws Exception {
+                final ObservableEmitter<Message> emitter = e;
+                socket.on(SOCKET_EVENT_MESSAGE, new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        Gson gson = new Gson();
+                        Message message = gson.fromJson(args[0].toString(), Message.class);
+                        emitter.onNext(message);
+                    }
+                });
             }
         });
+
+    }
+
+    public void socketDisconnect(){
+        socket.disconnect();
     }
 
 }

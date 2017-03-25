@@ -1,6 +1,7 @@
 package com.wow.wowmeet.data.loginregister;
 
 import com.google.gson.Gson;
+import com.wow.wowmeet.exceptions.GetUserFailedException;
 import com.wow.wowmeet.exceptions.LoginFailedException;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.models.UserApiResponse;
@@ -61,11 +62,15 @@ public class LoginRepository {
             @Override
             public void subscribe(SingleEmitter<User> e) throws Exception {
                 Response response = OkHttpUtils.makeGetRequest(client, USERS_ENDPOINT + "/" + userId);
-
+                String responseBody = response.body().string();
                 if(response.isSuccessful()){
-
+                    UserApiResponse apiResponse = new Gson().fromJson(responseBody, UserApiResponse.class);
+                    User user = apiResponse.getUser();
+                    user.setToken(apiResponse.getToken());
+                    e.onSuccess(user);
                 }else{
-
+                    GetUserFailedException getUserFailedException = new GetUserFailedException(responseBody);
+                    e.onError(getUserFailedException);
                 }
             }
         });

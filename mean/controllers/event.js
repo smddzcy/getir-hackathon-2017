@@ -92,6 +92,10 @@ exports.eventPost = function(req, res, next) {
       return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
 
+    // Add the event to the user
+    req.user.events.addToSet(event);
+    req.user.save();
+
     res.send(event);
   });
 }
@@ -132,6 +136,10 @@ exports.eventPut = function(req, res, next) {
  */
 exports.eventDelete = function(req, res, next) {
   Event.remove({ _id: req.params.id }, function(err) {
+    // Remove the event from user too.
+    req.user.events.pull(req.params.id);
+    req.user.save();
+
     res.send({ msg: 'Event has been permanently deleted.' });
   });
 }

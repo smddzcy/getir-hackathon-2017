@@ -17,13 +17,11 @@ var userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   gender: String,
   location: String,
-  website: String,
   picture: String,
   facebook: String,
   twitter: String,
   google: String,
   github: String,
-  vk: String,
   events: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
   messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 }, schemaOptions);

@@ -38,8 +38,7 @@ exports.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
     // Reset the online timeout of user
     var onlineTimeout = userOnlineTimeouts[req.user._id];
-    console.log(userOnlineTimeouts);
-    console.log(onlineTimeout);
+
     if (onlineTimeout) {
       clearTimeout(userOnlineTimeouts[req.user._id]);
       userOnlineTimeouts[req.user._id] = onlineTimeout;
@@ -58,12 +57,17 @@ exports.ensureAuthenticated = function(req, res, next) {
 exports.userGet = function(req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function(err, user) {
-    if (!user) {
-      return res.status(404).send({ msg: 'User couldn\'t be found. ' });
-    }
-    res.send(user);
-  })
+  User.findById(userId)
+    .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+    .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
+    .populate('events.messages', ['from', 'to', 'message'])
+    .populate('messages', ['from', 'to', 'message'])
+    .exec(function(err, user) {
+      if (!user) {
+        return res.status(404).send({ msg: 'User couldn\'t be found. ' });
+      }
+      res.send(user);
+    })
 }
 
 /**
@@ -93,23 +97,28 @@ exports.loginPost = function(req, res, next) {
     return res.status(400).send(errors);
   }
 
-  User.findOne({ email: req.body.email }, function(err, user) {
-    if (!user) {
-      return res.status(401).send({
-        msg: 'The email address ' + req.body.email + ' is not associated with any account. ' +
-          'Double-check your email address and try again.'
-      });
-    }
-
-    user.comparePassword(req.body.password, function(err, isMatch) {
-      if (!isMatch) {
-        return res.status(401).send({ msg: 'Invalid email or password' });
+  User.findOne({ email: req.body.email })
+    .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+    .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
+    .populate('events.messages', ['from', 'to', 'message'])
+    .populate('messages', ['from', 'to', 'message'])
+    .exec(function(err, user) {
+      if (!user) {
+        return res.status(401).send({
+          msg: 'The email address ' + req.body.email + ' is not associated with any account. ' +
+            'Double-check your email address and try again.'
+        });
       }
 
-      putUserToOnlineUsers(user);
-      res.send({ token: generateToken(user), user: user.toJSON() });
+      user.comparePassword(req.body.password, function(err, isMatch) {
+        if (!isMatch) {
+          return res.status(401).send({ msg: 'Invalid email or password' });
+        }
+
+        putUserToOnlineUsers(user);
+        res.send({ token: generateToken(user), user: user.toJSON() });
+      });
     });
-  });
 };
 
 /**
@@ -542,41 +551,51 @@ exports.authTwitter = function(req, res) {
 
         // Step 5a. Link accounts if user is authenticated.
         if (req.isAuthenticated()) {
-          User.findOne({ twitter: profile.id }, function(err, user) {
-            if (user) {
-              return res.status(409).send({ msg: 'There is already an existing account linked with Twitter that belongs to you.' });
-            }
-            user = req.user;
-            user.name = user.name || profile.name;
-            user.picture = user.picture || profile.profile_image_url_https;
-            user.location = user.location || profile.location;
-            user.twitter = profile.id;
-            user.save(function(err) {
-              putUserToOnlineUsers(user);
-              res.send({ token: generateToken(user), user: user });
+          User.findOne({ twitter: profile.id })
+            .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+            .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
+            .populate('events.messages', ['from', 'to', 'message'])
+            .populate('messages', ['from', 'to', 'message'])
+            .exec(function(err, user) {
+              if (user) {
+                return res.status(409).send({ msg: 'There is already an existing account linked with Twitter that belongs to you.' });
+              }
+              user = req.user;
+              user.name = user.name || profile.name;
+              user.picture = user.picture || profile.profile_image_url_https;
+              user.location = user.location || profile.location;
+              user.twitter = profile.id;
+              user.save(function(err) {
+                putUserToOnlineUsers(user);
+                res.send({ token: generateToken(user), user: user });
+              });
             });
-          });
         } else {
           // Step 5b. Create a new user account or return an existing one.
-          User.findOne({ twitter: profile.id }, function(err, user) {
-            if (user) {
-              putUserToOnlineUsers(user);
-              return res.send({ token: generateToken(user), user: user });
-            }
-            // Twitter does not provide an email address, but email is a required field in our User schema.
-            // We can "fake" a Twitter email address as follows: username@twitter.com.
-            user = new User({
-              name: profile.name,
-              email: profile.screen_name + '@twitter.com',
-              location: profile.location,
-              picture: profile.profile_image_url_https,
-              twitter: profile.id
+          User.findOne({ twitter: profile.id })
+            .populate('events', ['type', 'startTime', 'endTime', 'location', 'users', 'messages'])
+            .populate('events.users', ['name', 'email', 'location', 'website', 'picture'])
+            .populate('events.messages', ['from', 'to', 'message'])
+            .populate('messages', ['from', 'to', 'message'])
+            .exec(function(err, user) {
+              if (user) {
+                putUserToOnlineUsers(user);
+                return res.send({ token: generateToken(user), user: user });
+              }
+              // Twitter does not provide an email address, but email is a required field in our User schema.
+              // We can "fake" a Twitter email address as follows: username@twitter.com.
+              user = new User({
+                name: profile.name,
+                email: profile.screen_name + '@twitter.com',
+                location: profile.location,
+                picture: profile.profile_image_url_https,
+                twitter: profile.id
+              });
+              user.save(function() {
+                putUserToOnlineUsers(user);
+                res.send({ token: generateToken(user), user: user });
+              });
             });
-            user.save(function() {
-              putUserToOnlineUsers(user);
-              res.send({ token: generateToken(user), user: user });
-            });
-          });
         }
       });
     });

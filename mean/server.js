@@ -120,9 +120,7 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'app', 'index.html'));
 });
 
-/**
- * Leave other endpoints to AngularJS
- */
+// Leave other endpoints to AngularJS
 app.get('*', function(req, res) {
   res.redirect('/#' + req.originalUrl);
 });
@@ -139,13 +137,14 @@ var http = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+// Socket connections
+
 var io = require('socket.io').listen(http, {
   cookie: false
 });
 
 var chatIO = io.of('/chat');
 
-// Socket connections
 chatIO.on('connection', function(socket) {
   socket.on('join', function(roomId) {
     socket.join(roomId);

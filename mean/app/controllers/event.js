@@ -27,7 +27,6 @@ angular.module('MyApp')
 
             $scope.event.location.latitude = lat;
             $scope.event.location.longitude = lng;
-            console.log($scope.marker);
             $scope.$apply();
           }
         }
@@ -35,22 +34,17 @@ angular.module('MyApp')
     });
     // types
     $scope.types = ['fun','more fun','more more fun'];
-  
+
     $scope.sendEventForm = function() {
       //$scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
-      
-      console.log();
       Event.save($scope.event)
         .$promise
         .then(function(response) {
-          $scope.messages = {
-            success: [{ msg: "Event has been created successfully." }]
-          };
+          ngToast.success("Event has been created successfully.");
+          $scope.event = {};
         })
         .catch(function(response) {
-          $scope.messages = {
-            error: [response.data.msg]
-          };
+          ngToast.danger(response.data.msg);
         });
     };
   });

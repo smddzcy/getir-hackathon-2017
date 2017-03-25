@@ -1,10 +1,12 @@
 package com.wow.wowmeet.models;
 
+import java.io.Serializable;
+
 /**
  * Created by ergunerdogmus on 24.03.2017.
  */
 
-public class User {
+public class User implements Serializable {
     private String userId;
     private String username;
     private String email;

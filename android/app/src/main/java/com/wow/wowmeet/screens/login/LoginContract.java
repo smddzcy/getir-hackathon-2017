@@ -12,6 +12,10 @@ interface LoginContract {
 
     interface View extends BaseView<LoginContract.Presenter> {
         public void onLoginSuccess(User user);
+
+        void showLoading();
+
+        void hideLoading();
     }
 
     interface Presenter extends BasePresenter {

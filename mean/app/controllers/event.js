@@ -33,9 +33,11 @@ angular.module('MyApp')
         }
       }
     });
-
+    // types
+    $scope.types = ['fun','more fun','more more fun'];
+  
     $scope.sendEventForm = function() {
-      $scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
+      //$scope.event.date = $filter('date')($scope.event.date, "dd/MM/yyyy");
       
       console.log();
       Event.save($scope.event)

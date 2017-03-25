@@ -54,7 +54,7 @@ exports.eventGet = function(req, res, next) {
  */
 exports.eventPost = function(req, res, next) {
   req.assert('location', 'Location cannot be blank').notEmpty();
-
+  
   var event = new Event({
     creator: req.user,
     type: req.body.type,

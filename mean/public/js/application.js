@@ -180,6 +180,7 @@ angular.module('MyApp')
 
 		Event.query(function(events) {
 			events.forEach(function(e) {
+				console.log(e);
 				var marker = {};
 				marker.id = e._id;
 				marker.location = {

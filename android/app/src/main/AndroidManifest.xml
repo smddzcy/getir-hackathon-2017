@@ -40,9 +40,11 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".screens.profile.ProfileActivity" />
-        <activity android:name=".screens.createevent.CreateEventActivity" />
+        <activity android:name=".screens.createevent.CreateEventActivity"
+            android:label="@string/create_event_activity_title"/>
         <activity android:name=".screens.eventinfo.EventInfoActivity"
-            android:parentActivityName="com.wow.wowmeet.screens.main.MainActivity">
+            android:parentActivityName="com.wow.wowmeet.screens.main.MainActivity"
+            android:label="@string/event_info_activity_title">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

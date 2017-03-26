@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class CalendarUtils {
     final static String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    final static String PRETTY_FORMAT = "dd.MM.yyyy HH:mm:ss";
+    final static String PRETTY_FORMAT = "dd.MM.yyyy HH:mm";
 
     public static String calendarToDateString(Calendar calendar){
         SimpleDateFormat sdf = new SimpleDateFormat(ISO8601_DATE_FORMAT, Locale.ENGLISH);

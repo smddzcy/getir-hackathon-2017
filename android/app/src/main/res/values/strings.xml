@@ -43,5 +43,7 @@
     <string name="date">Date:</string>
     <string name="radius_unit">%1d km</string>
     <string name="server_error">Server Response Error</string>
+    <string name="create_event_activity_title">Create New Event</string>
+    <string name="event_info_activity_title">Event Info</string>
 
 </resources>

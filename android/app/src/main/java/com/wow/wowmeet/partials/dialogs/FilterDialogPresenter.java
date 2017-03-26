@@ -1,5 +1,7 @@
 package com.wow.wowmeet.partials.dialogs;
 
+import android.util.Log;
+
 import com.wow.wowmeet.data.EventTypeRepository;
 import com.wow.wowmeet.models.Type;
 
@@ -27,7 +29,7 @@ public class FilterDialogPresenter implements FilterDialogContract.Presenter {
     @Override
     public void start() {
         Single<List<Type>> singleTypes = eventTypeRepository.getTypes();
-
+        //TODO change
         DisposableSingleObserver<List<Type>> disposableSingleObserver =
                 singleTypes.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -35,6 +37,7 @@ public class FilterDialogPresenter implements FilterDialogContract.Presenter {
                     @Override
                     public void onSuccess(List<Type> value) {
                         view.updateEventTypes(value);
+                        Log.d("VALUES", value + "");
                     }
 
                     @Override

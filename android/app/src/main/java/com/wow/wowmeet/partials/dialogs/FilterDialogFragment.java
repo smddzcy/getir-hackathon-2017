@@ -160,8 +160,10 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_filter, container, false);
-
         ButterKnife.bind(this, v);
+
+        presenter = new FilterDialogPresenter(this);
+        this.setPresenter(presenter);
 
         currentStartDateTime = Calendar.getInstance();
         currentEndDateTime = Calendar.getInstance();
@@ -287,7 +289,7 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
 
         eventTypes = new ArrayList<>();
         spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, eventTypes);
-
+        spinnerActivityTypeFilter.setAdapter(spinnerAdapter);
         return v;
     }
 
@@ -314,6 +316,12 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
                 DialogHelper.showToastMessage(getActivity(), getString(R.string.place_selection_cancelled_info_text));
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.start();
     }
 
     @Override

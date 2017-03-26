@@ -65,6 +65,7 @@ public class FilterDialog extends DialogFragment {
     @BindView(R.id.txtEndingHourText) TextView txtEndHour;
     @BindView(R.id.txtRadiusText) TextView txtRadius;
 
+    @BindView(R.id.btnFilterCancel) Button btnCancel;
     @BindView(R.id.btnFilterOk) Button btnOK;
 
     private Calendar currentStartDateTime;
@@ -158,6 +159,13 @@ public class FilterDialog extends DialogFragment {
                     onFilterDialogResultListener.onFilterDialogResult(currentStartDateTime, currentEndDateTime,
                             place, 10, /*TODO*/null);
                 }
+                dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });

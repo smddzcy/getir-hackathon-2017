@@ -51,7 +51,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     ChatListAdapter chatListAdapter;
 
-    private ArrayList<Message> messages;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +75,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
             e.printStackTrace();
             //TODO exception handle
         }
-
-        messages = new ArrayList<>();
-        chatListAdapter = new ChatListAdapter(messages);
+        chatListAdapter = new ChatListAdapter(new ArrayList<Message>());
         chatRecyclerView.setAdapter(chatListAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         chatRecyclerView.setLayoutManager(linearLayoutManager);
@@ -114,6 +111,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @Override
     public void showMessages(List<Message> messages) {
         chatListAdapter.changeDataSet(messages);
+        chatRecyclerView.scrollToPosition(chatListAdapter.getItemCount() - 1);
     }
 
     @Override

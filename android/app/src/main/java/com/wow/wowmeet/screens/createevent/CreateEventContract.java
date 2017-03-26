@@ -6,6 +6,9 @@ import android.support.v4.app.DialogFragment;
 import com.google.android.gms.location.places.Place;
 import com.wow.wowmeet.base.BasePresenter;
 import com.wow.wowmeet.base.BaseView;
+import com.wow.wowmeet.models.Type;
+
+import java.util.List;
 
 /**
  * Created by ergunerdogmus on 25.03.2017.
@@ -16,8 +19,10 @@ interface CreateEventContract {
 
     interface View extends BaseView<CreateEventContract.Presenter> {
         void updateSuggestions();
+        void updateEventTypes(List<Type> eventTypes);
 
-        void updateTimeField(int hour, int minute);
+        void updateStartTimeField(int hour, int minute);
+        void updateEndTimeField(int hour, int minute);
         void updateDateField(int day, int month, int year);
         Place updatePlaceField(Intent placeData);
 
@@ -29,7 +34,10 @@ interface CreateEventContract {
         void onCreateEvent(/*TODO event bilgileri */);
         void onPlaceChooserClicked();
         void onDateSelectorClicked();
-        void onTimeSelectorClicked();
+        void onStartTimeSelectorClicked();
+
+        void onEndTimeSelectorClicked();
+
         void onChooseSuggestion();
         void onPlacePickerResult(int resultCode, Intent data);
     }

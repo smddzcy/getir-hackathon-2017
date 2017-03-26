@@ -36,26 +36,26 @@ angular.module('MyApp')
         });
     }
 
-    $scope.sendMessage = function(msg) {
-      $scope.sendingMessage = true;
-
+    $scope.sendMessage = function(msg, scope) {
+      scope.sendingMessage = true;
       Message.save({
         from: $rootScope.currentUser._id,
         to: eventId,
         message: msg
       }).$promise.then(function(message) {
+        scope.message = null;
         socket.emit('message', eventId, message);
-        $scope.message = '';
       }).catch(function(err) {
         console.log(err);
       }).finally(function() {
-        $scope.sendingMessage = false;
+        scope.sendingMessage = false;
       });
     }
 
     socket.emit('join', eventId);
 
     socket.on('message', function(message) {
+      console.log(message);
       $scope.event.messages.push(message);
     });
   });

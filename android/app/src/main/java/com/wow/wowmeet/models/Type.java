@@ -58,6 +58,6 @@ public class Type implements Serializable{
     @Override
     public String toString()
     {
-        return "ClassPojo [id = "+id+", count = "+count+", _id = "+_id+", name = "+name+"]";
+        return name;
     }
 }

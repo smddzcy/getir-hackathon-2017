@@ -7,28 +7,19 @@ import java.io.Serializable;
  */
 
 public class User implements Serializable {
-    private String updatedAt;
 
     private String _id;
 
     private String email;
 
-    private String[] events;
-
-    private String createdAt;
-
     private String token;
 
     private String name;
 
-    public String getUpdatedAt ()
-    {
-        return updatedAt;
-    }
+    private String picture;
 
-    public void setUpdatedAt (String updatedAt)
-    {
-        this.updatedAt = updatedAt;
+    public User(String picture) {
+        this.picture = picture;
     }
 
     public String get_id ()
@@ -51,32 +42,10 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String[] getEvents ()
-    {
-        return events;
-    }
-
-    public void setEvents (String[] events)
-    {
-        this.events = events;
-    }
-
-    public String getCreatedAt ()
-    {
-        return createdAt;
-    }
-
-    public void setCreatedAt (String createdAt)
-    {
-        this.createdAt = createdAt;
-    }
-
-
     @Override
     public String toString()
     {
-        return "ClassPojo [updatedAt = "+updatedAt+", _id = "+_id+", email = "+email+", " +
-                "events = "+events+", createdAt = "+createdAt+"";
+        return "_id = "+_id+", email = "+email;
     }
 
     public String getToken() {
@@ -93,5 +62,13 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

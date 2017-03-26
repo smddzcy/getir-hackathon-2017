@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public class Event extends ChatMessageProvider implements Serializable {
+
     private String _id;
 
     private Location location;
@@ -34,6 +35,14 @@ public class Event extends ChatMessageProvider implements Serializable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.users = users;
+    }
+
+    public Event(User creator, Type type, String startTime, String endTime, Location location){
+        this.creator = creator;
+        this.type = type;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
     }
 
     public String get_id ()

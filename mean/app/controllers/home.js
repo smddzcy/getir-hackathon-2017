@@ -19,7 +19,6 @@ angular.module('MyApp')
 
 	Event.query(function(events) {
 		events.forEach(function(e) {
-      console.log(123);
 			var marker = {};
 			marker.id = e._id;
       if(!e.location){

@@ -149,7 +149,7 @@ exports.eventSearchTypeGet = function(req, res, next) {
           return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
         }
         events = events.filter(function(event) {
-          return event.type; 
+          return event.type;
         });
         res.send(events);
       });
@@ -204,7 +204,6 @@ exports.eventPost = function(req, res, next) {
 
   event.save(function(err) {
     if (err) {
-      console.log(err);
       return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
 

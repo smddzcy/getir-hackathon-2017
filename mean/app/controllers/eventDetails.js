@@ -1,6 +1,6 @@
 angular.module('MyApp')
   .controller('EventDetailsCtrl', function($http, $rootScope, $scope, $route,
-    $location, Event, Message, socket) {
+    $location, Event, Message, socket, ngToast) {
     var eventId = $route.current.params.id;
 
     if ($location.search().join) {
@@ -11,7 +11,7 @@ angular.module('MyApp')
           $location.path('/event-details/' + eventId);
         })
         .catch(function(err)  {
-          console.log("Event couldn't be joined.");
+          ngToast.danger("Event couldn't be joined.");
         });
     } else {
       Event.get({}, { id: eventId })
@@ -20,7 +20,7 @@ angular.module('MyApp')
           $scope.event = event;
         })
         .catch(function(response) {
-          console.log(response.data);
+          ngToast.danger(response.msg);
         });
     }
 
@@ -32,7 +32,7 @@ angular.module('MyApp')
           $location.path('/event-details/' + eventId);
         })
         .catch(function(err)  {
-          console.log("Event couldn't be unjoined.");
+          ngToast.danger("Event couldn't be unjoined.");
         });
     }
 
@@ -46,7 +46,7 @@ angular.module('MyApp')
         scope.message = null;
         socket.emit('message', eventId, message);
       }).catch(function(err) {
-        console.log(err);
+        ngToast.danger(err.msg);
       }).finally(function() {
         scope.sendingMessage = false;
       });
@@ -55,7 +55,6 @@ angular.module('MyApp')
     socket.emit('join', eventId);
 
     socket.on('message', function(message) {
-      console.log(message);
       $scope.event.messages.push(message);
     });
   });

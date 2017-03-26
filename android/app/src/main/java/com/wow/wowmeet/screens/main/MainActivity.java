@@ -66,6 +66,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
     };
 
+    private User user;
+
     @BindView(R.id.fab) FloatingActionButton fab;
 
     @Override
@@ -75,7 +77,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         ButterKnife.bind(this);
 
         Intent i = getIntent();
-        User user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.drawerContainer, DrawerFragment.newInstance(user), "DRAWER")
@@ -187,6 +189,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public void goCreateEventActivity() {
         Intent intent = new Intent(this, CreateEventActivity.class);
+        intent.putExtra(Constants.INTENT_EXTRA_USER, user);
         startActivity(intent);
     }
 

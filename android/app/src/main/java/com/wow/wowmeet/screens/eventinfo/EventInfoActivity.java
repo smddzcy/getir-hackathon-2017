@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.partials.chat.ChatFragment;
 import com.wow.wowmeet.utils.CalendarUtils;
+import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
 
 import java.text.ParseException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +31,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     private EventInfoContract.Presenter presenter;
 
     private Event event;
+    private User user;
 
     @BindView(R.id.txtPlace) TextView txtPlace;
     @BindView(R.id.txtType) TextView txtType;
@@ -36,6 +40,8 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     @BindView(R.id.btnJoin) Button btnJoin;
     @BindView(R.id.activity_event_info_chatContainer)
     FrameLayout chatContainer;
+    @BindView(R.id.txtJoinedUsers)
+    TextView txtJoinedUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,9 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         Intent i = getIntent();
 
         event = (Event) i.getSerializableExtra(EXTRA_EVENT);
+        user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
 
-        presenter = new EventInfoPresenter(this, event);
+        presenter = new EventInfoPresenter(this, user, event);
 
         ChatFragment chatFragment = ChatFragment.newInstance(event);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_event_info_chatContainer, chatFragment).commit();
@@ -93,13 +100,11 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     }
 
     @Override
-    public void showEventInfo(Event event) {
+    public void showEventInfo(Event event, boolean isUserJoined) {
         this.event = event;
         txtPlace.setText(event.getLocation().getName());
         txtType.setText(event.getType().getName());
         txtUsername.setText(event.getCreator().getName());
-
-
         try {
             String datesString =
                     CalendarUtils.getStartEndDateString(event.getStartTime(), event.getEndTime());
@@ -109,6 +114,23 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
             e.printStackTrace();
             txtDateTime.setText(event.getStartTime());
         }
+
+        if(isUserJoined){
+            btnJoin.setVisibility(View.GONE);
+            showJoinedUsers(event.getUsers());
+        }
+
+    }
+
+    private void showJoinedUsers(List<User> users){
+        txtJoinedUsers.setVisibility(View.VISIBLE);
+        StringBuilder stringBuilder = new StringBuilder();
+        for(User user : users){
+            stringBuilder.append(user.getName());
+        }
+
+        String usersText = stringBuilder.toString();
+        txtJoinedUsers.setText(usersText);
 
     }
 

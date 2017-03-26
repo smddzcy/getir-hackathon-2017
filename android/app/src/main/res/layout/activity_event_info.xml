@@ -75,6 +75,16 @@
         android:layout_marginRight="16dp"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <TextView
+        android:id="@+id/txtJoinedUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsernameEventInfo"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <FrameLayout
         android:id="@+id/activity_event_info_chatContainer"
         android:layout_width="0dp"

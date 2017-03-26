@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.location.Location;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.wow.wowmeet.partials.dialogs.DatePickerFragment;
+import com.wow.wowmeet.partials.dialogs.TimePickerFragment;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package com.wow.wowmeet.screens.createevent;
+package com.wow.wowmeet.partials.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.text.format.DateFormat;
-import android.widget.TimePicker;
 
 import java.util.Calendar;
 
@@ -16,8 +15,8 @@ import java.util.Calendar;
 
 public class TimePickerFragment extends DialogFragment {
 
-    public static final String ARG_INITIAL_HOUR = "com.wow.wowmeet.screens.createevent.TimePickerFragment.argInitialHour";
-    public static final String ARG_INITIAL_MINUTE = "com.wow.wowmeet.screens.createevent.TimePickerFragment.argInitialMinute";
+    public static final String ARG_INITIAL_HOUR = "com.wow.wowmeet.partials.dialogs.TimePickerFragment.argInitialHour";
+    public static final String ARG_INITIAL_MINUTE = "com.wow.wowmeet.partials.dialogs.TimePickerFragment.argInitialMinute";
 
     private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 

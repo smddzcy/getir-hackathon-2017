@@ -21,6 +21,7 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
 import com.wow.wowmeet.partials.googleapi.GooglePlacesAPIWrapper;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +157,7 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
 
     @Override
     public void showError(String e) {
-
+        DialogHelper.showAlertDialogWithError(this, e);
     }
 
     @Override

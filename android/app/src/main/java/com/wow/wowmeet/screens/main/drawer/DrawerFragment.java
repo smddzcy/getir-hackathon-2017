@@ -3,6 +3,7 @@ package com.wow.wowmeet.screens.main.drawer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.login.LoginActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import butterknife.BindView;
@@ -88,7 +90,12 @@ public class DrawerFragment extends Fragment implements DrawerContract.View {
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(getActivity(), e);
+    }
 
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override

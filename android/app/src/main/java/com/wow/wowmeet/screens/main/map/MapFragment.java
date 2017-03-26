@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
 import com.wow.wowmeet.partials.googleapi.GoogleLocationAPIWrapper;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.List;
 
@@ -166,7 +168,12 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(getActivity(), e);
+    }
 
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override

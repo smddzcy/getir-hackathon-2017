@@ -30,6 +30,7 @@ interface CreateEventContract {
         void showPlacePickerDialog();
 
         void onSuccess();
+        void showPlacePickerError(Intent data);
     }
 
     interface Presenter extends BasePresenter{

@@ -3,6 +3,7 @@ package com.wow.wowmeet.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 /**
  * Created by ergunerdogmus on 25.03.2017.
@@ -23,5 +24,9 @@ public class DialogHelper {
                 .setCancelable(true)
                 .create();
         dialog.show();
+    }
+
+    public static void showToastMessage(Context context, String errorMessage) {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }

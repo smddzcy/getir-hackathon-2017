@@ -50,5 +50,7 @@
     <string name="filter">Filter</string>
     <string name="radius">Radius:</string>
     <string name="cancel">Cancel</string>
+    <string name="place_selection_cancelled_info_text">Place selection was cancelled by User.</string>
+    <string name="api_conn_failed_error_text">Google API Connection failed!</string>
 
 </resources>

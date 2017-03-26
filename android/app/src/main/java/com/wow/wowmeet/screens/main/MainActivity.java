@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -28,8 +29,8 @@ import com.wow.wowmeet.screens.main.map.MapContract;
 import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
-import com.wow.wowmeet.partials.dialogs.FilterDialog;
 import com.wow.wowmeet.utils.UserProvider;
+import com.wow.wowmeet.partials.dialogs.FilterDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,9 +140,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
         int action = item.getItemId();
         if(action == R.id.action_filter) {
-            FilterDialog filterDialog = FilterDialog.newInstance();
-            filterDialog.setOnFilterDialogResultListener(presenter);
-            filterDialog.show(getSupportFragmentManager(), "FilterDialogTest");
+            FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance();
+            filterDialogFragment.setOnFilterDialogResultListener(presenter);
+            filterDialogFragment.show(getSupportFragmentManager(), "FilterDialogTest");
 
             return true;
         }
@@ -178,6 +179,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
+    }
+
+    @Override
     public void refreshListAndMap(List<Event> arr) {
         events.clear();
         events.addAll(arr);
@@ -191,7 +197,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public void goCreateEventActivity() {
         Intent intent = new Intent(this, CreateEventActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_USER, user);
         startActivity(intent);
     }
 

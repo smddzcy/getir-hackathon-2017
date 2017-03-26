@@ -37,8 +37,7 @@ public class Event extends ChatMessageProvider implements Serializable {
         this.users = users;
     }
 
-    public Event(User creator, Type type, String startTime, String endTime, Location location){
-        this.creator = creator;
+    public Event(Type type, String startTime, String endTime, Location location){
         this.type = type;
         this.startTime = startTime;
         this.endTime = endTime;

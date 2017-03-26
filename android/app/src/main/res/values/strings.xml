@@ -49,5 +49,6 @@
     <string name="ok">OK</string>
     <string name="filter">Filter</string>
     <string name="radius">Radius:</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

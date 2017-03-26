@@ -126,7 +126,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
         int action = item.getItemId();
         if(action == R.id.action_filter) {
-            FilterDialog.newInstance().show(getSupportFragmentManager(), "FilterDialogTest");
+            FilterDialog filterDialog = FilterDialog.newInstance();
+            filterDialog.setOnFilterDialogResultListener(presenter);
+            filterDialog.show(getSupportFragmentManager(), "FilterDialogTest");
 
             return true;
         }
@@ -175,6 +177,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void goCreateEventActivity() {
         Intent intent = new Intent(this, CreateEventActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showLoading() {
+        showLoadingView();
+    }
+
+    @Override
+    public void hideLoading() {
+        hideLoadingView();
     }
 
     @Override

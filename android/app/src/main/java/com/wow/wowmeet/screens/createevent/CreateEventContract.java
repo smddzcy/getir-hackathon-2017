@@ -31,7 +31,9 @@ interface CreateEventContract {
     }
 
     interface Presenter extends BasePresenter{
-        void onCreateEvent(/*TODO event bilgileri */);
+
+        void onCreateEventClicked(Type eventType, String token);
+
         void onPlaceChooserClicked();
         void onDateSelectorClicked();
         void onStartTimeSelectorClicked();

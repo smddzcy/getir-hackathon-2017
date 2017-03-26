@@ -21,6 +21,7 @@ import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
 import com.wow.wowmeet.partials.googleapi.GooglePlacesAPIWrapper;
 import com.wow.wowmeet.utils.DialogHelper;
+import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +62,13 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
         final CreateEventPresenter presenter = new CreateEventPresenter(this);
         setPresenter(presenter);
 
+        final String token = SharedPreferencesUtil.getInstance(this).getUserToken();
 
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO create event parameters
-                presenter.onCreateEvent();
+                Type eventType = (Type)spinnerActivityType.getSelectedItem();
+                presenter.onCreateEventClicked(eventType, token);
             }
         });
         eventTypes = new ArrayList<>();

@@ -1,9 +1,14 @@
 package com.wow.wowmeet.screens.main;
 
+import android.support.annotation.Nullable;
+
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.data.main.MainRepository;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.Type;
 
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -43,17 +48,20 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void onRefreshListAndMap(double lat, double lng, double rad) {
+        view.showLoading();
         mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> value) {
+                        view.hideLoading();
                         view.refreshListAndMap(value);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         view.showError(e.getMessage());
+                        view.hideLoading();
                         e.printStackTrace();
                     }
                 });
@@ -67,5 +75,20 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void onProfileClicked() {
 
+    }
+
+    @Override
+    public void onFilterDialogResult(@Nullable Calendar startDate,
+                                     @Nullable Calendar endDate,
+                                     @Nullable Place place,
+                                     int radius,
+                                     @Nullable Type type) {
+        if(place != null){
+            LatLng latLng = place.getLatLng();
+            double lat = latLng.latitude;
+            double lng = latLng.longitude;
+
+            this.onRefreshListAndMap(lat, lng, radius);
+        }
     }
 }

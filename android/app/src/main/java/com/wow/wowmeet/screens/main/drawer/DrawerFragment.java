@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.screens.login.LoginActivity;
@@ -61,7 +62,8 @@ public class DrawerFragment extends Fragment implements DrawerContract.View {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance(getContext());
         presenter = new DrawerPresenter(this, sharedPreferencesUtil);
 
-        txtUsername.setText(user.getEmail());
+        txtUsername.setText(user.getName());
+        if(!user.getPicture().isEmpty()) Picasso.with(getContext()).load(user.getPicture()).into(imgProfile);
 
         final String[] options = getResources().getStringArray(R.array.drawer_options_array);
 

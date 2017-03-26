@@ -33,10 +33,6 @@ public class MapPresenter implements MapContract.Presenter {
 
     }
 
-    @Override
-    public void requestEventRefresh(double lat, double lng, double radius) {
-        this.start(); // TODO geçici kod
-    }
 
     @Override
     public void onEventClick(Event event) {

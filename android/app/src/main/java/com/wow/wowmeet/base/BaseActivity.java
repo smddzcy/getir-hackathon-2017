@@ -14,7 +14,7 @@ import com.wow.wowmeet.R;
 public abstract class BaseActivity extends AppCompatActivity implements BaseLoadingView {
 
     private View loadingView;
-
+    private boolean loadingViewAdded = false;
     @Override
     protected void onStart() {
         super.onStart();
@@ -23,14 +23,20 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseLoad
 
     @Override
     public void showLoadingView() {
-        ViewGroup rootView = (ViewGroup) findViewById(android.R.id.content);
-        rootView.addView(loadingView);
+        if(!loadingViewAdded) {
+            ViewGroup rootView = (ViewGroup) findViewById(android.R.id.content);
+            rootView.addView(loadingView);
+            loadingViewAdded = true;
+        }
     }
 
     @Override
     public void hideLoadingView() {
-        ViewGroup rootView = (ViewGroup) findViewById(android.R.id.content);
-        rootView.removeView(loadingView);
+        if(loadingViewAdded) {
+            ViewGroup rootView = (ViewGroup) findViewById(android.R.id.content);
+            rootView.removeView(loadingView);
+            loadingViewAdded = false;
+        }
     }
 
     private void initializeLoadingView() {

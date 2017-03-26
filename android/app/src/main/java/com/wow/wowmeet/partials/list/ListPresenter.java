@@ -25,11 +25,6 @@ public class ListPresenter implements ListContract.Presenter, ListEventClickList
     }
 
     @Override
-    public void onSwipeRefresh() {
-
-    }
-
-    @Override
     public void onEventClicked(Event event) {
         view.showEventInfo(event);
     }

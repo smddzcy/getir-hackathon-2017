@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +16,8 @@ import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.partials.chat.ChatFragment;
 import com.wow.wowmeet.utils.CalendarUtils;
-import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
+import com.wow.wowmeet.utils.UserProvider;
 
 import java.text.ParseException;
 import java.util.List;
@@ -56,7 +57,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         Intent i = getIntent();
 
         event = (Event) i.getSerializableExtra(EXTRA_EVENT);
-        user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        user = UserProvider.getInstance().getUser();
 
         presenter = new EventInfoPresenter(this, user, event);
 
@@ -118,6 +119,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         if(isUserJoined){
             btnJoin.setVisibility(View.GONE);
             showJoinedUsers(event.getUsers());
+            Log.d("EVENT", event.getUsers() + "");
         }
 
     }

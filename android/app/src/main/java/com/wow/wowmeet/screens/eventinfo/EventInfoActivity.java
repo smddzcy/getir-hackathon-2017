@@ -14,6 +14,7 @@ import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.partials.chat.ChatFragment;
 import com.wow.wowmeet.utils.CalendarUtils;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.text.ParseException;
 
@@ -49,9 +50,8 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         Intent i = getIntent();
 
         event = (Event) i.getSerializableExtra(EXTRA_EVENT);
-        showEventInfo(event);
 
-        presenter = new EventInfoPresenter(this);
+        presenter = new EventInfoPresenter(this, event);
 
         ChatFragment chatFragment = ChatFragment.newInstance(event);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_event_info_chatContainer, chatFragment).commit();
@@ -72,7 +72,13 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(this, e);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
     }
 
     @Override

@@ -48,6 +48,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void onRefreshListAndMap(double lat, double lng, double rad) {
+        //TODO SHOWLOADING
         mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
@@ -80,6 +81,12 @@ public class MainPresenter implements MainContract.Presenter {
                                      @Nullable Place place,
                                      int radius,
                                      @Nullable Type type) {
+        if(place != null){
+            LatLng latLng = place.getLatLng();
+            double lat = latLng.latitude;
+            double lng = latLng.longitude;
 
+            this.onRefreshListAndMap(lat, lng, radius);
+        }
     }
 }

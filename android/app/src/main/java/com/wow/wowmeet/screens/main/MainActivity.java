@@ -29,6 +29,7 @@ import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
 import com.wow.wowmeet.partials.dialogs.FilterDialog;
+import com.wow.wowmeet.utils.UserProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         Intent i = getIntent();
         user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        UserProvider.getInstance().setUser(user);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.drawerContainer, DrawerFragment.newInstance(user), "DRAWER")

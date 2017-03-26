@@ -348,7 +348,7 @@ exports.eventSuggestedGet = function(req, res, next) {
 
         // Normalize the values
         y = normalize(y);
-        console.log(y);
+
         // Get the ones that are greater that .75, which means +75% match.
         y = y.filter(function(e) {
           return e >= 0.75;

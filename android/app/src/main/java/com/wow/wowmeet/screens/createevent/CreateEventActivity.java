@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,8 +18,12 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.wow.wowmeet.R;
+import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
 import com.wow.wowmeet.partials.googleapi.GooglePlacesAPIWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +45,10 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     @BindView(R.id.edtStartTime) EditText edtTime;
     @BindView(R.id.edtDate) EditText edtDate;
 
-    private ArrayAdapter<CharSequence> spinnerAdapter;
+    private ArrayAdapter<Type> spinnerAdapter;
 
     private GooglePlacesAPIWrapper placesAPIWrapper;
+    private List<Type> eventTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,7 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
         final CreateEventPresenter presenter = new CreateEventPresenter(this);
         setPresenter(presenter);
 
+
         btnCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,9 +68,8 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
                 presenter.onCreateEvent();
             }
         });
-
-        spinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.event_types_array, android.R.layout.simple_spinner_item);
+        eventTypes = new ArrayList<>();
+        spinnerAdapter = new ArrayAdapter<Type>(this, android.R.layout.simple_spinner_item, eventTypes);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerActivityType.setAdapter(spinnerAdapter);
@@ -133,12 +139,14 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     protected void onStart() {
         super.onStart();
         placesAPIWrapper.onStart();
+        presenter.start();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         placesAPIWrapper.onStop();
+        presenter.stop();
     }
 
     @Override
@@ -154,6 +162,14 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     @Override
     public void updateSuggestions() {
 
+    }
+
+    @Override
+    public void updateEventTypes(List<Type> eventTypes) {
+        this.eventTypes.clear();
+        this.eventTypes.addAll(eventTypes);
+        Log.d("EventType", eventTypes.size() + "");
+        spinnerAdapter.notifyDataSetChanged();
     }
 
     @Override

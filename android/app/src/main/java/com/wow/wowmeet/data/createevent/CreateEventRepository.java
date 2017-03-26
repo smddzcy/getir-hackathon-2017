@@ -56,11 +56,6 @@ public class CreateEventRepository {
         });
     }
 
-    /**
-     *
-     * @param event
-     * @return
-     */
     public Single<String> createEvent(final Event event, final String userToken) {
         return Single.create(new SingleOnSubscribe<String>() {
             @Override

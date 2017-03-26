@@ -7,7 +7,6 @@ import com.wow.wowmeet.exceptions.ResponseUnsuccessfulException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.Type;
-import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
@@ -30,10 +29,9 @@ public class CreateEventRepository {
     private static final String EVENT_TYPES_ENDPOINT = Constants.API_URL + "/event-type";
     private static final String EVENT_ENDPOINT = Constants.API_URL + "/event";
 
-    private static final String PARAM_CREATOR_NAME = "creator";
     private static final String PARAM_TYPE_NAME = "type";
-    private static final String PARAM_START_TIME = "start_time";
-    private static final String PARAM_END_TIME = "end_time";
+    private static final String PARAM_START_TIME = "startTime";
+    private static final String PARAM_END_TIME = "endTime";
     private static final String PARAM_LOCATION = "location";
 
     public Single<List<Type>> getTypes(){
@@ -66,7 +64,7 @@ public class CreateEventRepository {
                 Response response =
                         OkHttpUtils.makePostRequestWithUser(client, EVENT_ENDPOINT, fields, userToken);
 
-                String responseBody = response.body().toString();
+                String responseBody = response.body().string();
 
                 if(response.isSuccessful()){
                     e.onSuccess(responseBody);
@@ -83,18 +81,15 @@ public class CreateEventRepository {
     private Map<String, String> getFieldsMapForEvent(Event event){
         Gson gson = new Gson();
 
-        User creator = event.getCreator();
         Type eventType = event.getType();
         String startTime = event.getStartTime();
         String endTime = event.getEndTime();
         Location location = event.getLocation();
 
-        String creatorJson = gson.toJson(creator);
         String eventTypeJson = gson.toJson(eventType);
         String locationJson = gson.toJson(location);
 
         HashMap<String, String> fields = new HashMap<>();
-        fields.put(PARAM_CREATOR_NAME, creatorJson);
         fields.put(PARAM_TYPE_NAME, eventTypeJson);
         fields.put(PARAM_START_TIME, startTime);
         fields.put(PARAM_END_TIME, endTime);

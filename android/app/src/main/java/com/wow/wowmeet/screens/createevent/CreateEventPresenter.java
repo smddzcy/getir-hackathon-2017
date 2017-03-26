@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.data.createevent.CreateEventRepository;
+import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.Type;
+import com.wow.wowmeet.utils.CalendarUtils;
 
 import java.util.Calendar;
 import java.util.List;
@@ -37,6 +42,7 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     private CreateEventRepository createEventRepository;
 
     private DisposableSingleObserver<List<Type>> disposableSingleEventTypesObserver;
+    private DisposableSingleObserver<String> disposableSingleCreateEventObserver;
 
     private TimePickerDialog.OnTimeSetListener onStartTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -99,9 +105,39 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
             disposableSingleEventTypesObserver.dispose();
     }
 
+    //EventType, ISO - StartTime, ISO - EndTime, Location
     @Override
-    public void onCreateEvent() {
+    public void onCreateEventClicked(Type eventType, String token) {
+        Location location = getLocationFromPlace(pickedPlace);
+        String startTime = CalendarUtils.calendarToDateString(dateStartTimePickerReference);
+        String endTime = CalendarUtils.calendarToDateString(dateEndTimePickerReference);
+        Event event = new Event(eventType, startTime, endTime, location);
+        Single<String> singleCreateEvent = createEventRepository.createEvent(event, token);
 
+        disposableSingleCreateEventObserver = singleCreateEvent
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<String>() {
+                    @Override
+                    public void onSuccess(String value) {
+                        //TODO SUCCESS
+                        Log.d("EVENT_CREATE", value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.showError(e.getMessage());
+                    }
+                });
+    }
+
+    private Location getLocationFromPlace(Place place){
+        LatLng placeLatLng = place.getLatLng();
+        double lat = placeLatLng.latitude;
+        double lng = placeLatLng.longitude;
+        String placeName = place.getName().toString();
+        return new Location(placeName, lat, lng);
     }
 
     @Override

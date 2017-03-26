@@ -126,7 +126,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
         int action = item.getItemId();
         if(action == R.id.action_filter) {
-            FilterDialog.newInstance().show(getSupportFragmentManager(), "FilterDialogTest");
+            FilterDialog filterDialog = FilterDialog.newInstance();
+            filterDialog.setOnFilterDialogResultListener(presenter);
+            filterDialog.show(getSupportFragmentManager(), "FilterDialogTest");
 
             return true;
         }

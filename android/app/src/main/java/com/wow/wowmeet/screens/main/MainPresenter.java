@@ -1,9 +1,14 @@
 package com.wow.wowmeet.screens.main;
 
+import android.support.annotation.Nullable;
+
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.data.main.MainRepository;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.Type;
 
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,6 +71,15 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void onProfileClicked() {
+
+    }
+
+    @Override
+    public void onFilterDialogResult(@Nullable Calendar startDate,
+                                     @Nullable Calendar endDate,
+                                     @Nullable Place place,
+                                     int radius,
+                                     @Nullable Type type) {
 
     }
 }

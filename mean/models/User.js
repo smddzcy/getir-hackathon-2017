@@ -23,7 +23,9 @@ var userSchema = new mongoose.Schema({
   google: String,
   github: String,
   events: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-  messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+  messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
+  rank: Number,
+  numberOfRates: Number
 }, schemaOptions);
 
 userSchema.pre('save', function(next) {

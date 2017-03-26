@@ -155,7 +155,9 @@ exports.signupPost = function(req, res, next) {
       password: req.body.password,
       name: req.body.name,
       location: req.body.location,
-      picture: req.body.picture || gravatarUrl
+      picture: req.body.picture || gravatarUrl,
+      rank: 0,
+      numberOfRates: 0
     });
 
     user.save(function(err) {
@@ -680,3 +682,35 @@ exports.authGithub = function(req, res) {
 exports.authGithubCallback = function(req, res) {
   res.send('Loading...');
 };
+
+exports.addRank = function(req, res) {
+  var target_id = req.params.id;
+    
+  User.findById(target_id, function(err, user) {
+    if(!user){
+      return res.status(400).send({ msg: 'No such user!' });
+    }  
+
+    if(req.body.rank){
+      if (!user.rank) user.rank = 0;
+      if (!user.numberOfRates) user.numberOfRates = 0;
+      user.rank = (parseInt(user.rank)*user.numberOfRates 
+            + parseInt(req.body.rank))/(user.numberOfRates + 1);
+      user.numberOfRates++;
+    }
+
+    console.log(user);
+
+    user.save(function(err) {
+      if (err) {
+        return res.status(404).send({ msg: 'Rank couldn\'t be added.'});
+      }
+
+      res.send({ user: user, msg: 'Rank has been updated successfully.' });
+    })
+  });
+
+};
+
+
+

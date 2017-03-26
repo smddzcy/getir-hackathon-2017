@@ -11,7 +11,7 @@ import com.wow.wowmeet.models.Event;
 interface EventInfoContract {
 
     interface View extends BaseView<EventInfoContract.Presenter> {
-        void showEventInfo(Event event);
+        void showEventInfo(Event event, boolean isUserJoined);
     }
 
     interface Presenter extends BasePresenter {

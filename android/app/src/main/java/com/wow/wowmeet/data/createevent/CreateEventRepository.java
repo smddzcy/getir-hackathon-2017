@@ -1,8 +1,6 @@
 package com.wow.wowmeet.data.createevent;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.wow.wowmeet.exceptions.CreateEventGetTypesFailedException;
 import com.wow.wowmeet.exceptions.ResponseUnsuccessfulException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.Location;
@@ -12,8 +10,6 @@ import com.wow.wowmeet.utils.OkHttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -34,26 +30,6 @@ public class CreateEventRepository {
     private static final String PARAM_START_TIME = "startTime";
     private static final String PARAM_END_TIME = "endTime";
     private static final String PARAM_LOCATION = "location";
-
-    public Single<List<Type>> getTypes(){
-        return Single.create(new SingleOnSubscribe<List<Type>>() {
-            @Override
-            public void subscribe(SingleEmitter<List<Type>> e) throws Exception {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Response response = OkHttpUtils.makeGetRequest(okHttpClient, EVENT_TYPES_ENDPOINT);
-                String responseBody = response.body().string();
-                if(response.isSuccessful()){
-                    Gson gson = new Gson();
-                    java.lang.reflect.Type typesType = new TypeToken<List<Type>>(){}.getType();
-                    List<Type> eventTypes = gson.fromJson(responseBody, typesType);
-                    e.onSuccess(eventTypes);
-                }else{
-                    CreateEventGetTypesFailedException exception = new CreateEventGetTypesFailedException(responseBody);
-                    e.onError(exception);
-                }
-            }
-        });
-    }
 
     public Single<String> createEvent(final Event event, final String userToken) {
         return Single.create(new SingleOnSubscribe<String>() {

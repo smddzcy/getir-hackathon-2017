@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 
 /**
  * Created by mahmutkaraca on 3/25/17.
@@ -26,7 +25,6 @@ public class PermissionChecker {
                 ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             if(requestPermissionIfNotGranted) {
-                // TODO tatlı dille permission isteyelim.(bkz. Valla bişey yapmicaz. Nolur verin şu izni.)
                 ActivityCompat.requestPermissions((Activity) context, locationPermissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
 

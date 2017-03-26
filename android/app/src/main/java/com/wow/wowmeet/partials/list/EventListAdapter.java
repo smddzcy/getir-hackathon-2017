@@ -1,5 +1,6 @@
 package com.wow.wowmeet.partials.list;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.utils.CalendarUtils;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,14 +28,17 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     private List<Event> eventList;
     private ListEventClickListener eventClickListener;
+    Context context;
 
-    public EventListAdapter(List<Event> eventList, ListEventClickListener eventClickListener) {
+    public EventListAdapter(Context context, List<Event> eventList, ListEventClickListener eventClickListener) {
+        this.context = context;
         this.eventList = eventList;
         this.eventClickListener = eventClickListener;
     }
 
     public void changeDataSet(List<Event> eventList){
-        this.eventList = eventList;
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
         notifyDataSetChanged();
     }
 
@@ -47,11 +54,22 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         Event event = eventList.get(position);
 
 
-        //holder.imageViewProfilePhoto.setImageDrawable();
+        if(event.getCreator() != null){
+            holder.textViewProfileName.setText(event.getCreator().getName());
+            Picasso.with(context).load(event.getCreator().getPicture()).into(holder.imageViewProfilePhoto);
+        }
+
+        try {
+            String datesString =
+                    CalendarUtils.getStartEndDateString(event.getStartTime(), event.getEndTime());
+            holder.textViewDate.setText(datesString);
+        } catch (ParseException e) {
+            holder.textViewDate.setText(event.getStartTime());
+            e.printStackTrace();
+        }
+
         holder.textViewPlaceName.setText(event.getLocation().getName());
-        holder.textViewProfileName.setText(event.getCreator().getEmail());
         holder.textViewType.setText(event.getType().getName());
-        holder.textViewDate.setText(event.getStartTime());
     }
 
     @Override

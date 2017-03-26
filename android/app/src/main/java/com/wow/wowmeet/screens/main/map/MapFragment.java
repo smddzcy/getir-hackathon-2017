@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
 import com.wow.wowmeet.partials.googleapi.GoogleLocationAPIWrapper;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     private GoogleLocationAPIWrapper.WrapperLocationListener wrapperLocationListener = new GoogleLocationAPIWrapper.WrapperLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 2);
+            onRefreshListRequestedListener.onRefreshListRequested(location.getLatitude(), location.getLongitude(), 2);
         }
     };
 
@@ -76,7 +78,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     Location lastLocation = apiWrapper.getLastKnownLocation();
 
                     if(lastLocation != null)
-                        presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 2);
+                        onRefreshListRequestedListener.onRefreshListRequested(lastLocation.getLatitude(),
+                                lastLocation.getLongitude(), 2);
 
                     requestLocationUpdates();
                 }
@@ -84,7 +87,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         }, new GoogleApiProvider.OnProviderConnectionFailedListener() {
             @Override
             public void onConnectionFailed() {
-                //TODO error message about how bad the internet is...
+                showError(R.string.api_conn_failed_error_text);
             }
         });
 
@@ -121,14 +124,14 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         apiWrapper.onStop();
     }
 
-
     private void initializeMap(GoogleMap googleMap) {
         map = googleMap;
-        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026); //TODO DYNAMIC TAKE
+        LatLng mainCoordinates = com.wow.wowmeet.models.Location.getDefaultLocation(); //TODO DYNAMIC TAKE
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;
-        presenter.requestEventRefresh(mainCoordinates.latitude, mainCoordinates.longitude, 1.0);
+        onRefreshListRequestedListener.onRefreshListRequested(mainCoordinates.latitude,
+                mainCoordinates.longitude, 10);
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -164,7 +167,12 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(getActivity(), e);
+    }
 
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override
@@ -182,8 +190,6 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongitude())))
                     .setTag(e);
             }
-        } else {
-            //TODO EMPTY ELSE?
         }
 
 
@@ -199,6 +205,6 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     }
 
     public interface OnRefreshListRequestedListener {
-        void onRefreshListRequested();
+        void onRefreshListRequested(double lat, double lng, int radius);
     }
 }

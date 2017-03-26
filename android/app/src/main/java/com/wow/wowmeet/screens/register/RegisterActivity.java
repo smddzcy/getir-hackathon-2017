@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.register;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -68,6 +69,11 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
     @Override
     public void showError(String errorMessage) {
         DialogHelper.showAlertDialogWithError(this, errorMessage);
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
 

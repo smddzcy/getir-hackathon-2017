@@ -16,11 +16,11 @@ public interface ListContract {
         void showEvents(List<Event> events);
 
         void showEventInfo(Event event);
+
+        void stopRefreshLayoutRefreshingAnimation();
     }
 
     interface Presenter extends BasePresenter {
-        void onSwipeRefresh();
-
         void onEventClicked(Event event);
     }
 

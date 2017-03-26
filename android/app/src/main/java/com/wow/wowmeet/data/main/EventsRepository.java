@@ -22,4 +22,6 @@ public interface EventsRepository {
 
     Single<Event> getSingleEvent(String eventId);
 
+    Single<List<Event>> getSuggestedEvents(double lat, double lng, double radius, String token);
+
 }

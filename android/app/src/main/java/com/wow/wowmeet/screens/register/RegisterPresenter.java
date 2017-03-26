@@ -1,6 +1,7 @@
 package com.wow.wowmeet.screens.register;
 
 import com.wow.wowmeet.data.loginregister.RegisterRepository;
+import com.wow.wowmeet.exceptions.BaseException;
 import com.wow.wowmeet.models.User;
 
 import io.reactivex.Single;
@@ -53,7 +54,15 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         view.hideLoading();
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        } else {
+                            view.showError(e.getMessage());
+                        }
                         e.printStackTrace();
                     }
                 });

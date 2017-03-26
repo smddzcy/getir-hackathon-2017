@@ -5,14 +5,17 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -22,8 +25,11 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.screens.createevent.CreateEventActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,11 +38,48 @@ import butterknife.ButterKnife;
  * Created by mahmutkaraca on 3/26/17.
  */
 
-public class FilterDialog extends DialogFragment {
+public class FilterDialogFragment extends DialogFragment implements FilterDialogContract.View {
 
-    public static FilterDialog newInstance() {
-        FilterDialog dialog = new FilterDialog();
+    public static final String ARG_DATE_DAY = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateDay";
+    public static final String ARG_DATE_MONTH = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateMonth";
+    public static final String ARG_DATE_YEAR = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateYear";
 
+    public static final String ARG_DATE_START_HOUR = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateStartHour";
+    public static final String ARG_DATE_END_HOUR = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateEndHour";
+
+    public static final String ARG_PLACE_LAT = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceLat";
+    public static final String ARG_PLACE_LNG = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceLng";
+    public static final String ARG_PLACE_NAME = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceName";
+
+    public static final String ARG_PLACE_RADIUS = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceRadius";
+    public static final String ARG_TYPE = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argType";
+    private FilterDialogContract.Presenter presenter;
+
+    public static FilterDialogFragment newInstance() {
+        FilterDialogFragment dialog = new FilterDialogFragment();
+
+        return dialog;
+    }
+
+    public static FilterDialogFragment newInstance(FilterInfo filterInfo) {
+        FilterDialogFragment dialog = new FilterDialogFragment();
+        Bundle args = new Bundle();
+
+        args.putInt(ARG_DATE_DAY, filterInfo.dateStart.get(Calendar.DAY_OF_MONTH));
+        args.putInt(ARG_DATE_MONTH, filterInfo.dateStart.get(Calendar.MONTH));
+        args.putInt(ARG_DATE_YEAR, filterInfo.dateStart.get(Calendar.YEAR));
+
+        args.putInt(ARG_DATE_START_HOUR, filterInfo.dateStart.get(Calendar.HOUR_OF_DAY));
+        args.putInt(ARG_DATE_END_HOUR, filterInfo.dateEnd.get(Calendar.HOUR_OF_DAY));
+
+        args.putDouble(ARG_PLACE_LAT, filterInfo.place.getLatLng().latitude);
+        args.putDouble(ARG_PLACE_LNG, filterInfo.place.getLatLng().longitude);
+        args.putString(ARG_PLACE_NAME, (String) filterInfo.place.getName());
+
+        args.putInt(ARG_PLACE_RADIUS, filterInfo.radius);
+        args.putSerializable(ARG_TYPE, filterInfo.type);
+
+        dialog.setArguments(args);
         return dialog;
     }
 
@@ -64,7 +107,10 @@ public class FilterDialog extends DialogFragment {
     @BindView(R.id.txtStartingHourText) TextView txtStartHour;
     @BindView(R.id.txtEndingHourText) TextView txtEndHour;
     @BindView(R.id.txtRadiusText) TextView txtRadius;
+    @BindView(R.id.spinnerActivityTypeFilter)
+    Spinner spinnerActivityTypeFilter;
 
+    @BindView(R.id.btnFilterCancel) Button btnCancel;
     @BindView(R.id.btnFilterOk) Button btnOK;
 
     private Calendar currentStartDateTime;
@@ -76,19 +122,56 @@ public class FilterDialog extends DialogFragment {
     private int radius = 20;
 
     private Place place;
+    private double previousLat;
+    private double previousLng;
+
+    private boolean placeChanged;
+
+    private ArrayAdapter<Type> spinnerAdapter;
+    private List<Type> eventTypes;
+
+    private void parseArguments(Bundle args) {
+        int day = args.getInt(ARG_DATE_DAY);
+        int month = args.getInt(ARG_DATE_MONTH);
+        int year = args.getInt(ARG_DATE_YEAR);
+
+        int startHour = args.getInt(ARG_DATE_START_HOUR);
+        int endHour = args.getInt(ARG_DATE_END_HOUR);
+
+        double lat = args.getDouble(ARG_PLACE_LAT);
+        double lng = args.getDouble(ARG_PLACE_LNG);
+        String name = args.getString(ARG_PLACE_NAME);
+
+        int radius = args.getInt(ARG_PLACE_RADIUS);
+        Type type = (Type) args.getSerializable(ARG_TYPE);
+
+        currentStartDateTime.set(year, month, day, startHour, 0);
+        currentEndDateTime.set(year, month, day, endHour, 0);
+        this.startHour = startHour;
+        this.endHour = endHour;
+
+        this.edtLocationFilter.setText(name);
+        previousLat = lat;
+        previousLng = lng;
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_filter, container, false);
-
         ButterKnife.bind(this, v);
+
+        presenter = new FilterDialogPresenter(this);
+        this.setPresenter(presenter);
 
         currentStartDateTime = Calendar.getInstance();
         currentEndDateTime = Calendar.getInstance();
         startHour = currentStartDateTime.get(Calendar.HOUR_OF_DAY);
         endHour = startHour + 1;
-
+        if(getArguments() != null) {
+            parseArguments(getArguments());
+        }
 
         seekBarStartingHour.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -138,7 +221,7 @@ public class FilterDialog extends DialogFragment {
             public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
                 if(fromUser) {
                     radius = i;
-                    txtRadius.setText(radius + " km");
+                    txtRadius.setText(String.format(getString(R.string.radius_unit), radius));
                 }
             }
 
@@ -158,6 +241,13 @@ public class FilterDialog extends DialogFragment {
                     onFilterDialogResultListener.onFilterDialogResult(currentStartDateTime, currentEndDateTime,
                             place, 10, /*TODO*/null);
                 }
+                dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });
@@ -186,10 +276,10 @@ public class FilterDialog extends DialogFragment {
                     startActivityForResult(i, CreateEventActivity.PLACE_PICKER_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
-                    //TODO handle error
+                    DialogHelper.showAlertDialogWithError(getActivity(), e.getLocalizedMessage());
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
-                    //TODO handle error 2
+                    DialogHelper.showAlertDialogWithError(getActivity(), e.getLocalizedMessage());
                 }
             }
         });
@@ -197,6 +287,9 @@ public class FilterDialog extends DialogFragment {
         edtDateFilter.setKeyListener(null);
         edtLocationFilter.setKeyListener(null);
 
+        eventTypes = new ArrayList<>();
+        spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, eventTypes);
+        spinnerActivityTypeFilter.setAdapter(spinnerAdapter);
         return v;
     }
 
@@ -218,15 +311,51 @@ public class FilterDialog extends DialogFragment {
                 place = PlacePicker.getPlace(getActivity(), data);
                 edtLocationFilter.setText(place.getName());
             } else if(resultCode == PlacePicker.RESULT_ERROR) {
-                //TODO handle error 3
+                DialogHelper.showAlertDialogWithError(getActivity(), PlacePicker.getStatus(getActivity(), data).getStatusMessage());
             } else if(resultCode == Activity.RESULT_CANCELED) {
-                //TODO handle cancellation
+                DialogHelper.showToastMessage(getActivity(), getString(R.string.place_selection_cancelled_info_text));
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.start();
+    }
+
+    @Override
+    public void setPresenter(FilterDialogContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void showError(String e) {
+
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+
+    }
+
+    @Override
+    public void updateEventTypes(List<Type> eventTypes) {
+        this.eventTypes.clear();
+        this.eventTypes.addAll(eventTypes);
+        spinnerAdapter.notifyDataSetChanged();
     }
 
     public interface OnFilterDialogResultListener {
         void onFilterDialogResult(@Nullable Calendar startDate, @Nullable Calendar endDate, @Nullable Place place, int radius,
                                   @Nullable Type type);
+    }
+
+    public static class FilterInfo {
+        public Calendar dateStart;
+        public Calendar dateEnd;
+        public Place place;
+        public int radius;
+        public Type type;
     }
 }

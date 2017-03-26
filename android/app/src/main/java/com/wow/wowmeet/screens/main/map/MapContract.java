@@ -24,7 +24,6 @@ public interface MapContract {
 
     interface Presenter extends BasePresenter {
         void onGPSTimeout();
-        void requestEventRefresh(double lat, double lng, double radius);
         void onEventClick(Event event);
     }
 }

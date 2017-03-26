@@ -9,10 +9,17 @@ import android.widget.TimePicker;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.wow.wowmeet.R;
+import com.wow.wowmeet.data.EventTypeRepository;
+import com.wow.wowmeet.data.createevent.CreateEventRepository;
+import com.wow.wowmeet.exceptions.BaseException;
+import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.Location;
+import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.partials.dialogs.DatePickerFragment;
 import com.wow.wowmeet.partials.dialogs.TimePickerFragment;
-import com.wow.wowmeet.data.createevent.CreateEventRepository;
-import com.wow.wowmeet.models.Type;
+import com.wow.wowmeet.utils.CalendarUtils;
 
 import java.util.Calendar;
 import java.util.List;
@@ -37,8 +44,10 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     private Place pickedPlace;
 
     private CreateEventRepository createEventRepository;
+    private EventTypeRepository eventTypeRepository;
 
     private DisposableSingleObserver<List<Type>> disposableSingleEventTypesObserver;
+    private DisposableSingleObserver<String> disposableSingleCreateEventObserver;
 
     private TimePickerDialog.OnTimeSetListener onStartTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -73,12 +82,13 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
         this.dateStartTimePickerReference = Calendar.getInstance();
         this.dateEndTimePickerReference = Calendar.getInstance();
         this.createEventRepository = new CreateEventRepository();
+        this.eventTypeRepository = new EventTypeRepository();
     }
 
 
     @Override
     public void start() {
-        Single<List<Type>> singleTypes = createEventRepository.getTypes();
+        Single<List<Type>> singleTypes = eventTypeRepository.getTypes();
 
         disposableSingleEventTypesObserver = singleTypes.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +100,13 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        }
                     }
                 });
     }
@@ -101,9 +117,44 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
             disposableSingleEventTypesObserver.dispose();
     }
 
+    //EventType, ISO - StartTime, ISO - EndTime, Location
     @Override
-    public void onCreateEvent() {
+    public void onCreateEventClicked(Type eventType, String token) {
+        Location location = getLocationFromPlace(pickedPlace);
+        String startTime = CalendarUtils.calendarToDateString(dateStartTimePickerReference);
+        String endTime = CalendarUtils.calendarToDateString(dateEndTimePickerReference);
+        Event event = new Event(eventType, startTime, endTime, location);
+        Single<String> singleCreateEvent = createEventRepository.createEvent(event, token);
 
+        disposableSingleCreateEventObserver = singleCreateEvent
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<String>() {
+                    @Override
+                    public void onSuccess(String value) {
+                        view.onSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        }
+                    }
+                });
+    }
+
+    private Location getLocationFromPlace(Place place){
+        LatLng placeLatLng = place.getLatLng();
+        double lat = placeLatLng.latitude;
+        double lng = placeLatLng.longitude;
+        String placeName = place.getName().toString();
+        return new Location(placeName, lat, lng);
     }
 
     @Override
@@ -143,9 +194,9 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
             Place place = view.updatePlaceField(data);
             this.pickedPlace = place;
         } else if(resultCode == PlacePicker.RESULT_ERROR) {
-            //TODO handle error
+            view.showPlacePickerError(data);
         } else if(resultCode == Activity.RESULT_CANCELED) {
-            // TODO Do nothing?
+            view.showError(R.string.place_selection_cancelled_info_text);
         }
     }
 

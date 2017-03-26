@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -28,7 +29,8 @@ import com.wow.wowmeet.screens.main.map.MapContract;
 import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
-import com.wow.wowmeet.partials.dialogs.FilterDialog;
+import com.wow.wowmeet.utils.UserProvider;
+import com.wow.wowmeet.partials.dialogs.FilterDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +53,22 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private ArrayList<Event> events = new ArrayList<>();
 
-    private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListener = new MapFragment.OnRefreshListRequestedListener() {
-        @Override
-        public void onRefreshListRequested() {
+    private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListenerForMap = new MapFragment.OnRefreshListRequestedListener() {
 
+        @Override
+        public void onRefreshListRequested(double lat, double lng, int radius) {
+            presenter.onRefreshListAndMap(lat, lng, radius);
         }
     };
+
+    private ListFragment.OnRefreshListRequestedListener onRefreshListRequestedListenerForList = new ListFragment.OnRefreshListRequestedListener() {
+        @Override
+        public void onRefreshListRequested() {
+            presenter.onRefreshListAndMap();
+        }
+    };
+
+    private User user;
 
     @BindView(R.id.fab) FloatingActionButton fab;
 
@@ -67,7 +79,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         ButterKnife.bind(this);
 
         Intent i = getIntent();
-        User user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        UserProvider.getInstance().setUser(user);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.drawerContainer, DrawerFragment.newInstance(user), "DRAWER")
@@ -84,7 +97,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         ListFragment lf = ListFragment.newInstance();
         MapFragment mf = MapFragment.newInstance();
 
-        mf.setOnRefreshListRequestedListener(onRefreshListRequestedListener);
+        mf.setOnRefreshListRequestedListener(onRefreshListRequestedListenerForMap);
+        lf.setOnRefreshListRequestedListener(onRefreshListRequestedListenerForList);
 
         listContractView = lf;
         mapContractView = mf;
@@ -126,7 +140,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
         int action = item.getItemId();
         if(action == R.id.action_filter) {
-            FilterDialog.newInstance().show(getSupportFragmentManager(), "FilterDialogTest");
+            FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance();
+            filterDialogFragment.setOnFilterDialogResultListener(presenter);
+            filterDialogFragment.show(getSupportFragmentManager(), "FilterDialogTest");
 
             return true;
         }
@@ -163,9 +179,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
+    }
+
+    @Override
     public void refreshListAndMap(List<Event> arr) {
         events.clear();
         events.addAll(arr);
+
+        listContractView.stopRefreshLayoutRefreshingAnimation();
 
         listContractView.showEvents(events);
         mapContractView.showEvents(events);
@@ -175,6 +198,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void goCreateEventActivity() {
         Intent intent = new Intent(this, CreateEventActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showLoading() {
+        showLoadingView();
+    }
+
+    @Override
+    public void hideLoading() {
+        hideLoadingView();
     }
 
     @Override

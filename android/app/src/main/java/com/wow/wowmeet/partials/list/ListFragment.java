@@ -3,7 +3,9 @@ package com.wow.wowmeet.partials.list;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,10 @@ public class ListFragment extends Fragment implements ListContract.View {
     private ListContract.Presenter presenter;
     private EventListAdapter eventListAdapter;
 
+    @BindView(R.id.swipeRefreshEventList) SwipeRefreshLayout swipeRefreshEventList;
     @BindView(R.id.event_list) RecyclerView eventList;
+
+    private OnRefreshListRequestedListener onRefreshListRequestedListener;
 
     public static ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -53,9 +59,18 @@ public class ListFragment extends Fragment implements ListContract.View {
         presenter.start();
         ArrayList<Event> events = new ArrayList<>();
 
-        eventListAdapter = new EventListAdapter(events, presenter);
-        eventList.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventListAdapter = new EventListAdapter(getContext(), events, presenter);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setReverseLayout(true);
+        eventList.setLayoutManager(llm);
         eventList.setAdapter(eventListAdapter);
+
+        swipeRefreshEventList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                onRefreshListRequestedListener.onRefreshListRequested();
+            }
+        });
 
         return v;
     }
@@ -67,12 +82,18 @@ public class ListFragment extends Fragment implements ListContract.View {
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(getActivity(), e);
+    }
 
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override
     public void showEvents(List<Event> events) {
         eventListAdapter.changeDataSet(events);
+        eventList.scrollToPosition(eventListAdapter.getItemCount() - 1);
     }
 
     @Override
@@ -80,5 +101,18 @@ public class ListFragment extends Fragment implements ListContract.View {
         Intent i = new Intent(getActivity(), EventInfoActivity.class);
         i.putExtra(EventInfoActivity.EXTRA_EVENT, event);
         startActivity(i);
+    }
+
+    @Override
+    public void stopRefreshLayoutRefreshingAnimation() {
+        swipeRefreshEventList.setRefreshing(false);
+    }
+
+    public void setOnRefreshListRequestedListener(OnRefreshListRequestedListener onRefreshListRequestedListener) {
+        this.onRefreshListRequestedListener = onRefreshListRequestedListener;
+    }
+
+    public interface OnRefreshListRequestedListener {
+        void onRefreshListRequested();
     }
 }

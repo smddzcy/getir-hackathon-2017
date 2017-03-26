@@ -185,6 +185,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     @Override
     public void showEvents(List<Event> events) {
         if(mapReady && map != null) {
+            map.clear();
             for (Event e : events) {
                 map.addMarker(new MarkerOptions()
                     .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongitude())))

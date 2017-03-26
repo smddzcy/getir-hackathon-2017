@@ -8,7 +8,7 @@ var async = require('async');
  * Train the model of user with given events.
  */
 var trainModel = function(userId, events, cb) {
-  // If exists, get the model from Redis.
+  // If exists, get the regression model from Redis.
   // Otherwise, create a new model.
   redis.hget('lr_model', userId, function(err, jsonString) {
     var oldModel;
@@ -148,9 +148,12 @@ exports.eventSearchTypeGet = function(req, res, next) {
         if (err) {
           return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
         }
+
+        // Clear events that doesn't have a type.
         events = events.filter(function(event) {
           return event.type;
         });
+
         res.send(events);
       });
     });
@@ -180,6 +183,7 @@ exports.eventSearchIntervalGet = function(req, res, next) {
         if (err) {
           return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
         }
+
         res.send(events);
       });
     });

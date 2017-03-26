@@ -11,8 +11,7 @@ import android.widget.Button;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.base.BaseActivity;
 import com.wow.wowmeet.models.User;
-import com.wow.wowmeet.screens.main.MainActivity;
-import com.wow.wowmeet.utils.Constants;
+import com.wow.wowmeet.screens.login.LoginActivity;
 import com.wow.wowmeet.utils.DialogHelper;
 
 import butterknife.BindView;
@@ -85,8 +84,7 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     @Override
     public void goMainWithUser(User user) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_USER, user);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

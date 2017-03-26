@@ -242,6 +242,11 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     }
 
     @Override
+    public void onSuccess() {
+        this.finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PLACE_PICKER_REQUEST_CODE) {

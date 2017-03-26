@@ -21,9 +21,10 @@ var trainModel = function(userId, events, cb) {
     // Build the train inputs.
     var x = oldModel.x;
     [].concat(events).forEach(function(event) {
-      x.push([ event.location.latitude, event.location.longitude,
-               toEpoch(event.startTime), toEpoch(event.endTime),
-               parseInt(event.type, 16) ]);
+      x.push([event.location.latitude, event.location.longitude,
+        toEpoch(event.startTime), toEpoch(event.endTime),
+        parseInt(event.type, 16)
+      ]);
     })
 
     // Train the model.
@@ -341,10 +342,10 @@ exports.eventSuggestedGet = function(req, res, next) {
           // Build the prediction.
           predictions.push({
             point: Math.pow(event.location.latitude, 5) * eq[0] +
-                   Math.pow(event.location.longitude, 4) * eq[1] +
-                   Math.pow(toEpoch(event.startTime), 3) * eq[2] +
-                   Math.pow(toEpoch(event.endTime), 2) * eq[3] +
-                   parseInt(event.type._id, 16) * eq[4] + eq[5],
+              Math.pow(event.location.longitude, 4) * eq[1] +
+              Math.pow(toEpoch(event.startTime), 3) * eq[2] +
+              Math.pow(toEpoch(event.endTime), 2) * eq[3] +
+              parseInt(event.type._id, 16) * eq[4] + eq[5],
             event: event
           });
         });

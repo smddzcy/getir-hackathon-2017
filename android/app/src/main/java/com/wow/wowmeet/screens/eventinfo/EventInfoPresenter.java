@@ -23,6 +23,7 @@ public class EventInfoPresenter implements EventInfoContract.Presenter {
     private User user;
 
     private EventInfoRepository eventInfoRepository;
+    private DisposableSingleObserver<String> disposableSingleJoinObserver;
 
     public EventInfoPresenter(EventInfoContract.View view, User user, Event event) {
         this.view = view;
@@ -39,14 +40,15 @@ public class EventInfoPresenter implements EventInfoContract.Presenter {
 
     @Override
     public void stop() {
-
+        if(disposableSingleJoinObserver != null)
+            disposableSingleJoinObserver.dispose();
     }
 
     @Override
     public void onJoinClicked() {
         Single<String> singleJoinEvent = eventInfoRepository.joinEvent(event.get_id(), user.getToken());
 
-        DisposableSingleObserver<String> disposableSingleObserver = singleJoinEvent
+        disposableSingleJoinObserver = singleJoinEvent
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<String>() {

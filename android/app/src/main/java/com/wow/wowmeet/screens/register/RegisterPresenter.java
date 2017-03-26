@@ -42,7 +42,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
 
         Single<User> singleUser = registerRepository.register(usernameText, emailText, passwordText);
 
-        singleUser.subscribeOn(Schedulers.io())
+        disposableSingleUserObserver = singleUser.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<User>() {
                     @Override

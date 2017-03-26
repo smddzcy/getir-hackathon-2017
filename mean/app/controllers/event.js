@@ -25,6 +25,10 @@ angular.module('MyApp')
               $scope.event.location = {};
             }
 
+            if (!$scope.search) {
+              $scope.search = {};
+            }
+
             $scope.event.location.latitude = lat;
             $scope.event.location.longitude = lng;
 
@@ -34,6 +38,7 @@ angular.module('MyApp')
               geocoder.geocode({ 'latLng': latlng }, function(results, status) {
                 $scope.$apply(function() {
                   $scope.event.location.name = results[0].formatted_address;
+                  $scope.search = results[0].formatted_address;
                 });
               });
             });
@@ -66,6 +71,7 @@ angular.module('MyApp')
         }
       },
     });
+    $scope.search = '';
 
     // Get event types
     $http.get('/event-type')

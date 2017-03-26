@@ -63,6 +63,21 @@ public class OkHttpUtils {
         return client.newCall(request).execute();
     }
 
+    public static Response makePostRequestBodyJsonWithJUser(OkHttpClient client, String endpoint,
+                                                   String jsonString, String token) throws IOException {
+
+        RequestBody requestBody = RequestBody.create(JSON, jsonString);
+
+        Request request = new Request.Builder()
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .post(requestBody)
+                .url(endpoint)
+                .build();
+
+        return client.newCall(request).execute();
+    }
+
     public static Response makePostRequestWithUserJson(OkHttpClient client, String endpoint,
                                                        String json, String token) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);

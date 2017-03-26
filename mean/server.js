@@ -96,6 +96,9 @@ app.get('/user/:id', userController.userGet);
 app.get('/event/search/type/:typeName', eventController.eventSearchTypeGet);
 app.get('/event/search/interval/:startTime/:endTime', eventController.eventSearchIntervalGet);
 
+// Rank stuff
+app.post('/user/rank/:id', userController.ensureAuthenticated, userController.addRank);
+
 // Event endpoints
 app.get('/event/:id', eventController.eventGet);
 app.post('/event/:id/join', userController.ensureAuthenticated, eventController.eventJoinPost);

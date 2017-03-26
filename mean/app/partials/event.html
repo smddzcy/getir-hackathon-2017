@@ -12,7 +12,6 @@
                     ng-options="type as type.name for type in types track by type._id"
                     ng-model="event.type">
             </select>
-           <!-- <input type="text" name="type" id="type" class="form-control" ng-model="event.type" autofocus> -->
           </div>
         </div>
 
@@ -41,12 +40,12 @@
         </div>
         <div>
           <script id="searchbox.tpl.html" type="text/ng-template">
-            <input type="text" class="searchbox" placeholder="Search">
+            <input type="text" class="searchbox" placeholder="Search" ng-model="search">
           </script>
           <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" events="map.events">
               <ui-gmap-marker idKey="1" coords="marker.coords"></ui-gmap-marker>
-              <ui-gmap-search-box options="searchbox.options" template="searchbox.template" ng-model="search"
-                            events="searchbox.events" position="searchbox.position"></ui-gmap-search-box>
+              <ui-gmap-search-box options="searchbox.options" template="searchbox.template"
+                                  events="searchbox.events" position="searchbox.position"></ui-gmap-search-box>
           </ui-gmap-google-map>
         </div>
       </form>

@@ -11,6 +11,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.R;
+import com.wow.wowmeet.data.EventTypeRepository;
 import com.wow.wowmeet.data.createevent.CreateEventRepository;
 import com.wow.wowmeet.exceptions.BaseException;
 import com.wow.wowmeet.models.Event;
@@ -43,6 +44,7 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     private Place pickedPlace;
 
     private CreateEventRepository createEventRepository;
+    private EventTypeRepository eventTypeRepository;
 
     private DisposableSingleObserver<List<Type>> disposableSingleEventTypesObserver;
     private DisposableSingleObserver<String> disposableSingleCreateEventObserver;
@@ -80,12 +82,13 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
         this.dateStartTimePickerReference = Calendar.getInstance();
         this.dateEndTimePickerReference = Calendar.getInstance();
         this.createEventRepository = new CreateEventRepository();
+        this.eventTypeRepository = new EventTypeRepository();
     }
 
 
     @Override
     public void start() {
-        Single<List<Type>> singleTypes = createEventRepository.getTypes();
+        Single<List<Type>> singleTypes = eventTypeRepository.getTypes();
 
         disposableSingleEventTypesObserver = singleTypes.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

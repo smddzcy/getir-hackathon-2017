@@ -5,14 +5,17 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -24,7 +27,9 @@ import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.screens.createevent.CreateEventActivity;
 import com.wow.wowmeet.utils.DialogHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by mahmutkaraca on 3/26/17.
  */
 
-public class FilterDialogFragment extends DialogFragment {
+public class FilterDialogFragment extends DialogFragment implements FilterDialogContract.View {
 
     public static final String ARG_DATE_DAY = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateDay";
     public static final String ARG_DATE_MONTH = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateMonth";
@@ -48,6 +53,7 @@ public class FilterDialogFragment extends DialogFragment {
 
     public static final String ARG_PLACE_RADIUS = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceRadius";
     public static final String ARG_TYPE = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argType";
+    private FilterDialogContract.Presenter presenter;
 
     public static FilterDialogFragment newInstance() {
         FilterDialogFragment dialog = new FilterDialogFragment();
@@ -101,6 +107,8 @@ public class FilterDialogFragment extends DialogFragment {
     @BindView(R.id.txtStartingHourText) TextView txtStartHour;
     @BindView(R.id.txtEndingHourText) TextView txtEndHour;
     @BindView(R.id.txtRadiusText) TextView txtRadius;
+    @BindView(R.id.spinnerActivityTypeFilter)
+    Spinner spinnerActivityTypeFilter;
 
     @BindView(R.id.btnFilterCancel) Button btnCancel;
     @BindView(R.id.btnFilterOk) Button btnOK;
@@ -119,6 +127,8 @@ public class FilterDialogFragment extends DialogFragment {
 
     private boolean placeChanged;
 
+    private ArrayAdapter<Type> spinnerAdapter;
+    private List<Type> eventTypes;
 
     private void parseArguments(Bundle args) {
         int day = args.getInt(ARG_DATE_DAY);
@@ -150,8 +160,10 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_filter, container, false);
-
         ButterKnife.bind(this, v);
+
+        presenter = new FilterDialogPresenter(this);
+        this.setPresenter(presenter);
 
         currentStartDateTime = Calendar.getInstance();
         currentEndDateTime = Calendar.getInstance();
@@ -275,6 +287,9 @@ public class FilterDialogFragment extends DialogFragment {
         edtDateFilter.setKeyListener(null);
         edtLocationFilter.setKeyListener(null);
 
+        eventTypes = new ArrayList<>();
+        spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, eventTypes);
+        spinnerActivityTypeFilter.setAdapter(spinnerAdapter);
         return v;
     }
 
@@ -301,6 +316,34 @@ public class FilterDialogFragment extends DialogFragment {
                 DialogHelper.showToastMessage(getActivity(), getString(R.string.place_selection_cancelled_info_text));
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.start();
+    }
+
+    @Override
+    public void setPresenter(FilterDialogContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void showError(String e) {
+
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+
+    }
+
+    @Override
+    public void updateEventTypes(List<Type> eventTypes) {
+        this.eventTypes.clear();
+        this.eventTypes.addAll(eventTypes);
+        spinnerAdapter.notifyDataSetChanged();
     }
 
     public interface OnFilterDialogResultListener {

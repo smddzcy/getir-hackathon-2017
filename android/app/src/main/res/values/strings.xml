@@ -12,8 +12,6 @@
     <string name="activity_name_register">Register</string>
 
     <string-array name="drawer_options_array">
-        <item>Home</item>
-        <item>Messages</item>
         <item>Log Out</item>
     </string-array>
 

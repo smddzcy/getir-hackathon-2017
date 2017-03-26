@@ -21,7 +21,6 @@ import com.wow.wowmeet.utils.UserProvider;
 
 import java.text.ParseException;
 import java.util.List;
-import com.wow.wowmeet.utils.DialogHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

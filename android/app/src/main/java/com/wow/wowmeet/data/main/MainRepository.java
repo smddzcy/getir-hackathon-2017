@@ -1,11 +1,10 @@
 package com.wow.wowmeet.data.main;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wow.wowmeet.exceptions.AddEventFailedException;
 import com.wow.wowmeet.exceptions.GetEventsFailedException;
+import com.wow.wowmeet.exceptions.ResponseUnsuccessfulException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.utils.OkHttpUtils;
@@ -21,13 +20,13 @@ import io.reactivex.SingleOnSubscribe;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-import static com.wow.wowmeet.data.main.EventsConstants.EVENTS_ENDPOINT;
-
 /**
  * Created by ergunerdogmus on 25.03.2017.
  */
 
 public class MainRepository implements EventsRepository {
+
+    static final String EVENTS_ENDPOINT = com.wow.wowmeet.utils.Constants.API_URL + "/event";
 
     private OkHttpClient client;
 
@@ -37,9 +36,7 @@ public class MainRepository implements EventsRepository {
 
     private void getEventsForEmitter(SingleEmitter<List<Event>> e, String endpoint) throws IOException {
         Response response = OkHttpUtils.makeGetRequest(client, endpoint);
-        Log.d("WHERE", endpoint);
         String responseBody = response.body().string();
-        Log.d("RESPONSE", responseBody);
         if(response.isSuccessful()){
             Gson gson = new Gson();
             Type eventsType = new TypeToken<ArrayList<Event>>(){}.getType();
@@ -102,5 +99,30 @@ public class MainRepository implements EventsRepository {
     @Override
     public Single<Event> getSingleEvent(String eventId) {
         return null;
+    }
+
+    @Override
+    public Single<List<Event>> getSuggestedEvents(final double lat,
+                                                  final double lng,
+                                                  final double radius,
+                                                  final String token) {
+        return Single.create(new SingleOnSubscribe<List<Event>>() {
+            @Override
+            public void subscribe(SingleEmitter<List<Event>> e) throws Exception {
+                OkHttpClient client = new OkHttpClient();
+                String endpoint = EVENTS_ENDPOINT + "/" + lat + "/" + lng + "/" + radius;
+                Response response = OkHttpUtils.makeGetRequestWithUser(client, endpoint, token);
+                String responseBody = response.body().string();
+                if(response.isSuccessful()){
+                    Gson gson = new Gson();
+                    Type eventsType = new TypeToken<ArrayList<Event>>(){}.getType();
+                    List<Event> events = gson.fromJson(responseBody, eventsType);
+                    e.onSuccess(events);
+                }else{
+                    ResponseUnsuccessfulException exception = new ResponseUnsuccessfulException(responseBody);
+                    e.onError(exception);
+                }
+            }
+        });
     }
 }

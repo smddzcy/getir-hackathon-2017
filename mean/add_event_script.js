@@ -10,8 +10,8 @@ let i = 0;
 
 const getRandomFloat = (min, max) => Math.random() * (max - min) + min;
 const getRandomSign = () => Math.random() > 0.5 ? -1 : 1;
-const getRandomLatitude = () => getRandomFloat(41.025, 41.25);
-const getRandomLongitude = () => getRandomFloat(28.5, 29.38);
+const getRandomLatitude = () => getRandomFloat(36.09, 41.25);
+const getRandomLongitude = () => getRandomFloat(27.655, 44.66);
 const getRandomEventType = () => eventTypes[(Math.random() * (eventTypes.length - 1)) | 0];
 const getRandomStartTime = () => (new Date(Date.now() - Math.random() * 1000)).toISOString();
 const getRandomEndTime = () => (new Date(Date.now() + Math.random() * 1000)).toISOString();

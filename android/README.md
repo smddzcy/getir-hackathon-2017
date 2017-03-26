@@ -3,18 +3,18 @@ With this application, users can register, login, create events, see created eve
 chat with people in the same event and join event.
 
 ### Usage
-Here is the steps for the typical user who uses the application in normal usecase.
-1 - Login / Register
-2 - Main Screen
+Here is the steps for the typical user who uses the application in normal usecase.  
+1 - Login / Register  
+2 - Main Screen  
 In here our user can see the events created by others users in a list or in the map.
 Also, the user can filter the result by place and radius.
-From here, user can go to two screens.
-  2.1 - Create Event Screen
-  In here, user can create a new event by choosing a place, date, time and activity type.
-  2.2 - Event Info Screen
+From here, user can go to two screens.  
+  2.1 - Create Event Screen  
+  In here, user can create a new event by choosing a place, date, time and activity type.  
+  2.2 - Event Info Screen  
   In here, user can see the info of the event and chat with other users that looking the same event like a group chat.
   Also, user can "Join" the event which means user is also joining the event. After joining, user can see other
-  users who also joined the same event.
+  users who also joined the same event.  
   
 In main screen, user can use the navigation drawer and can log out.
 

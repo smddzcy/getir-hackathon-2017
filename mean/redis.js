@@ -66,29 +66,27 @@ client.getEventById = function(id) {
  * Returns a Promise that resolves with the events.
  */
 client.getEvents = function(lat, lng, radius) {
-  var deferred = new Promise();
+  return new Promise(function(resolve, reject) {
+    // If no lat and lng is given, return all the events.
+    if (!lat && !lng) {
+      return client.hvals('events', resolve);
+    }
 
-  // If no lat and lng is given, return all the events.
-  if (!lat && !lng) {
-    return client.hvals('events', deferred.resolve);
-  }
+    // Find the events in the given area.
+    radius = radius || 0.5;
+    client.hvals('events', function(events) {
+      // Get events in the radius.
+      var eventsInRadius = events.filter(function(event) {
+        // If event has no location info, do not include it.
+        if (!event.location) { return false; }
+        return Math.sqrt(Math.pow(event.location.latitude - lat, 2) +
+                         Math.pow(event.location.longitude - lng, 2)) < radius;
+      });
 
-  // Find the events in the given area.
-  radius = radius || 0.5;
-  client.hvals('events', function(events) {
-    // Get events in the radius.
-    var eventsInRadius = events.filter(function(event) {
-      // If event has no location info, do not include it.
-      if (!event.location) { return false; }
-      return Math.sqrt(Math.pow(event.location.latitude - lat, 2) +
-                       Math.pow(event.location.longitude - lng, 2)) < radius;
+      // Resolve the promise with filtered events.
+      resolve(eventsInRadius);
     });
-
-    // Resolve the promise with filtered events.
-    deferred.resolve(eventsInRadius);
   });
-
-  return deferred;
 }
 
 module.exports = client;

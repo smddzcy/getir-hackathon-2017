@@ -36,7 +36,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void start() {
-        LatLng mainCoordinates = Location.getDefaultLocation(); //TODO DYNAMIC TAKE
+        LatLng mainCoordinates = Location.getDefaultLocation();
         onRefreshListAndMap(mainCoordinates.latitude, mainCoordinates.longitude, radius);
     }
 

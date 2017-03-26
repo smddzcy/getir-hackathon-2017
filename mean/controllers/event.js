@@ -1,6 +1,6 @@
 var Event = require('../models/Event');
 var Message = require('../models/Message');
-var LinearRegression = require('../linear_regression').LinearRegression;
+var regression = require('../linear_regression');
 var redis = require('../redis');
 var async = require('async');
 
@@ -11,35 +11,30 @@ var trainModel = function(userId, events, cb) {
   // If exists, get the model from Redis.
   // Otherwise, create a new model.
   redis.hget('lr_model', userId, function(err, jsonString) {
-    var lrModel;
+    var oldModel;
     if (jsonString) {
-      lrModel = LinearRegression.fromJSON(jsonString);
+      oldModel = JSON.parse(jsonString);
     } else {
-      lrModel = new LinearRegression();
+      oldModel = { x: [] };
     }
 
-    // Build the train inputs and outputs.
-    var x = [];
-    var y = [];
+    // Build the train inputs.
+    var x = oldModel.x;
     [].concat(events).forEach(function(event) {
       x.push([event.location.latitude, event.location.longitude,
-                toEpoch(event.startTime), toEpoch(event.endTime),
-                event.type.toString()]);
-
-      // Since this is not a real train data, give a good random
-      // y value which represents how much user likes this event.
-      // It's between 0.75 and 1.
-      y.push(Math.random() / 4 + 0.75);
+        toEpoch(event.startTime), toEpoch(event.endTime),
+        parseInt(event.type, 16)
+      ]);
     })
 
     // Train the model.
-    lrModel.train(x, y, function(trainedModel) {
-      // Save the trained model to Redis.
-      redis.hset('lr_model', userId, trainedModel.toJSON());
+    var model = regression('polynomial', x, 5);
 
-      // If there is a callback, call it with the trained model.
-      if (cb && typeof cb === 'function') cb(trainedModel);
-    });
+    // Persist the model in Redis.
+    redis.hset('lr_model', userId, JSON.stringify({
+      eq: model.equation,
+      x: x
+    }));
   });
 }
 
@@ -201,11 +196,12 @@ exports.eventPost = function(req, res, next) {
     endTime: req.body.endTime,
     location: req.body.location,
     users: req.body.users,
-    messages: req.body.message
+    messages: req.body.messages
   });
 
   event.save(function(err) {
     if (err) {
+      console.log(err);
       return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
 
@@ -318,34 +314,55 @@ exports.eventSuggestedGet = function(req, res, next) {
   var lng = req.params.lng;
   var radius = req.params.radius || 1;
 
+  var normalize = function(obj, field) {
+    // First reduce, then map.
+    var sum = 0;
+    for (var i in obj) {
+      sum += obj[i][field];
+    }
+    for (var i in obj) {
+      obj[i][field] = obj[i][field] / sum;
+    }
+    return obj;
+  };
+
   // Get the trained model from Redis
   redis.hget('lr_model', req.user._id.toString(), function(err, jsonString) {
-    var lrModel = LinearRegression.fromJSON(JSON.parse(jsonString));
+    var eq = JSON.parse(jsonString).eq;
 
     Event.find({})
       .populate('creator', ['_id', 'name', 'email', 'picture'])
       .populate('type', ['_id', 'name', 'count'])
       .exec(function(err, events) {
-        var y = [];
+        var predictions = [];
 
         filterEventsInRadius(events, lat, lng, radius).forEach(function(event) {
           // Don't count user's own events
           if (event.creator._id === req.user._id) return;
 
-          // Build the prediction input.
-          var x = [event.location.latitude, event.location.longitude,
-                    toEpoch(event.startTime), toEpoch(event.endTime),
-                    event.type._id];
-
-          // Suggest the event if it's a +75% match for the user.
-          var predictedMatch = lrModel.predict(x);
-          console.log(predictedMatch);
-          if (predictedMatch > 0.75) {
-            y.push(event);
-          }
+          // Build the prediction.
+          predictions.push({
+            point: Math.pow(event.location.latitude, 5) * eq[0] +
+              Math.pow(event.location.longitude, 4) * eq[1] +
+              Math.pow(toEpoch(event.startTime), 3) * eq[2] +
+              Math.pow(toEpoch(event.endTime), 2) * eq[3] +
+              parseInt(event.type._id, 16) * eq[4] + eq[5],
+            event: event
+          });
         });
 
-        res.send(y);
+        // Normalize the values
+        predictions = normalize(predictions, 'point');
+
+        // Collect the suggestions.
+        var suggestions = [];
+        for (var i in predictions) {
+          if (predictions[i].point >= 1 / predictions.length * 10) {
+            suggestions.push(predictions[i].event);
+          }
+        }
+
+        res.send(suggestions);
       });
   });
 }

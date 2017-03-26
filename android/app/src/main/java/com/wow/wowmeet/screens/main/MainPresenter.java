@@ -25,6 +25,9 @@ public class MainPresenter implements MainContract.Presenter {
     private MainRepository mainRepository;
     private double radius = 12;
 
+    private double lastLat = -1;
+    private double lastLong = -1;
+
     public MainPresenter(MainContract.View view) {
         this.view = view;
         this.mainRepository = new MainRepository();
@@ -47,8 +50,18 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
+    public void onRefreshListAndMap() {
+        if(lastLat != -1 || lastLong != -1) {
+            onRefreshListAndMap(lastLat, lastLong, radius);
+        }
+    }
+
+    @Override
     public void onRefreshListAndMap(double lat, double lng, double rad) {
         view.showLoading();
+        lastLat = lat;
+        lastLong = lng;
+        radius = rad;
         mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {

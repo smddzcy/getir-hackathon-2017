@@ -35,7 +35,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     private GoogleLocationAPIWrapper.WrapperLocationListener wrapperLocationListener = new GoogleLocationAPIWrapper.WrapperLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            presenter.requestEventRefresh(location.getLatitude(), location.getLongitude(), 2);
+            onRefreshListRequestedListener.onRefreshListRequested(location.getLatitude(), location.getLongitude(), 2);
         }
     };
 
@@ -76,7 +76,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     Location lastLocation = apiWrapper.getLastKnownLocation();
 
                     if(lastLocation != null)
-                        presenter.requestEventRefresh(lastLocation.getLatitude(), lastLocation.getLongitude(), 2);
+                        onRefreshListRequestedListener.onRefreshListRequested(lastLocation.getLatitude(),
+                                lastLocation.getLongitude(), 2);
 
                     requestLocationUpdates();
                 }
@@ -128,7 +129,8 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;
-        presenter.requestEventRefresh(mainCoordinates.latitude, mainCoordinates.longitude, 1.0);
+        onRefreshListRequestedListener.onRefreshListRequested(mainCoordinates.latitude,
+                mainCoordinates.longitude, 10);
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -199,6 +201,6 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     }
 
     public interface OnRefreshListRequestedListener {
-        void onRefreshListRequested();
+        void onRefreshListRequested(double lat, double lng, int radius);
     }
 }

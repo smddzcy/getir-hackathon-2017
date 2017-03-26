@@ -4,6 +4,7 @@ package com.wow.wowmeet.partials.list;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +29,10 @@ public class ListFragment extends Fragment implements ListContract.View {
     private ListContract.Presenter presenter;
     private EventListAdapter eventListAdapter;
 
+    @BindView(R.id.swipeRefreshEventList) SwipeRefreshLayout swipeRefreshEventList;
     @BindView(R.id.event_list) RecyclerView eventList;
+
+    private OnRefreshListRequestedListener onRefreshListRequestedListener;
 
     public static ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -57,6 +61,13 @@ public class ListFragment extends Fragment implements ListContract.View {
         eventList.setLayoutManager(new LinearLayoutManager(getContext()));
         eventList.setAdapter(eventListAdapter);
 
+        swipeRefreshEventList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                onRefreshListRequestedListener.onRefreshListRequested();
+            }
+        });
+
         return v;
     }
 
@@ -80,5 +91,18 @@ public class ListFragment extends Fragment implements ListContract.View {
         Intent i = new Intent(getActivity(), EventInfoActivity.class);
         i.putExtra(EventInfoActivity.EXTRA_EVENT, event);
         startActivity(i);
+    }
+
+    @Override
+    public void stopRefreshLayoutRefreshingAnimation() {
+        swipeRefreshEventList.setRefreshing(false);
+    }
+
+    public void setOnRefreshListRequestedListener(OnRefreshListRequestedListener onRefreshListRequestedListener) {
+        this.onRefreshListRequestedListener = onRefreshListRequestedListener;
+    }
+
+    public interface OnRefreshListRequestedListener {
+        void onRefreshListRequested();
     }
 }

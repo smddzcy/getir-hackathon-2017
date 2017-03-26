@@ -51,10 +51,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private ArrayList<Event> events = new ArrayList<>();
 
-    private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListener = new MapFragment.OnRefreshListRequestedListener() {
+    private MapFragment.OnRefreshListRequestedListener onRefreshListRequestedListenerForMap = new MapFragment.OnRefreshListRequestedListener() {
+
+        @Override
+        public void onRefreshListRequested(double lat, double lng, int radius) {
+            presenter.onRefreshListAndMap(lat, lng, radius);
+        }
+    };
+
+    private ListFragment.OnRefreshListRequestedListener onRefreshListRequestedListenerForList = new ListFragment.OnRefreshListRequestedListener() {
         @Override
         public void onRefreshListRequested() {
-
+            presenter.onRefreshListAndMap();
         }
     };
 
@@ -84,7 +92,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         ListFragment lf = ListFragment.newInstance();
         MapFragment mf = MapFragment.newInstance();
 
-        mf.setOnRefreshListRequestedListener(onRefreshListRequestedListener);
+        mf.setOnRefreshListRequestedListener(onRefreshListRequestedListenerForMap);
+        lf.setOnRefreshListRequestedListener(onRefreshListRequestedListenerForList);
 
         listContractView = lf;
         mapContractView = mf;
@@ -168,6 +177,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void refreshListAndMap(List<Event> arr) {
         events.clear();
         events.addAll(arr);
+
+        listContractView.stopRefreshLayoutRefreshingAnimation();
 
         listContractView.showEvents(events);
         mapContractView.showEvents(events);

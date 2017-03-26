@@ -62,6 +62,12 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop();
+    }
+
+    @Override
     public void setPresenter(RegisterContract.Presenter presenter) {
         this.presenter = presenter;
     }

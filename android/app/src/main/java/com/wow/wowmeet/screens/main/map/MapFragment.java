@@ -122,6 +122,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     public void onStop() {
         super.onStop();
         apiWrapper.onStop();
+        presenter.stop();
     }
 
     private void initializeMap(GoogleMap googleMap) {

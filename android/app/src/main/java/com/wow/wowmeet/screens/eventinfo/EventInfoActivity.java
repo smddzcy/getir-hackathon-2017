@@ -93,6 +93,12 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop();
+    }
+
+    @Override
     public void showError(@StringRes int resource) {
         showError(getString(resource));
     }

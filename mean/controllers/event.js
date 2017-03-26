@@ -148,6 +148,9 @@ exports.eventSearchTypeGet = function(req, res, next) {
         if (err) {
           return res.status(400).send({ msg: 'Events couldn\'t be retrieved' });
         }
+        events = events.filter(function(event) {
+          return event.type; 
+        });
         res.send(events);
       });
     });

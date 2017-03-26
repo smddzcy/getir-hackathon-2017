@@ -21,6 +21,8 @@ public class FilterDialogPresenter implements FilterDialogContract.Presenter {
     private EventTypeRepository eventTypeRepository;
     private FilterDialogContract.View view;
 
+    private DisposableSingleObserver<List<Type>> disposableSingleTypesObserver;
+
     public FilterDialogPresenter(FilterDialogContract.View view) {
         eventTypeRepository = new EventTypeRepository();
         this.view = view;
@@ -29,8 +31,7 @@ public class FilterDialogPresenter implements FilterDialogContract.Presenter {
     @Override
     public void start() {
         Single<List<Type>> singleTypes = eventTypeRepository.getTypes();
-        //TODO change
-        DisposableSingleObserver<List<Type>> disposableSingleObserver =
+        disposableSingleTypesObserver =
                 singleTypes.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Type>>() {
@@ -49,6 +50,7 @@ public class FilterDialogPresenter implements FilterDialogContract.Presenter {
 
     @Override
     public void stop() {
-
+        if(disposableSingleTypesObserver != null)
+            disposableSingleTypesObserver.dispose();
     }
 }

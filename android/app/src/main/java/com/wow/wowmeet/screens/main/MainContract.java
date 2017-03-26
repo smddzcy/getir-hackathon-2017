@@ -3,7 +3,7 @@ package com.wow.wowmeet.screens.main;
 import com.wow.wowmeet.base.BasePresenter;
 import com.wow.wowmeet.base.BaseView;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.partials.dialogs.FilterDialog;
+import com.wow.wowmeet.partials.dialogs.FilterDialogFragment;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ interface MainContract {
         void hideLoading();
     }
 
-    interface Presenter extends BasePresenter, FilterDialog.OnFilterDialogResultListener {
+    interface Presenter extends BasePresenter, FilterDialogFragment.OnFilterDialogResultListener {
         void onAddEventClicked();
         void onRefreshListAndMap();
         void onRefreshListAndMap(double lat, double lng, double rad);

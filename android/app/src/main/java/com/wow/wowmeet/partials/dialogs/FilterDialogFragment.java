@@ -32,11 +32,47 @@ import butterknife.ButterKnife;
  * Created by mahmutkaraca on 3/26/17.
  */
 
-public class FilterDialog extends DialogFragment {
+public class FilterDialogFragment extends DialogFragment {
 
-    public static FilterDialog newInstance() {
-        FilterDialog dialog = new FilterDialog();
+    public static final String ARG_DATE_DAY = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateDay";
+    public static final String ARG_DATE_MONTH = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateMonth";
+    public static final String ARG_DATE_YEAR = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateYear";
 
+    public static final String ARG_DATE_START_HOUR = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateStartHour";
+    public static final String ARG_DATE_END_HOUR = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateEndHour";
+
+    public static final String ARG_PLACE_LAT = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceLat";
+    public static final String ARG_PLACE_LNG = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceLng";
+    public static final String ARG_PLACE_NAME = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceName";
+
+    public static final String ARG_PLACE_RADIUS = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceRadius";
+    public static final String ARG_TYPE = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argType";
+
+    public static FilterDialogFragment newInstance() {
+        FilterDialogFragment dialog = new FilterDialogFragment();
+
+        return dialog;
+    }
+
+    public static FilterDialogFragment newInstance(FilterInfo filterInfo) {
+        FilterDialogFragment dialog = new FilterDialogFragment();
+        Bundle args = new Bundle();
+
+        args.putInt(ARG_DATE_DAY, filterInfo.dateStart.get(Calendar.DAY_OF_MONTH));
+        args.putInt(ARG_DATE_MONTH, filterInfo.dateStart.get(Calendar.MONTH));
+        args.putInt(ARG_DATE_YEAR, filterInfo.dateStart.get(Calendar.YEAR));
+
+        args.putInt(ARG_DATE_START_HOUR, filterInfo.dateStart.get(Calendar.HOUR_OF_DAY));
+        args.putInt(ARG_DATE_END_HOUR, filterInfo.dateEnd.get(Calendar.HOUR_OF_DAY));
+
+        args.putDouble(ARG_PLACE_LAT, filterInfo.place.getLatLng().latitude);
+        args.putDouble(ARG_PLACE_LNG, filterInfo.place.getLatLng().longitude);
+        args.putString(ARG_PLACE_NAME, (String) filterInfo.place.getName());
+
+        args.putInt(ARG_PLACE_RADIUS, filterInfo.radius);
+        args.putSerializable(ARG_TYPE, filterInfo.type);
+
+        dialog.setArguments(args);
         return dialog;
     }
 
@@ -77,6 +113,37 @@ public class FilterDialog extends DialogFragment {
     private int radius = 20;
 
     private Place place;
+    private double previousLat;
+    private double previousLng;
+
+    private boolean placeChanged;
+
+
+    private void parseArguments(Bundle args) {
+        int day = args.getInt(ARG_DATE_DAY);
+        int month = args.getInt(ARG_DATE_MONTH);
+        int year = args.getInt(ARG_DATE_YEAR);
+
+        int startHour = args.getInt(ARG_DATE_START_HOUR);
+        int endHour = args.getInt(ARG_DATE_END_HOUR);
+
+        double lat = args.getDouble(ARG_PLACE_LAT);
+        double lng = args.getDouble(ARG_PLACE_LNG);
+        String name = args.getString(ARG_PLACE_NAME);
+
+        int radius = args.getInt(ARG_PLACE_RADIUS);
+        Type type = (Type) args.getSerializable(ARG_TYPE);
+
+        currentStartDateTime.set(year, month, day, startHour, 0);
+        currentEndDateTime.set(year, month, day, endHour, 0);
+        this.startHour = startHour;
+        this.endHour = endHour;
+
+        this.edtLocationFilter.setText(name);
+        previousLat = lat;
+        previousLng = lng;
+
+    }
 
     @Nullable
     @Override
@@ -89,7 +156,9 @@ public class FilterDialog extends DialogFragment {
         currentEndDateTime = Calendar.getInstance();
         startHour = currentStartDateTime.get(Calendar.HOUR_OF_DAY);
         endHour = startHour + 1;
-
+        if(getArguments() != null) {
+            parseArguments(getArguments());
+        }
 
         seekBarStartingHour.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -236,5 +305,13 @@ public class FilterDialog extends DialogFragment {
     public interface OnFilterDialogResultListener {
         void onFilterDialogResult(@Nullable Calendar startDate, @Nullable Calendar endDate, @Nullable Place place, int radius,
                                   @Nullable Type type);
+    }
+
+    public static class FilterInfo {
+        public Calendar dateStart;
+        public Calendar dateEnd;
+        public Place place;
+        public int radius;
+        public Type type;
     }
 }

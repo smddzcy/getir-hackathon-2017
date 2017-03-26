@@ -28,7 +28,7 @@ import com.wow.wowmeet.screens.main.map.MapContract;
 import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
-import com.wow.wowmeet.partials.dialogs.FilterDialog;
+import com.wow.wowmeet.partials.dialogs.FilterDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,9 +135,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
         int action = item.getItemId();
         if(action == R.id.action_filter) {
-            FilterDialog filterDialog = FilterDialog.newInstance();
-            filterDialog.setOnFilterDialogResultListener(presenter);
-            filterDialog.show(getSupportFragmentManager(), "FilterDialogTest");
+            FilterDialogFragment filterDialogFragment = FilterDialogFragment.newInstance();
+            filterDialogFragment.setOnFilterDialogResultListener(presenter);
+            filterDialogFragment.show(getSupportFragmentManager(), "FilterDialogTest");
 
             return true;
         }

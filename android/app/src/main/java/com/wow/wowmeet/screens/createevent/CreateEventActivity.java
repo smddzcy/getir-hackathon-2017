@@ -6,7 +6,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -43,7 +42,8 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     @BindView(R.id.btnCreateEvent) Button btnCreateEvent;
 
     @BindView(R.id.edtPlace) EditText edtPlace;
-    @BindView(R.id.edtStartTime) EditText edtTime;
+    @BindView(R.id.edtStartTime) EditText edtStartTime;
+    @BindView(R.id.edtEndTime) EditText edtEndTime;
     @BindView(R.id.edtDate) EditText edtDate;
 
     private ArrayAdapter<Type> spinnerAdapter;
@@ -84,15 +84,6 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
             }
         });
 
-        edtTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(hasFocus) {
-                    presenter.onTimeSelectorClicked();
-                }
-            }
-        });
-
         edtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,12 +91,38 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
             }
         });
 
-        edtTime.setOnClickListener(new View.OnClickListener() {
+        edtStartTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View view) {
-                presenter.onTimeSelectorClicked();
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(hasFocus) {
+                    presenter.onStartTimeSelectorClicked();
+                }
             }
         });
+
+        edtStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onStartTimeSelectorClicked();
+            }
+        });
+
+        edtEndTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(hasFocus) {
+                    presenter.onEndTimeSelectorClicked();
+                }
+            }
+        });
+
+        edtEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onEndTimeSelectorClicked();
+            }
+        });
+
 
         edtPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +132,9 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
         });
 
         edtDate.setKeyListener(null);
-        edtTime.setKeyListener(null);
+        edtStartTime.setKeyListener(null);
         edtPlace.setKeyListener(null);
+        edtEndTime.setKeyListener(null);
 
         edtPlace.setEnabled(false);
 
@@ -169,13 +187,22 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     public void updateEventTypes(List<Type> eventTypes) {
         this.eventTypes.clear();
         this.eventTypes.addAll(eventTypes);
-        Log.d("EventType", eventTypes.size() + "");
         spinnerAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void updateTimeField(int hour, int minute) {
-        edtTime.setText(((hour < 10) ? "0" : "") + hour + ":" + ((minute < 10) ? "0" : "") + minute);
+    public void updateStartTimeField(int hour, int minute) {
+        edtStartTime.setText(getTimeText(hour, minute));
+    }
+
+    @Override
+    public void updateEndTimeField(int hour, int minute) {
+        edtEndTime.setText(getTimeText(hour, minute));
+    }
+
+
+    private String getTimeText(int hour, int minute){
+        return ((hour < 10) ? "0" : "") + hour + ":" + ((minute < 10) ? "0" : "") + minute;
     }
 
     @Override

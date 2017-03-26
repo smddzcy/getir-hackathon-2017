@@ -28,7 +28,9 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
     private CreateEventContract.View view;
 
-    private Calendar dateTimePickerReference;
+    private Calendar dateStartTimePickerReference;
+
+    private Calendar dateEndTimePickerReference;
 
     private Place pickedPlace;
 
@@ -36,26 +38,38 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
     private DisposableSingleObserver<List<Type>> disposableSingleEventTypesObserver;
 
-    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+    private TimePickerDialog.OnTimeSetListener onStartTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-            dateTimePickerReference.set(Calendar.HOUR_OF_DAY, hour);
-            dateTimePickerReference.set(Calendar.MINUTE, minute);
-            view.updateTimeField(hour, minute);
+            dateStartTimePickerReference.set(Calendar.HOUR_OF_DAY, hour);
+            dateStartTimePickerReference.set(Calendar.MINUTE, minute);
+            view.updateStartTimeField(hour, minute);
         }
     };
 
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            dateTimePickerReference.set(year, month, day);
+            dateStartTimePickerReference.set(year, month, day);
+            dateEndTimePickerReference.set(year, month, day);
             view.updateDateField(day, month, year);
         }
     };
 
+    private TimePickerDialog.OnTimeSetListener onEndTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+            dateEndTimePickerReference.set(Calendar.HOUR_OF_DAY, hour);
+            dateEndTimePickerReference.set(Calendar.MINUTE, minute);
+            view.updateEndTimeField(hour, minute);
+        }
+    };
+
+
     public CreateEventPresenter(CreateEventContract.View view) {
         this.view = view;
-        this.dateTimePickerReference = Calendar.getInstance();
+        this.dateStartTimePickerReference = Calendar.getInstance();
+        this.dateEndTimePickerReference = Calendar.getInstance();
         this.createEventRepository = new CreateEventRepository();
     }
 
@@ -97,15 +111,22 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
     @Override
     public void onDateSelectorClicked() {
-        DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(dateTimePickerReference);
+        DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(dateStartTimePickerReference);
         datePickerFragment.setOnDateSetListener(onDateSetListener);
         view.showDialog(datePickerFragment, "DatePickerDialog");
     }
 
     @Override
-    public void onTimeSelectorClicked() {
-        TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(dateTimePickerReference);
-        timePickerFragment.setOnTimeSetListener(onTimeSetListener);
+    public void onStartTimeSelectorClicked() {
+        TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(dateStartTimePickerReference);
+        timePickerFragment.setOnTimeSetListener(onStartTimeSetListener);
+        view.showDialog(timePickerFragment, "TimePickerDialog");
+    }
+
+    @Override
+    public void onEndTimeSelectorClicked() {
+        TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(dateEndTimePickerReference);
+        timePickerFragment.setOnTimeSetListener(onEndTimeSetListener);
         view.showDialog(timePickerFragment, "TimePickerDialog");
     }
 

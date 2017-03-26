@@ -21,7 +21,8 @@ interface CreateEventContract {
         void updateSuggestions();
         void updateEventTypes(List<Type> eventTypes);
 
-        void updateTimeField(int hour, int minute);
+        void updateStartTimeField(int hour, int minute);
+        void updateEndTimeField(int hour, int minute);
         void updateDateField(int day, int month, int year);
         Place updatePlaceField(Intent placeData);
 
@@ -33,7 +34,10 @@ interface CreateEventContract {
         void onCreateEvent(/*TODO event bilgileri */);
         void onPlaceChooserClicked();
         void onDateSelectorClicked();
-        void onTimeSelectorClicked();
+        void onStartTimeSelectorClicked();
+
+        void onEndTimeSelectorClicked();
+
         void onChooseSuggestion();
         void onPlacePickerResult(int resultCode, Intent data);
     }

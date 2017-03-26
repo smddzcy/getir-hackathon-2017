@@ -43,5 +43,11 @@
     <string name="end_time">End Time</string>
     <string name="create_event_activity_type_hint">What do you want to do?</string>
     <string name="next">Next</string>
+    <string name="place_filter_hint">Where do you want to hang out?</string>
+    <string name="starting_hour">Starting Hour:</string>
+    <string name="ending_hour">Ending Hour:</string>
+    <string name="ok">OK</string>
+    <string name="filter">Filter</string>
+    <string name="radius">Radius:</string>
 
 </resources>

@@ -11,6 +11,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,6 +28,7 @@ import com.wow.wowmeet.screens.main.map.MapContract;
 import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
+import com.wow.wowmeet.partials.dialogs.FilterDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +124,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         if(drawerToggle.onOptionsItemSelected(item)){
             return true;
         }
+        int action = item.getItemId();
+        if(action == R.id.action_filter) {
+            FilterDialog.newInstance().show(getSupportFragmentManager(), "FilterDialogTest");
 
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -129,6 +137,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
         drawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override

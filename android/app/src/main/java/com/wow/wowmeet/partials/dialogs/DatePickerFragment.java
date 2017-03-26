@@ -1,4 +1,4 @@
-package com.wow.wowmeet.screens.createevent;
+package com.wow.wowmeet.partials.dialogs;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -14,9 +14,9 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment {
 
-    public static final String ARG_INITIAL_DATE_DAY = "com.wow.wowmeet.screens.createevent.DatePickerFragment.argInitialDateDay";
-    public static final String ARG_INITIAL_DATE_MONTH = "com.wow.wowmeet.screens.createevent.DatePickerFragment.argInitialDateMonth";
-    public static final String ARG_INITIAL_DATE_YEAR = "com.wow.wowmeet.screens.createevent.DatePickerFragment.argInitialDateYear";
+    public static final String ARG_INITIAL_DATE_DAY = "com.wow.wowmeet.partials.dialogs.DatePickerFragment.argInitialDateDay";
+    public static final String ARG_INITIAL_DATE_MONTH = "com.wow.wowmeet.partials.dialogs.DatePickerFragment.argInitialDateMonth";
+    public static final String ARG_INITIAL_DATE_YEAR = "com.wow.wowmeet.partials.dialogs.DatePickerFragment.argInitialDateYear";
 
     private DatePickerDialog.OnDateSetListener onDateSetListener;
 

@@ -2,7 +2,7 @@
 
 Meeting with people has never been easier.
 
-WowMeet enables you to meet with likeminded people.
+WowMeet enables you to meet with likeminded people. WowMeet is a smart application that learns your habits as you use it, and it suggests you the events you would like.
 
 
 ## Web Application

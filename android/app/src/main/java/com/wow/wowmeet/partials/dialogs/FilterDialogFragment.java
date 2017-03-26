@@ -210,7 +210,7 @@ public class FilterDialogFragment extends DialogFragment {
             public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
                 if(fromUser) {
                     radius = i;
-                    txtRadius.setText(radius + " km");
+                    txtRadius.setText(String.format(getString(R.string.radius_unit), radius));
                 }
             }
 

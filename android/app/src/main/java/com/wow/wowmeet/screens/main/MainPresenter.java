@@ -6,6 +6,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.data.main.MainRepository;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.Type;
 
 import java.util.Calendar;
@@ -35,7 +36,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void start() {
-        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026); //TODO DYNAMIC TAKE
+        LatLng mainCoordinates = Location.getDefaultLocation(); //TODO DYNAMIC TAKE
         onRefreshListAndMap(mainCoordinates.latitude, mainCoordinates.longitude, radius);
     }
 

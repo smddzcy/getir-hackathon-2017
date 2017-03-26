@@ -10,9 +10,10 @@ import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.OkHttpUtils;
 
-import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -58,11 +59,11 @@ public class CreateEventRepository {
         return Single.create(new SingleOnSubscribe<String>() {
             @Override
             public void subscribe(SingleEmitter<String> e) throws Exception {
-                Map<String, String> fields = getFieldsMapForEvent(event);
+                String jsonString = getJsonStringForEvent(event);
                 OkHttpClient client = new OkHttpClient();
 
                 Response response =
-                        OkHttpUtils.makePostRequestWithUser(client, EVENT_ENDPOINT, fields, userToken);
+                        OkHttpUtils.makePostRequestBodyJsonWithJUser(client, EVENT_ENDPOINT, jsonString, userToken);
 
                 String responseBody = response.body().string();
 
@@ -78,24 +79,25 @@ public class CreateEventRepository {
 
     }
 
-    private Map<String, String> getFieldsMapForEvent(Event event){
+    String getJsonStringForEvent(Event event) throws JSONException {
         Gson gson = new Gson();
+        JSONObject jsonObject = new JSONObject();
 
         Type eventType = event.getType();
         String startTime = event.getStartTime();
         String endTime = event.getEndTime();
         Location location = event.getLocation();
 
-        String eventTypeJson = gson.toJson(eventType);
         String locationJson = gson.toJson(location);
 
-        HashMap<String, String> fields = new HashMap<>();
-        fields.put(PARAM_TYPE_NAME, eventTypeJson);
-        fields.put(PARAM_START_TIME, startTime);
-        fields.put(PARAM_END_TIME, endTime);
-        fields.put(PARAM_LOCATION, locationJson);
+        JSONObject jsonLocationObject = new JSONObject(locationJson);
+        jsonObject.put(PARAM_TYPE_NAME, eventType.get_id());
+        jsonObject.put(PARAM_START_TIME, startTime);
+        jsonObject.put(PARAM_END_TIME, endTime);
+        jsonObject.put(PARAM_LOCATION, jsonLocationObject);
 
-        return fields;
+
+        return jsonObject.toString();
     }
 
 }

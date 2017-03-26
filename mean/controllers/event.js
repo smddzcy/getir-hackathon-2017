@@ -196,11 +196,12 @@ exports.eventPost = function(req, res, next) {
     endTime: req.body.endTime,
     location: req.body.location,
     users: req.body.users,
-    messages: req.body.message
+    messages: req.body.messages
   });
 
   event.save(function(err) {
     if (err) {
+      console.log(err);
       return res.status(400).send({ msg: 'Event couldn\'t be created.' })
     }
 

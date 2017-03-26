@@ -27,6 +27,11 @@ angular.module('MyApp')
         }); 
 	}
 	$scope.searchTime = function(){
+		if(!$scope.startTime || !$scope.endTime){
+			$scope.messages = {
+              error: [{ msg: "Both dates should be filled!" }]
+            };
+		}
     	$http.get('/event/search/interval/'+$scope.startTime+'/'+$scope.endTime)
 	      .then(function(eventTypes) {
 	      	$scope.events = eventTypes.data;

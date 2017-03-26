@@ -67,6 +67,36 @@ Output: `{
   msg: STATUS_MESSAGE
 }`
 
+### Event Endpoints
+
+#### Event Suggestions  
+Method Type: `GET`  
+Endpoint: `/event/suggested/:lat/:lng/:radius`  
+Body Params: `{  
+    lat: "41",  
+    lng: "28",  
+    radius: "1"  
+}`  
+Output: `{  
+    suggestions: {  
+        ...    (field of events)  
+    }  
+}`  
+
+#### Join Delete  
+Method Type: `DELETE`  
+Endpoint: `/event/:id/join`  
+Body Params: `{  
+    id: (event id)  
+}`  
+Output: `{  
+    event: {  
+        ...    (field of events)  
+    },  
+    msg: {  
+        (Message)  
+    }  
+}`  
 
 ## Technologies Used
 - Backend API: **Node.js**

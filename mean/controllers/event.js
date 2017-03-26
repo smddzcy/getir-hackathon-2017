@@ -312,16 +312,16 @@ exports.eventSuggestedGet = function(req, res, next) {
   var lng = req.params.lng;
   var radius = req.params.radius || 1;
 
-  /**
-   * Normalize an array of numbers.
-   */
-  var normalize = function(arr) {
-    var sum = arr.reduce(function(sum, x) {
-      return sum + x;
-    }, 0);
-    return arr.map(function(e) {
-      return e / sum;
-    });
+  var normalize = function(obj, field) {
+    // First reduce, then map.
+    var sum = 0;
+    for (var i in obj) {
+      sum += obj[i][field];
+    }
+    for (var i in obj) {
+      obj[i][field] = obj[i][field] / sum;
+    }
+    return obj;
   };
 
   // Get the trained model from Redis
@@ -332,29 +332,35 @@ exports.eventSuggestedGet = function(req, res, next) {
       .populate('creator', ['_id', 'name', 'email', 'picture'])
       .populate('type', ['_id', 'name', 'count'])
       .exec(function(err, events) {
-        var y = [];
+        var predictions = [];
 
         filterEventsInRadius(events, lat, lng, radius).forEach(function(event) {
           // Don't count user's own events
           if (event.creator._id === req.user._id) return;
 
           // Build the prediction.
-          y.push(Math.pow(event.location.latitude, 5) * eq[0] +
-                 Math.pow(event.location.longitude, 4) * eq[1] +
-                 Math.pow(toEpoch(event.startTime), 3) * eq[2] +
-                 Math.pow(toEpoch(event.endTime), 2) * eq[3] +
-                 parseInt(event.type._id, 16) * eq[4] + eq[5]);
+          predictions.push({
+            point: Math.pow(event.location.latitude, 5) * eq[0] +
+                   Math.pow(event.location.longitude, 4) * eq[1] +
+                   Math.pow(toEpoch(event.startTime), 3) * eq[2] +
+                   Math.pow(toEpoch(event.endTime), 2) * eq[3] +
+                   parseInt(event.type._id, 16) * eq[4] + eq[5],
+            event: event
+          });
         });
 
         // Normalize the values
-        y = normalize(y);
+        predictions = normalize(predictions, 'point');
 
-        // Get the ones that are greater that .75, which means +75% match.
-        y = y.filter(function(e) {
-          return e >= 0.75;
-        });
+        // Collect the suggestions.
+        var suggestions = [];
+        for (var i in predictions) {
+          if (predictions[i].point >= 1 / predictions.length * 10) {
+            suggestions.push(predictions[i].event);
+          }
+        }
 
-        res.send(y);
+        res.send(suggestions);
       });
   });
 }

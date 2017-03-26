@@ -151,7 +151,7 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
                 new GoogleApiProvider.OnProviderConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed() {
-                        //TODO show error
+                        showError(R.string.api_conn_failed_error_text);
                     }
                 });
 

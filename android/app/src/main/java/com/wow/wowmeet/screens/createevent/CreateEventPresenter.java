@@ -124,8 +124,7 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
                 .subscribeWith(new DisposableSingleObserver<String>() {
                     @Override
                     public void onSuccess(String value) {
-                        //TODO SUCCESS
-                        Log.d("EVENT_CREATE", value);
+                        view.onSuccess();
                     }
 
                     @Override

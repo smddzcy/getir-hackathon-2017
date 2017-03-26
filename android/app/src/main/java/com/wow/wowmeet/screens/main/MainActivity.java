@@ -29,6 +29,7 @@ import com.wow.wowmeet.screens.main.map.MapContract;
 import com.wow.wowmeet.screens.main.map.MapFragment;
 import com.wow.wowmeet.utils.Constants;
 import com.wow.wowmeet.utils.DialogHelper;
+import com.wow.wowmeet.utils.UserProvider;
 import com.wow.wowmeet.partials.dialogs.FilterDialogFragment;
 
 import java.util.ArrayList;
@@ -67,6 +68,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
     };
 
+    private User user;
+
     @BindView(R.id.fab) FloatingActionButton fab;
 
     @Override
@@ -76,7 +79,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         ButterKnife.bind(this);
 
         Intent i = getIntent();
-        User user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        user = (User) i.getSerializableExtra(Constants.INTENT_EXTRA_USER);
+        UserProvider.getInstance().setUser(user);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.drawerContainer, DrawerFragment.newInstance(user), "DRAWER")

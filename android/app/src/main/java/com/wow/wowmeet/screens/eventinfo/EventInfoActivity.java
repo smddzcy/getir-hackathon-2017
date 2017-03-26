@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +14,14 @@ import android.widget.TextView;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.partials.chat.ChatFragment;
+import com.wow.wowmeet.utils.CalendarUtils;
+import com.wow.wowmeet.utils.DialogHelper;
+import com.wow.wowmeet.utils.UserProvider;
+
+import java.text.ParseException;
+import java.util.List;
 import com.wow.wowmeet.utils.DialogHelper;
 
 import butterknife.BindView;
@@ -26,6 +34,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     private EventInfoContract.Presenter presenter;
 
     private Event event;
+    private User user;
 
     @BindView(R.id.txtPlace) TextView txtPlace;
     @BindView(R.id.txtType) TextView txtType;
@@ -34,6 +43,10 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     @BindView(R.id.btnJoin) Button btnJoin;
     @BindView(R.id.activity_event_info_chatContainer)
     FrameLayout chatContainer;
+    @BindView(R.id.txtJoinedUsers)
+    TextView txtJoinedUsers;
+    @BindView(R.id.txtJoinedUsersLabel)
+    TextView txtJoinedUsersLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +61,9 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         Intent i = getIntent();
 
         event = (Event) i.getSerializableExtra(EXTRA_EVENT);
-        showEventInfo(event);
+        user = UserProvider.getInstance().getUser();
 
-        presenter = new EventInfoPresenter(this);
+        presenter = new EventInfoPresenter(this, user, event);
 
         ChatFragment chatFragment = ChatFragment.newInstance(event);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_event_info_chatContainer, chatFragment).commit();
@@ -75,6 +88,13 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
+        DialogHelper.showAlertDialogWithError(this, e);
+    }
+
+    @Override
     public void showError(@StringRes int resource) {
         showError(getString(resource));
     }
@@ -91,12 +111,40 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     }
 
     @Override
-    public void showEventInfo(Event event) {
+    public void showEventInfo(Event event, boolean isUserJoined) {
         this.event = event;
         txtPlace.setText(event.getLocation().getName());
         txtType.setText(event.getType().getName());
-        txtDateTime.setText(event.getStartTime());
         txtUsername.setText(event.getCreator().getName());
+        try {
+            String datesString =
+                    CalendarUtils.getStartEndDateString(event.getStartTime(), event.getEndTime());
+
+            txtDateTime.setText(datesString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            txtDateTime.setText(event.getStartTime());
+        }
+
+        if(isUserJoined){
+            btnJoin.setVisibility(View.GONE);
+            showJoinedUsers(event.getUsers());
+            Log.d("EVENT", event.getUsers() + "");
+        }
+
+    }
+
+    private void showJoinedUsers(List<User> users){
+        txtJoinedUsers.setVisibility(View.VISIBLE);
+        txtJoinedUsersLabel.setVisibility(View.VISIBLE);
+        StringBuilder stringBuilder = new StringBuilder();
+        for(User user : users){
+            stringBuilder.append(user.getName());
+        }
+
+        String usersText = stringBuilder.toString();
+        txtJoinedUsers.setText(usersText);
+
     }
 
 

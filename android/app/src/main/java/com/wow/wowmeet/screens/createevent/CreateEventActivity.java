@@ -151,7 +151,7 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
                 new GoogleApiProvider.OnProviderConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed() {
-                        DialogHelper.showAlertDialogWithError(CreateEventActivity.this, getString(R.string.api_conn_failed_error_text));
+                        //TODO show error
                     }
                 });
 
@@ -251,6 +251,12 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     public void showPlacePickerError(Intent data) {
         showError(PlacePicker.getStatus(this, data).getStatusMessage());
     }
+
+    @Override
+    public void onSuccess() {
+        this.finish();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

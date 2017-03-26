@@ -13,13 +13,13 @@
         android:text="TextView"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintLeft_toRightOf="@+id/textView4"
         android:layout_marginLeft="8dp"
         app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsernameEventInfo"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -58,14 +58,14 @@
         android:id="@+id/txtUsernameEventInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDateTime"
         app:layout_constraintLeft_toRightOf="@+id/textView7"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
     <Button
@@ -73,26 +73,11 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/join"
-        app:layout_constraintTop_toBottomOf="@+id/txtUsernameEventInfo"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <FrameLayout
-        android:id="@+id/activity_event_info_chatContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/join"
+        android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnJoin">
-
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
         android:id="@+id/textView4"
@@ -136,6 +121,48 @@
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txtUsernameEventInfo"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:id="@+id/txtJoinedUsers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="invisible"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintLeft_toRightOf="@+id/txtJoinedUsersLabel"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/activity_event_info_chatContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtJoinedUsers"
+        app:layout_constraintVertical_bias="1.0">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/txtJoinedUsersLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="Joined Users:"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtJoinedUsers"
         android:layout_marginTop="0dp" />
 
 </android.support.constraint.ConstraintLayout>

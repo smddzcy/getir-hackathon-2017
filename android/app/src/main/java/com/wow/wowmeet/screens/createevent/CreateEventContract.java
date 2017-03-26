@@ -28,6 +28,8 @@ interface CreateEventContract {
 
         void showDialog(DialogFragment fragment, String tag);
         void showPlacePickerDialog();
+
+        void onSuccess();
         void showPlacePickerError(Intent data);
     }
 

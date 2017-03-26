@@ -325,6 +325,12 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        presenter.stop();
+    }
+
+    @Override
     public void setPresenter(FilterDialogContract.Presenter presenter) {
         this.presenter = presenter;
     }

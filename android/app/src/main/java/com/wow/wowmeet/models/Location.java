@@ -1,5 +1,7 @@
 package com.wow.wowmeet.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 
 /**
@@ -14,6 +16,10 @@ public class Location implements Serializable{
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public static LatLng getDefaultLocation() {
+        return new LatLng(41.0728162, 29.0089026);
     }
 
     public String getName() {

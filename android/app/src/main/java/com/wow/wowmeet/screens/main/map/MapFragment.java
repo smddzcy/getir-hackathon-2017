@@ -87,7 +87,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         }, new GoogleApiProvider.OnProviderConnectionFailedListener() {
             @Override
             public void onConnectionFailed() {
-                //TODO error message about how bad the internet is...
+                showError(R.string.api_conn_failed_error_text);
             }
         });
 
@@ -124,10 +124,9 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
         apiWrapper.onStop();
     }
 
-
     private void initializeMap(GoogleMap googleMap) {
         map = googleMap;
-        LatLng mainCoordinates = new LatLng(41.0728162, 29.0089026); //TODO DYNAMIC TAKE
+        LatLng mainCoordinates = com.wow.wowmeet.models.Location.getDefaultLocation(); //TODO DYNAMIC TAKE
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;
@@ -191,8 +190,6 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
                     .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongitude())))
                     .setTag(e);
             }
-        } else {
-            //TODO EMPTY ELSE?
         }
 
 

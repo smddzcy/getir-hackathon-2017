@@ -18,14 +18,24 @@ angular.module('MyApp')
     	$http.get('/event/search/type/'+$scope.event.type.name)
 	      .then(function(eventTypes) {
 	      	$scope.events = eventTypes.data;
-	      })
+	      },
+        function(err){
+          console.log(err);
+          $scope.messages = {
+              error: [{ msg: err.data.msg }]
+            };
+        }); 
 	}
 	$scope.searchTime = function(){
-    	console.log($scope.startTime);
-    	console.log($scope.endTime);
     	$http.get('/event/search/interval/'+$scope.startTime+'/'+$scope.endTime)
 	      .then(function(eventTypes) {
 	      	$scope.events = eventTypes.data;
-	      })
+	      },
+        function(err){
+          console.log(err);
+          $scope.messages = {
+              error: [{ msg: err.data.msg }]
+            };
+        }); 
 	}
 });

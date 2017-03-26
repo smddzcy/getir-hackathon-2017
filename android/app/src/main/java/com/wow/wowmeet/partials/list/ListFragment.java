@@ -53,7 +53,7 @@ public class ListFragment extends Fragment implements ListContract.View {
         presenter.start();
         ArrayList<Event> events = new ArrayList<>();
 
-        eventListAdapter = new EventListAdapter(events, presenter);
+        eventListAdapter = new EventListAdapter(getContext(), events, presenter);
         eventList.setLayoutManager(new LinearLayoutManager(getContext()));
         eventList.setAdapter(eventListAdapter);
 

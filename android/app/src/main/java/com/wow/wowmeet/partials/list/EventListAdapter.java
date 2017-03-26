@@ -1,5 +1,6 @@
 package com.wow.wowmeet.partials.list;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 
@@ -24,8 +26,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     private List<Event> eventList;
     private ListEventClickListener eventClickListener;
+    Context context;
 
-    public EventListAdapter(List<Event> eventList, ListEventClickListener eventClickListener) {
+    public EventListAdapter(Context context, List<Event> eventList, ListEventClickListener eventClickListener) {
+        this.context = context;
         this.eventList = eventList;
         this.eventClickListener = eventClickListener;
     }
@@ -47,9 +51,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         Event event = eventList.get(position);
 
 
-        //holder.imageViewProfilePhoto.setImageDrawable();
+        if(event.getCreator() != null){
+            holder.textViewProfileName.setText(event.getCreator().getName());
+            Picasso.with(context).load(event.getCreator().getPicture()).into(holder.imageViewProfilePhoto);
+        }
         holder.textViewPlaceName.setText(event.getLocation().getName());
-        holder.textViewProfileName.setText(event.getCreator().getEmail());
         holder.textViewType.setText(event.getType().getName());
         holder.textViewDate.setText(event.getStartTime());
     }

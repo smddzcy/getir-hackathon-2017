@@ -62,7 +62,7 @@ public class DrawerFragment extends Fragment implements DrawerContract.View {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance(getContext());
         presenter = new DrawerPresenter(this, sharedPreferencesUtil);
 
-        txtUsername.setText(user.getEmail());
+        txtUsername.setText(user.getName());
         if(!user.getPicture().isEmpty()) Picasso.with(getContext()).load(user.getPicture()).into(imgProfile);
 
         final String[] options = getResources().getStringArray(R.array.drawer_options_array);

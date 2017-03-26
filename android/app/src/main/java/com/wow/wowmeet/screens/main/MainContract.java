@@ -17,6 +17,10 @@ interface MainContract {
         void refreshListAndMap(List<Event> arr);
 
         void goCreateEventActivity();
+
+        void showLoading();
+
+        void hideLoading();
     }
 
     interface Presenter extends BasePresenter, FilterDialog.OnFilterDialogResultListener {

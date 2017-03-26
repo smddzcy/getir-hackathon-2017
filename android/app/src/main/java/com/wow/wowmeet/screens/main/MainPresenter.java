@@ -48,18 +48,20 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void onRefreshListAndMap(double lat, double lng, double rad) {
-        //TODO SHOWLOADING
+        view.showLoading();
         mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> value) {
+                        view.hideLoading();
                         view.refreshListAndMap(value);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         view.showError(e.getMessage());
+                        view.hideLoading();
                         e.printStackTrace();
                     }
                 });

@@ -126,7 +126,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
 
     private void initializeMap(GoogleMap googleMap) {
         map = googleMap;
-        LatLng mainCoordinates = com.wow.wowmeet.models.Location.getDefaultLocation(); //TODO DYNAMIC TAKE
+        LatLng mainCoordinates = com.wow.wowmeet.models.Location.getDefaultLocation();
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;

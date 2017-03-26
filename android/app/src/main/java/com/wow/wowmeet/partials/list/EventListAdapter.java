@@ -37,7 +37,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     }
 
     public void changeDataSet(List<Event> eventList){
-        this.eventList = eventList;
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
         notifyDataSetChanged();
     }
 

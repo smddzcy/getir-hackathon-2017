@@ -58,7 +58,9 @@ public class ListFragment extends Fragment implements ListContract.View {
         ArrayList<Event> events = new ArrayList<>();
 
         eventListAdapter = new EventListAdapter(getContext(), events, presenter);
-        eventList.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setReverseLayout(true);
+        eventList.setLayoutManager(llm);
         eventList.setAdapter(eventListAdapter);
 
         swipeRefreshEventList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -84,6 +86,7 @@ public class ListFragment extends Fragment implements ListContract.View {
     @Override
     public void showEvents(List<Event> events) {
         eventListAdapter.changeDataSet(events);
+        eventList.scrollToPosition(eventListAdapter.getItemCount() - 1);
     }
 
     @Override

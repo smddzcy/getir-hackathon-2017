@@ -7,40 +7,40 @@ var async = require('async');
 /**
  * Train the model of user with given events.
  */
-var trainModel = function(userId, events) {
+var trainModel = function(userId, events, cb) {
   // If exists, get the model from Redis.
   // Otherwise, create a new model.
-  var lrModel = redis.hget('lr_model', userId);
-  if (lrModel) {
-    lrModel = LinearRegression.fromJSON(lrModel);
-  } else {
-    lrModel = new LinearRegression({
-      algorithm: GradientDescent
+  redis.hget('lr_model', userId, function(err, jsonString) {
+    var lrModel;
+    if (jsonString) {
+      lrModel = LinearRegression.fromJSON(jsonString);
+    } else {
+      lrModel = new LinearRegression();
+    }
+
+    // Build the train inputs and outputs.
+    var x = [];
+    var y = [];
+    [].concat(events).forEach(function(event) {
+      x.push([event.location.latitude, event.location.longitude,
+                toEpoch(event.startTime), toEpoch(event.endTime),
+                event.type.toString()]);
+
+      // Since this is not a real train data, give a good random
+      // y value which represents how much user likes this event.
+      // It's between 0.75 and 1.
+      y.push(Math.random() / 4 + 0.75);
+    })
+
+    // Train the model.
+    lrModel.train(x, y, function(trainedModel) {
+      // Save the trained model to Redis.
+      redis.hset('lr_model', userId, trainedModel.toJSON());
+
+      // If there is a callback, call it with the trained model.
+      if (cb && typeof cb === 'function') cb(trainedModel);
     });
-  }
-
-  // Build the train inputs and outputs.
-  var x = [];
-  var y = [];
-  [].concat(events).forEach(function(event) {
-    x.push([event.location.latitude, event.location.longitude,
-              toEpoch(event.startTime), toEpoch(event.endTime),
-              event.type.name]);
-
-    // Since this is not a real train data, give a good random
-    // y value which represents how much user likes this event.
-    // It's between 0.75 and 1.
-    y.push(Math.random() / 4 + 0.75);
-  })
-
-  // Train the model.
-  lrModel.train(x, y);
-
-  // Save the trained model to Redis.
-  redis.hset('lr_model', userId, lrModel.toJSON());
-
-  // Return the trained model.
-  return lrModel;
+  });
 }
 
 /**
@@ -214,9 +214,7 @@ exports.eventPost = function(req, res, next) {
     req.user.save();
 
     // Train the user's lr model.
-    setTimeout(function(){
-      trainModel(req.user._id, event);
-    });
+    trainModel(req.user._id, event);
 
     res.send(event);
   });
@@ -248,9 +246,7 @@ exports.eventPut = function(req, res, next) {
       }
 
       // Train the user's lr model.
-      setTimeout(function(){
-        trainModel(req.user._id, event);
-      });
+      trainModel(req.user._id, event);
 
       res.send({ event: event, msg: 'Event has been updated successfully.' });
     })
@@ -287,9 +283,7 @@ exports.eventJoinPost = function(req, res, next) {
       }
 
       // Train the user's lr model.
-      setTimeout(function(){
-        trainModel(req.user._id, event);
-      });
+      trainModel(req.user._id, event);
 
       res.send({ event: event, msg: 'Event has been joined successfully.' });
     })
@@ -325,29 +319,33 @@ exports.eventSuggestedGet = function(req, res, next) {
   var radius = req.params.radius || 1;
 
   // Get the trained model from Redis
-  var lrModel = LinearRegression.fromJSON(redis.hget('lr_model', req.user._id));
+  redis.hget('lr_model', req.user._id.toString(), function(err, jsonString) {
+    var lrModel = LinearRegression.fromJSON(JSON.parse(jsonString));
 
-  Event.find({})
-    .populate('creator', ['_id', 'name', 'email', 'picture'])
-    .populate('type', ['_id', 'name', 'count'])
-    .exec(function(err, events) {
-      var y = [];
+    Event.find({})
+      .populate('creator', ['_id', 'name', 'email', 'picture'])
+      .populate('type', ['_id', 'name', 'count'])
+      .exec(function(err, events) {
+        var y = [];
 
-      filterEventsInRadius(events, lat, lng, radius).forEach(function(event) {
-        // Don't count user's own events
-        if (event.creator._id === req.user._id) return;
+        filterEventsInRadius(events, lat, lng, radius).forEach(function(event) {
+          // Don't count user's own events
+          if (event.creator._id === req.user._id) return;
 
-        // Build the prediction input.
-        var x = [event.location.latitude, event.location.longitude,
-                  toEpoch(event.startTime), toEpoch(event.endTime),
-                  event.type.name];
+          // Build the prediction input.
+          var x = [event.location.latitude, event.location.longitude,
+                    toEpoch(event.startTime), toEpoch(event.endTime),
+                    event.type._id];
 
-        // Suggest the event if it's a +75% match for the user.
-        if (lrModel.predict(x) > 0.75) {
-          y.push(event);
-        }
+          // Suggest the event if it's a +75% match for the user.
+          var predictedMatch = lrModel.predict(x);
+          console.log(predictedMatch);
+          if (predictedMatch > 0.75) {
+            y.push(event);
+          }
+        });
+
+        res.send(y);
       });
-
-      res.send(y);
-    });
+  });
 }

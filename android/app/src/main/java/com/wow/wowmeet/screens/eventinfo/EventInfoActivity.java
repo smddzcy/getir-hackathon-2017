@@ -43,6 +43,8 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     FrameLayout chatContainer;
     @BindView(R.id.txtJoinedUsers)
     TextView txtJoinedUsers;
+    @BindView(R.id.txtJoinedUsersLabel)
+    TextView txtJoinedUsersLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,7 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
 
     private void showJoinedUsers(List<User> users){
         txtJoinedUsers.setVisibility(View.VISIBLE);
+        txtJoinedUsersLabel.setVisibility(View.VISIBLE);
         StringBuilder stringBuilder = new StringBuilder();
         for(User user : users){
             stringBuilder.append(user.getName());

@@ -239,7 +239,7 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
                     currentStartDateTime.set(Calendar.HOUR_OF_DAY, startHour);
                     currentEndDateTime.set(Calendar.HOUR_OF_DAY, endHour);
                     onFilterDialogResultListener.onFilterDialogResult(currentStartDateTime, currentEndDateTime,
-                            place, 10, /*TODO*/null);
+                            place, 10, (Type) spinnerActivityTypeFilter.getSelectedItem());
                 }
                 dismiss();
             }
@@ -322,6 +322,12 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
     public void onStart() {
         super.onStart();
         presenter.start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.stop();
     }
 
     @Override

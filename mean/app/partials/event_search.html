@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">Search Event</h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-group" style="margin-bottom: 60px">
+          <label for="type" class="col-sm-2">Type</label>
+          <div class="col-sm-8">
+            <select name="type" style="width: 100%" class="form-control"
+                    ng-options="type as type.name for type in types track by type._id"
+                    ng-model="event.type"
+                    ng-change="searchType()">
+            </select>
+          </div>
+          <div class="form-group">
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 40px">
+        <div class="form-group">
+            <div ng-if="messages.error" role="alert" class="alert alert-danger">
+              <div ng-repeat="error in messages.error">{{error.msg}}</div>
+            </div>
+            <div ng-if="messages.success" role="alert" class="alert alert-success">
+              <div ng-repeat="success in messages.success">{{success.msg}}</div>
+            </div>
+            <label for="startTime" class="col-sm-2">Start Time</label>
+            <div class="col-sm-3">
+              <input type="datetime-local" name="startTime" id="startTime" class="form-control" ng-model="startTime">
+            </div>
+            <label for="endTime" class="col-sm-2">End Time</label>
+            <div class="col-sm-3">
+              <input type="datetime-local" name="endTime" id="endTime" class="form-control" ng-model="endTime">
+            </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-8">
+            <button type="submit" class="btn btn-success" style="margin-top: 20px"
+              ng-click="searchTime()">Search With Time</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel" ng-repeat="event in events">
+        <div class="panel-body">
+          <span>Type: {{ event.type.name }} </span><br>
+          <span>Place: {{ event.location.name }} </span><br>
+          <span>Start Time: {{ event.startTime }} </span><br>
+          <span>End Time: {{ event.endTime }}</span><br>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

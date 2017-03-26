@@ -50,6 +50,11 @@ angular.module('MyApp', ['ngRoute', 'ngResource', 'satellizer',
         controller: 'PublicProfileCtrl',
         resolve: { loginRequired: loginRequired }
       })
+      .when('/search-event', {
+        templateUrl: 'partials/event_search.html',
+        controller: 'EventSearcrhCtrl',
+        resolve: { loginRequired: loginRequired }
+      })
       .otherwise({
         templateUrl: 'partials/404.html'
       });

@@ -1,4 +1,4 @@
-package com.wow.wowmeet.partials.googleapi;
+package com.wow.wowmeet.utils.googleapi;
 
 import android.content.Context;
 import android.location.Location;

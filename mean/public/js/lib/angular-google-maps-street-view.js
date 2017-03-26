@@ -1,1 +1,677 @@
-!function(e,n,o,i){"use strict";(function(){n.module("uiGmapgoogle-maps.providers",["nemLogging"]),n.module("uiGmapgoogle-maps.wrapped",[]),n.module("uiGmapgoogle-maps.extensions",["uiGmapgoogle-maps.wrapped","uiGmapgoogle-maps.providers"]),n.module("uiGmapgoogle-maps.directives.api.utils",["uiGmapgoogle-maps.extensions"]),n.module("uiGmapgoogle-maps.directives.api.managers",[]),n.module("uiGmapgoogle-maps.directives.api.options",["uiGmapgoogle-maps.directives.api.utils"]),n.module("uiGmapgoogle-maps.directives.api.options.builders",[]),n.module("uiGmapgoogle-maps.directives.api.models.child",["uiGmapgoogle-maps.directives.api.utils","uiGmapgoogle-maps.directives.api.options","uiGmapgoogle-maps.directives.api.options.builders"]),n.module("uiGmapgoogle-maps.directives.api.models.parent",["uiGmapgoogle-maps.directives.api.managers","uiGmapgoogle-maps.directives.api.models.child","uiGmapgoogle-maps.providers"]),n.module("uiGmapgoogle-maps.directives.api",["uiGmapgoogle-maps.directives.api.models.parent"]),n.module("uiGmapgoogle-maps",["uiGmapgoogle-maps.directives.api","uiGmapgoogle-maps.providers"])}).call(this),n.module("uiGmapgoogle-maps.wrapped").service("uiGmapuuid",function(){function e(){}return e.generate=function(){var n=e._gri,o=e._ha;return o(n(32),8)+"-"+o(n(16),4)+"-"+o(16384|n(12),4)+"-"+o(32768|n(14),4)+"-"+o(n(48),12)},e._gri=function(e){return 0>e?NaN:30>=e?0|Math.random()*(1<<e):53>=e?(0|1073741824*Math.random())+1073741824*(0|Math.random()*(1<<e-30)):NaN},e._ha=function(e,n){for(var o=e.toString(16),i=n-o.length,t="0";0<i;i>>>=1,t+=t)1&i&&(o=t+o);return o},e}),function(){n.module("uiGmapgoogle-maps.providers").factory("uiGmapMapScriptLoader",["$q","uiGmapuuid",function(i,t){var a,r,u,s,l;return s=void 0,l=void 0,a=function(e){return e.china?"http://maps.google.cn/maps/api/js?":"auto"===e.transport?"//maps.googleapis.com/maps/api/js?":e.transport+"://maps.googleapis.com/maps/api/js?"},r=function(e){var n,i,r,u;return n=["transport","isGoogleMapsForWork","china","preventLoad"],e.isGoogleMapsForWork&&n.push("key"),i=o.map(o.omit(e,n),function(e,n){return n+"="+e}),s&&(u=document.getElementById(s),u.parentNode.removeChild(u)),i=i.join("&"),r=document.createElement("script"),r.id=s="ui_gmap_map_load_"+t.generate(),r.type="text/javascript",r.src=a(e)+i,document.head.appendChild(r)},u=function(){return n.isDefined(e.google)&&n.isDefined(e.google.maps)},{load:function(n){var o,t;return o=i.defer(),u()?(o.resolve(e.google.maps),o.promise):(t=n.callback="onGoogleMapsReady"+Math.round(1e3*Math.random()),e[t]=function(){e[t]=null,o.resolve(e.google.maps)},e.navigator.connection&&e.Connection&&e.navigator.connection.type===e.Connection.NONE&&!n.preventLoad?document.addEventListener("online",function(){if(!u())return r(n)}):n.preventLoad||r(n),l=n,l.randomizedFunctionName=t,o.promise)},manualLoad:function(){var n;return n=l,u()?e[n.randomizedFunctionName]?e[n.randomizedFunctionName]():void 0:r(n)}}}]).provider("uiGmapGoogleMapApi",function(){return this.options={transport:"https",isGoogleMapsForWork:!1,china:!1,v:"3",libraries:"",language:"en",preventLoad:!1},this.configure=function(e){n.extend(this.options,e)},this.$get=["uiGmapMapScriptLoader",function(e){return function(n){return n.load(e.options)}}(this)],this}).service("uiGmapGoogleMapApiManualLoader",["uiGmapMapScriptLoader",function(e){return{load:function(){e.manualLoad()}}}])}.call(this),function(){n.module("uiGmapgoogle-maps.directives.api.utils").service("uiGmapLogger",["nemSimpleLogger",function(e){return e.spawn()}])}.call(this),function(){n.module("uiGmapgoogle-maps.directives.api.utils").service("uiGmapGmapUtil",["uiGmapLogger","$compile",function(e,i){var t,a,r,u,s,l;return a=function(e,n,o){return e===n||o.indexOf(e)!==-1},t=function(e){return a(e,!1,["false","FALSE",0,"n","N","no","NO"])},u=function(e){return Array.isArray(e)&&2===e.length?e[1]:n.isDefined(e.type)&&"Point"===e.type?e.coordinates[1]:e.latitude},s=function(e){return Array.isArray(e)&&2===e.length?e[0]:n.isDefined(e.type)&&"Point"===e.type?e.coordinates[0]:e.longitude},r=function(e){if(e)return e instanceof google.maps.LatLng?e:Array.isArray(e)&&2===e.length?new google.maps.LatLng(e[1],e[0]):n.isDefined(e.type)&&"Point"===e.type?new google.maps.LatLng(e.coordinates[1],e.coordinates[0]):new google.maps.LatLng(e.latitude,e.longitude)},l=function(e){if(n.isUndefined(e))return!1;if(o.isArray(e)){if(2===e.length)return!0}else if(null!=e&&(null!=e?e.type:void 0)&&"Point"===e.type&&o.isArray(e.coordinates)&&2===e.coordinates.length)return!0;return!(!e||!n.isDefined((null!=e?e.latitude:void 0)&&n.isDefined(null!=e?e.longitude:void 0)))},{setCoordsFromEvent:function(e,o){if(e)return Array.isArray(e)&&2===e.length?(e[1]=o.lat(),e[0]=o.lng()):n.isDefined(e.type)&&"Point"===e.type?(e.coordinates[1]=o.lat(),e.coordinates[0]=o.lng()):(e.latitude=o.lat(),e.longitude=o.lng()),e},getLabelPositionPoint:function(e){var n,o;if(void 0!==e)return e=/^([-\d\.]+)\s([-\d\.]+)$/.exec(e),n=parseFloat(e[1]),o=parseFloat(e[2]),null!=n&&null!=o?new google.maps.Point(n,o):void 0},createWindowOptions:function(o,t,a,u){var s;return null!=a&&null!=u&&null!=i?(s=n.extend({},u,{content:this.buildContent(t,u,a),position:null!=u.position?u.position:n.isObject(o)?o.getPosition():r(t.coords)}),null!=o&&null==(null!=s?s.pixelOffset:void 0)&&(null==s.boxClass||(s.pixelOffset={height:0,width:-2})),s):u?u:(e.error("infoWindow defaults not defined"),a?void 0:e.error("infoWindow content not defined"))},buildContent:function(e,n,o){var t,a;return null!=n.content?a=n.content:null!=i?(o=o.replace(/^\s+|\s+$/g,""),t=""===o?"":i(o)(e),t.length>0&&(a=t[0])):a=o,a},defaultDelay:50,isTrue:function(e){return a(e,!0,["true","TRUE",1,"y","Y","yes","YES"])},isFalse:t,isFalsy:function(e){return a(e,!1,[void 0,null])||t(e)},getCoords:r,validateCoords:l,equalCoords:function(e,n){return u(e)===u(n)&&s(e)===s(n)},validatePath:function(e){var i,t,a,r;if(t=0,n.isUndefined(e.type)){if(!Array.isArray(e)||e.length<2)return!1;for(;t<e.length;){if(!(n.isDefined(e[t].latitude)&&n.isDefined(e[t].longitude)||"function"==typeof e[t].lat&&"function"==typeof e[t].lng))return!1;t++}return!0}if(n.isUndefined(e.coordinates))return!1;if("Polygon"===e.type){if(e.coordinates[0].length<4)return!1;i=e.coordinates[0]}else if("MultiPolygon"===e.type){if(r={max:0,index:0},o.forEach(e.coordinates,function(e,n){if(e[0].length>this.max)return this.max=e[0].length,this.index=n},r),a=e.coordinates[r.index],i=a[0],i.length<4)return!1}else{if("LineString"!==e.type)return!1;if(e.coordinates.length<2)return!1;i=e.coordinates}for(;t<i.length;){if(2!==i[t].length)return!1;t++}return!0},convertPathPoints:function(e){var i,t,a,r,u;if(t=0,r=new google.maps.MVCArray,n.isUndefined(e.type))for(;t<e.length;)n.isDefined(e[t].latitude)&&n.isDefined(e[t].longitude)?a=new google.maps.LatLng(e[t].latitude,e[t].longitude):"function"==typeof e[t].lat&&"function"==typeof e[t].lng&&(a=e[t]),r.push(a),t++;else for("Polygon"===e.type?i=e.coordinates[0]:"MultiPolygon"===e.type?(u={max:0,index:0},o.forEach(e.coordinates,function(e,n){if(e[0].length>this.max)return this.max=e[0].length,this.index=n},u),i=e.coordinates[u.index][0]):"LineString"===e.type&&(i=e.coordinates);t<i.length;)r.push(new google.maps.LatLng(i[t][1],i[t][0])),t++;return r},getPath:function(e,n){var i;return null!=n&&o.isString(n)?(i=e,o.each(n.split("."),function(e){if(i)return i=i[e]}),i):n},validateBoundPoints:function(e){return!(n.isUndefined(e.sw.latitude)||n.isUndefined(e.sw.longitude)||n.isUndefined(e.ne.latitude)||n.isUndefined(e.ne.longitude))},convertBoundPoints:function(e){var n;return n=new google.maps.LatLngBounds(new google.maps.LatLng(e.sw.latitude,e.sw.longitude),new google.maps.LatLng(e.ne.latitude,e.ne.longitude))},fitMapBounds:function(e,n){return e.fitBounds(n)}}}])}.call(this),function(){n.module("uiGmapgoogle-maps.directives.api.utils").service("uiGmapEventsHelper",["uiGmapLogger",function(e){var i,t;return t=function(e){return n.isDefined(e.events)&&null!=e.events&&n.isObject(e.events)},i=function(e,n){return t(e)?e:t(n)?n:void 0},{setEvents:function(e,t,a,r){var u;if(u=i(t,a),null!=u)return o.compact(o.map(u.events,function(i,s){var l;if(r&&(l=o(r).includes(s)),u.events.hasOwnProperty(s)&&n.isFunction(u.events[s])&&!l)return google.maps.event.addListener(e,s,function(){return t.$evalAsync||(t.$evalAsync=function(){}),t.$evalAsync(i.apply(t,[e,s,a,arguments]))})}))},removeEvents:function(e){var n,o;if(e)for(n in e)o=e[n],o&&e.hasOwnProperty(n)&&google.maps.event.removeListener(o)}}}])}.call(this),function(){n.module("uiGmapgoogle-maps").directive("uiGmapStreetViewPanorama",["uiGmapGoogleMapApi","uiGmapLogger","uiGmapGmapUtil","uiGmapEventsHelper",function(e,o,i,t){var a;return a="uiGmapStreetViewPanorama",{restrict:"EMA",template:'<div class="angular-google-map-street-view-panorama"></div>',replace:!0,scope:{focalcoord:"=",radius:"=?",events:"=?",options:"=?",control:"=?",povoptions:"=?",imagestatus:"="},link:function(r,u,s){return e.then(function(e){return function(e){var s,l,d,p,g,c,m,f,v,h;return f=void 0,h=void 0,d=!1,c=void 0,m=null,v=null,s=function(){if(t.removeEvents(c),null!=f&&(f.unbind("position"),f.setVisible(!1)),null!=h)return null!=(null!=h?h.setVisible:void 0)&&h.setVisible(!1),h=void 0},g=function(e,o){var i;return i=google.maps.geometry.spherical.computeHeading(e,o),d=!0,r.radius=r.radius||50,v=n.extend({heading:i,zoom:1,pitch:0},r.povoptions||{}),m=m=n.extend({navigationControl:!1,addressControl:!1,linksControl:!1,position:e,pov:v,visible:!0},r.options||{}),d=!1},l=function(){var e;return r.focalcoord?r.radius?(s(),null==h&&(h=new google.maps.StreetViewService),r.events&&(c=t.setEvents(h,r,r)),e=i.getCoords(r.focalcoord),h.getPanoramaByLocation(e,r.radius,function(n,o){var i,t,a;if(null!=r.imagestatus&&(r.imagestatus=o),null!=(null!=(a=r.events)?a.image_status_changed:void 0)&&r.events.image_status_changed(h,"image_status_changed",r,o),"OK"===o)return t=n.location.latLng,g(t,e),i=u[0],f=new google.maps.StreetViewPanorama(i,m)})):void o.error(a+": needs a radius to set the camera view from its focal target."):void o.error(a+": focalCoord needs to be defined")},null!=r.control&&(r.control.getOptions=function(){return m},r.control.getPovOptions=function(){return v},r.control.getGObject=function(){return h},r.control.getGPano=function(){return f}),r.$watch("options",function(e,n){if(e!==n&&e!==m&&!d)return l()}),p=!0,r.$watch("focalcoord",function(e,n){if((e!==n||p)&&null!=e)return p=!1,l()}),r.$on("$destroy",function(){return s()})}}(this))}}}])}.call(this)}(window,angular,_);
+/*! angular-google-maps 2.4.1 2017-01-05
+ *  AngularJS directives for Google Maps
+ *  git: https://github.com/angular-ui/angular-google-maps.git
+ */
+;
+(function( window, angular, _, undefined ){
+  'use strict';
+/*
+!
+The MIT License
+
+Copyright (c) 2010-2013 Google, Inc. http://angularjs.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the 'Software'), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+angular-google-maps
+https://github.com/angular-ui/angular-google-maps
+
+@authors
+Nicolas Laplante - https://plus.google.com/108189012221374960701
+Nicholas McCready - https://twitter.com/nmccready
+ */
+
+(function() {
+  angular.module('uiGmapgoogle-maps.providers', ['nemLogging']);
+
+  angular.module('uiGmapgoogle-maps.wrapped', []);
+
+  angular.module('uiGmapgoogle-maps.extensions', ['uiGmapgoogle-maps.wrapped', 'uiGmapgoogle-maps.providers']);
+
+  angular.module('uiGmapgoogle-maps.directives.api.utils', ['uiGmapgoogle-maps.extensions']);
+
+  angular.module('uiGmapgoogle-maps.directives.api.managers', []);
+
+  angular.module('uiGmapgoogle-maps.directives.api.options', ['uiGmapgoogle-maps.directives.api.utils']);
+
+  angular.module('uiGmapgoogle-maps.directives.api.options.builders', []);
+
+  angular.module('uiGmapgoogle-maps.directives.api.models.child', ['uiGmapgoogle-maps.directives.api.utils', 'uiGmapgoogle-maps.directives.api.options', 'uiGmapgoogle-maps.directives.api.options.builders']);
+
+  angular.module('uiGmapgoogle-maps.directives.api.models.parent', ['uiGmapgoogle-maps.directives.api.managers', 'uiGmapgoogle-maps.directives.api.models.child', 'uiGmapgoogle-maps.providers']);
+
+  angular.module('uiGmapgoogle-maps.directives.api', ['uiGmapgoogle-maps.directives.api.models.parent']);
+
+  angular.module('uiGmapgoogle-maps', ['uiGmapgoogle-maps.directives.api', 'uiGmapgoogle-maps.providers']);
+
+}).call(this);
+;angular.module('uiGmapgoogle-maps.wrapped')
+.service('uiGmapuuid', function() {
+  //BEGIN REPLACE
+  /* istanbul ignore next */
+  /*
+ Version: core-1.0
+ The MIT License: Copyright (c) 2012 LiosK.
+*/
+function UUID(){}UUID.generate=function(){var a=UUID._gri,b=UUID._ha;return b(a(32),8)+"-"+b(a(16),4)+"-"+b(16384|a(12),4)+"-"+b(32768|a(14),4)+"-"+b(a(48),12)};UUID._gri=function(a){return 0>a?NaN:30>=a?0|Math.random()*(1<<a):53>=a?(0|1073741824*Math.random())+1073741824*(0|Math.random()*(1<<a-30)):NaN};UUID._ha=function(a,b){for(var c=a.toString(16),d=b-c.length,e="0";0<d;d>>>=1,e+=e)d&1&&(c=e+c);return c};
+
+  //END REPLACE
+return UUID;
+});
+;(function() {
+  angular.module('uiGmapgoogle-maps.providers').factory('uiGmapMapScriptLoader', [
+    '$q', 'uiGmapuuid', function($q, uuid) {
+      var getScriptUrl, includeScript, isGoogleMapsLoaded, scriptId, usedConfiguration;
+      scriptId = void 0;
+      usedConfiguration = void 0;
+      getScriptUrl = function(options) {
+        if (options.china) {
+          return 'http://maps.google.cn/maps/api/js?';
+        } else {
+          if (options.transport === 'auto') {
+            return '//maps.googleapis.com/maps/api/js?';
+          } else {
+            return options.transport + '://maps.googleapis.com/maps/api/js?';
+          }
+        }
+      };
+      includeScript = function(options) {
+        var omitOptions, query, script, scriptElem;
+        omitOptions = ['transport', 'isGoogleMapsForWork', 'china', 'preventLoad'];
+        if (options.isGoogleMapsForWork) {
+          omitOptions.push('key');
+        }
+        query = _.map(_.omit(options, omitOptions), function(v, k) {
+          return k + '=' + v;
+        });
+        if (scriptId) {
+          scriptElem = document.getElementById(scriptId);
+          scriptElem.parentNode.removeChild(scriptElem);
+        }
+        query = query.join('&');
+        script = document.createElement('script');
+        script.id = scriptId = "ui_gmap_map_load_" + (uuid.generate());
+        script.type = 'text/javascript';
+        script.src = getScriptUrl(options) + query;
+        return document.head.appendChild(script);
+      };
+      isGoogleMapsLoaded = function() {
+        return angular.isDefined(window.google) && angular.isDefined(window.google.maps);
+      };
+      return {
+        load: function(options) {
+          var deferred, randomizedFunctionName;
+          deferred = $q.defer();
+          if (isGoogleMapsLoaded()) {
+            deferred.resolve(window.google.maps);
+            return deferred.promise;
+          }
+          randomizedFunctionName = options.callback = 'onGoogleMapsReady' + Math.round(Math.random() * 1000);
+          window[randomizedFunctionName] = function() {
+            window[randomizedFunctionName] = null;
+            deferred.resolve(window.google.maps);
+          };
+          if (window.navigator.connection && window.Connection && window.navigator.connection.type === window.Connection.NONE && !options.preventLoad) {
+            document.addEventListener('online', function() {
+              if (!isGoogleMapsLoaded()) {
+                return includeScript(options);
+              }
+            });
+          } else if (!options.preventLoad) {
+            includeScript(options);
+          }
+          usedConfiguration = options;
+          usedConfiguration.randomizedFunctionName = randomizedFunctionName;
+          return deferred.promise;
+        },
+        manualLoad: function() {
+          var config;
+          config = usedConfiguration;
+          if (!isGoogleMapsLoaded()) {
+            return includeScript(config);
+          } else {
+            if (window[config.randomizedFunctionName]) {
+              return window[config.randomizedFunctionName]();
+            }
+          }
+        }
+      };
+    }
+  ]).provider('uiGmapGoogleMapApi', function() {
+    this.options = {
+      transport: 'https',
+      isGoogleMapsForWork: false,
+      china: false,
+      v: '3',
+      libraries: '',
+      language: 'en',
+      preventLoad: false
+    };
+    this.configure = function(options) {
+      angular.extend(this.options, options);
+    };
+    this.$get = [
+      'uiGmapMapScriptLoader', (function(_this) {
+        return function(loader) {
+          return loader.load(_this.options);
+        };
+      })(this)
+    ];
+    return this;
+  }).service('uiGmapGoogleMapApiManualLoader', [
+    'uiGmapMapScriptLoader', function(loader) {
+      return {
+        load: function() {
+          loader.manualLoad();
+        }
+      };
+    }
+  ]);
+
+}).call(this);
+;(function() {
+  angular.module('uiGmapgoogle-maps.directives.api.utils').service('uiGmapLogger', [
+    'nemSimpleLogger', function(nemSimpleLogger) {
+      return nemSimpleLogger.spawn();
+    }
+  ]);
+
+}).call(this);
+;
+/*global _:true, angular:true, google:true */
+
+(function() {
+  angular.module('uiGmapgoogle-maps.directives.api.utils').service('uiGmapGmapUtil', [
+    'uiGmapLogger', '$compile', function(Logger, $compile) {
+      var _isFalse, _isTruthy, getCoords, getLatitude, getLongitude, validateCoords;
+      _isTruthy = function(value, bool, optionsArray) {
+        return value === bool || optionsArray.indexOf(value) !== -1;
+      };
+      _isFalse = function(value) {
+        return _isTruthy(value, false, ['false', 'FALSE', 0, 'n', 'N', 'no', 'NO']);
+      };
+      getLatitude = function(value) {
+        if (Array.isArray(value) && value.length === 2) {
+          return value[1];
+        } else if (angular.isDefined(value.type) && value.type === 'Point') {
+          return value.coordinates[1];
+        } else {
+          return value.latitude;
+        }
+      };
+      getLongitude = function(value) {
+        if (Array.isArray(value) && value.length === 2) {
+          return value[0];
+        } else if (angular.isDefined(value.type) && value.type === 'Point') {
+          return value.coordinates[0];
+        } else {
+          return value.longitude;
+        }
+      };
+      getCoords = function(value) {
+        if (!value) {
+          return;
+        }
+        if (value instanceof google.maps.LatLng) {
+          return value;
+        } else if (Array.isArray(value) && value.length === 2) {
+          return new google.maps.LatLng(value[1], value[0]);
+        } else if (angular.isDefined(value.type) && value.type === 'Point') {
+          return new google.maps.LatLng(value.coordinates[1], value.coordinates[0]);
+        } else {
+          return new google.maps.LatLng(value.latitude, value.longitude);
+        }
+      };
+      validateCoords = function(coords) {
+        if (angular.isUndefined(coords)) {
+          return false;
+        }
+        if (_.isArray(coords)) {
+          if (coords.length === 2) {
+            return true;
+          }
+        } else if ((coords != null) && (coords != null ? coords.type : void 0)) {
+          if (coords.type === 'Point' && _.isArray(coords.coordinates) && coords.coordinates.length === 2) {
+            return true;
+          }
+        }
+        if (coords && angular.isDefined((coords != null ? coords.latitude : void 0) && angular.isDefined(coords != null ? coords.longitude : void 0))) {
+          return true;
+        }
+        return false;
+      };
+      return {
+        setCoordsFromEvent: function(prevValue, newLatLon) {
+          if (!prevValue) {
+            return;
+          }
+          if (Array.isArray(prevValue) && prevValue.length === 2) {
+            prevValue[1] = newLatLon.lat();
+            prevValue[0] = newLatLon.lng();
+          } else if (angular.isDefined(prevValue.type) && prevValue.type === 'Point') {
+            prevValue.coordinates[1] = newLatLon.lat();
+            prevValue.coordinates[0] = newLatLon.lng();
+          } else {
+            prevValue.latitude = newLatLon.lat();
+            prevValue.longitude = newLatLon.lng();
+          }
+          return prevValue;
+        },
+        getLabelPositionPoint: function(anchor) {
+          var xPos, yPos;
+          if (anchor === void 0) {
+            return void 0;
+          }
+          anchor = /^([-\d\.]+)\s([-\d\.]+)$/.exec(anchor);
+          xPos = parseFloat(anchor[1]);
+          yPos = parseFloat(anchor[2]);
+          if ((xPos != null) && (yPos != null)) {
+            return new google.maps.Point(xPos, yPos);
+          }
+        },
+        createWindowOptions: function(gMarker, scope, content, defaults) {
+          var options;
+          if ((content != null) && (defaults != null) && ($compile != null)) {
+            options = angular.extend({}, defaults, {
+              content: this.buildContent(scope, defaults, content),
+              position: defaults.position != null ? defaults.position : angular.isObject(gMarker) ? gMarker.getPosition() : getCoords(scope.coords)
+            });
+            if ((gMarker != null) && ((options != null ? options.pixelOffset : void 0) == null)) {
+              if (options.boxClass == null) {
+
+              } else {
+                options.pixelOffset = {
+                  height: 0,
+                  width: -2
+                };
+              }
+            }
+            return options;
+          } else {
+            if (!defaults) {
+              Logger.error('infoWindow defaults not defined');
+              if (!content) {
+                return Logger.error('infoWindow content not defined');
+              }
+            } else {
+              return defaults;
+            }
+          }
+        },
+        buildContent: function(scope, defaults, content) {
+          var parsed, ret;
+          if (defaults.content != null) {
+            ret = defaults.content;
+          } else {
+            if ($compile != null) {
+              content = content.replace(/^\s+|\s+$/g, '');
+              parsed = content === '' ? '' : $compile(content)(scope);
+              if (parsed.length > 0) {
+                ret = parsed[0];
+              }
+            } else {
+              ret = content;
+            }
+          }
+          return ret;
+        },
+        defaultDelay: 50,
+        isTrue: function(value) {
+          return _isTruthy(value, true, ['true', 'TRUE', 1, 'y', 'Y', 'yes', 'YES']);
+        },
+        isFalse: _isFalse,
+        isFalsy: function(value) {
+          return _isTruthy(value, false, [void 0, null]) || _isFalse(value);
+        },
+        getCoords: getCoords,
+        validateCoords: validateCoords,
+        equalCoords: function(coord1, coord2) {
+          return getLatitude(coord1) === getLatitude(coord2) && getLongitude(coord1) === getLongitude(coord2);
+        },
+        validatePath: function(path) {
+          var array, i, polygon, trackMaxVertices;
+          i = 0;
+          if (angular.isUndefined(path.type)) {
+            if (!Array.isArray(path) || path.length < 2) {
+              return false;
+            }
+            while (i < path.length) {
+              if (!((angular.isDefined(path[i].latitude) && angular.isDefined(path[i].longitude)) || (typeof path[i].lat === 'function' && typeof path[i].lng === 'function'))) {
+                return false;
+              }
+              i++;
+            }
+            return true;
+          } else {
+            if (angular.isUndefined(path.coordinates)) {
+              return false;
+            }
+            if (path.type === 'Polygon') {
+              if (path.coordinates[0].length < 4) {
+                return false;
+              }
+              array = path.coordinates[0];
+            } else if (path.type === 'MultiPolygon') {
+              trackMaxVertices = {
+                max: 0,
+                index: 0
+              };
+              _.forEach(path.coordinates, function(polygon, index) {
+                if (polygon[0].length > this.max) {
+                  this.max = polygon[0].length;
+                  return this.index = index;
+                }
+              }, trackMaxVertices);
+              polygon = path.coordinates[trackMaxVertices.index];
+              array = polygon[0];
+              if (array.length < 4) {
+                return false;
+              }
+            } else if (path.type === 'LineString') {
+              if (path.coordinates.length < 2) {
+                return false;
+              }
+              array = path.coordinates;
+            } else {
+              return false;
+            }
+            while (i < array.length) {
+              if (array[i].length !== 2) {
+                return false;
+              }
+              i++;
+            }
+            return true;
+          }
+        },
+        convertPathPoints: function(path) {
+          var array, i, latlng, result, trackMaxVertices;
+          i = 0;
+          result = new google.maps.MVCArray();
+          if (angular.isUndefined(path.type)) {
+            while (i < path.length) {
+              latlng;
+              if (angular.isDefined(path[i].latitude) && angular.isDefined(path[i].longitude)) {
+                latlng = new google.maps.LatLng(path[i].latitude, path[i].longitude);
+              } else if (typeof path[i].lat === 'function' && typeof path[i].lng === 'function') {
+                latlng = path[i];
+              }
+              result.push(latlng);
+              i++;
+            }
+          } else {
+            array;
+            if (path.type === 'Polygon') {
+              array = path.coordinates[0];
+            } else if (path.type === 'MultiPolygon') {
+              trackMaxVertices = {
+                max: 0,
+                index: 0
+              };
+              _.forEach(path.coordinates, function(polygon, index) {
+                if (polygon[0].length > this.max) {
+                  this.max = polygon[0].length;
+                  return this.index = index;
+                }
+              }, trackMaxVertices);
+              array = path.coordinates[trackMaxVertices.index][0];
+            } else if (path.type === 'LineString') {
+              array = path.coordinates;
+            }
+            while (i < array.length) {
+              result.push(new google.maps.LatLng(array[i][1], array[i][0]));
+              i++;
+            }
+          }
+          return result;
+        },
+        getPath: function(object, key) {
+          var obj;
+          if ((key == null) || !_.isString(key)) {
+            return key;
+          }
+          obj = object;
+          _.each(key.split('.'), function(value) {
+            if (obj) {
+              return obj = obj[value];
+            }
+          });
+          return obj;
+        },
+        validateBoundPoints: function(bounds) {
+          if (angular.isUndefined(bounds.sw.latitude) || angular.isUndefined(bounds.sw.longitude) || angular.isUndefined(bounds.ne.latitude) || angular.isUndefined(bounds.ne.longitude)) {
+            return false;
+          }
+          return true;
+        },
+        convertBoundPoints: function(bounds) {
+          var result;
+          result = new google.maps.LatLngBounds(new google.maps.LatLng(bounds.sw.latitude, bounds.sw.longitude), new google.maps.LatLng(bounds.ne.latitude, bounds.ne.longitude));
+          return result;
+        },
+        fitMapBounds: function(map, bounds) {
+          return map.fitBounds(bounds);
+        }
+      };
+    }
+  ]);
+
+}).call(this);
+;(function() {
+  angular.module("uiGmapgoogle-maps.directives.api.utils").service("uiGmapEventsHelper", [
+    "uiGmapLogger", function($log) {
+      var _getEventsObj, _hasEvents;
+      _hasEvents = function(obj) {
+        return angular.isDefined(obj.events) && (obj.events != null) && angular.isObject(obj.events);
+      };
+      _getEventsObj = function(scope, model) {
+        if (_hasEvents(scope)) {
+          return scope;
+        }
+        if (_hasEvents(model)) {
+          return model;
+        }
+      };
+      return {
+        setEvents: function(gObject, scope, model, ignores) {
+          var eventObj;
+          eventObj = _getEventsObj(scope, model);
+          if (eventObj != null) {
+            return _.compact(_.map(eventObj.events, function(eventHandler, eventName) {
+              var doIgnore;
+              if (ignores) {
+                doIgnore = _(ignores).includes(eventName);
+              }
+              if (eventObj.events.hasOwnProperty(eventName) && angular.isFunction(eventObj.events[eventName]) && !doIgnore) {
+                return google.maps.event.addListener(gObject, eventName, function() {
+                  if (!scope.$evalAsync) {
+                    scope.$evalAsync = function() {};
+                  }
+                  return scope.$evalAsync(eventHandler.apply(scope, [gObject, eventName, model, arguments]));
+                });
+              }
+            }));
+          }
+        },
+        removeEvents: function(listeners) {
+          var key, l;
+          if (!listeners) {
+            return;
+          }
+          for (key in listeners) {
+            l = listeners[key];
+            if (l && listeners.hasOwnProperty(key)) {
+              google.maps.event.removeListener(l);
+            }
+          }
+        }
+      };
+    }
+  ]);
+
+}).call(this);
+;
+/*
+@authors:
+- Nicholas McCready - https://twitter.com/nmccready
+ */
+
+
+/*
+StreetViewPanorama Directive to care of basic initialization of StreetViewPanorama
+ */
+
+(function() {
+  angular.module('uiGmapgoogle-maps').directive('uiGmapStreetViewPanorama', [
+    'uiGmapGoogleMapApi', 'uiGmapLogger', 'uiGmapGmapUtil', 'uiGmapEventsHelper', function(GoogleMapApi, $log, GmapUtil, EventsHelper) {
+      var name;
+      name = 'uiGmapStreetViewPanorama';
+      return {
+        restrict: 'EMA',
+        template: '<div class="angular-google-map-street-view-panorama"></div>',
+        replace: true,
+        scope: {
+          focalcoord: '=',
+          radius: '=?',
+          events: '=?',
+          options: '=?',
+          control: '=?',
+          povoptions: '=?',
+          imagestatus: '='
+        },
+        link: function(scope, element, attrs) {
+          return GoogleMapApi.then((function(_this) {
+            return function(maps) {
+              var clean, create, didCreateOptionsFromDirective, firstTime, handleSettings, listeners, opts, pano, povOpts, sv;
+              pano = void 0;
+              sv = void 0;
+              didCreateOptionsFromDirective = false;
+              listeners = void 0;
+              opts = null;
+              povOpts = null;
+              clean = function() {
+                EventsHelper.removeEvents(listeners);
+                if (pano != null) {
+                  pano.unbind('position');
+                  pano.setVisible(false);
+                }
+                if (sv != null) {
+                  if ((sv != null ? sv.setVisible : void 0) != null) {
+                    sv.setVisible(false);
+                  }
+                  return sv = void 0;
+                }
+              };
+              handleSettings = function(perspectivePoint, focalPoint) {
+                var heading;
+                heading = google.maps.geometry.spherical.computeHeading(perspectivePoint, focalPoint);
+                didCreateOptionsFromDirective = true;
+                scope.radius = scope.radius || 50;
+                povOpts = angular.extend({
+                  heading: heading,
+                  zoom: 1,
+                  pitch: 0
+                }, scope.povoptions || {});
+                opts = opts = angular.extend({
+                  navigationControl: false,
+                  addressControl: false,
+                  linksControl: false,
+                  position: perspectivePoint,
+                  pov: povOpts,
+                  visible: true
+                }, scope.options || {});
+                return didCreateOptionsFromDirective = false;
+              };
+              create = function() {
+                var focalPoint;
+                if (!scope.focalcoord) {
+                  $log.error(name + ": focalCoord needs to be defined");
+                  return;
+                }
+                if (!scope.radius) {
+                  $log.error(name + ": needs a radius to set the camera view from its focal target.");
+                  return;
+                }
+                clean();
+                if (sv == null) {
+                  sv = new google.maps.StreetViewService();
+                }
+                if (scope.events) {
+                  listeners = EventsHelper.setEvents(sv, scope, scope);
+                }
+                focalPoint = GmapUtil.getCoords(scope.focalcoord);
+                return sv.getPanoramaByLocation(focalPoint, scope.radius, function(streetViewPanoramaData, status) {
+                  var ele, perspectivePoint, ref;
+                  if (scope.imagestatus != null) {
+                    scope.imagestatus = status;
+                  }
+                  if (((ref = scope.events) != null ? ref.image_status_changed : void 0) != null) {
+                    scope.events.image_status_changed(sv, 'image_status_changed', scope, status);
+                  }
+                  if (status === "OK") {
+                    perspectivePoint = streetViewPanoramaData.location.latLng;
+                    handleSettings(perspectivePoint, focalPoint);
+                    ele = element[0];
+                    return pano = new google.maps.StreetViewPanorama(ele, opts);
+                  }
+                });
+              };
+              if (scope.control != null) {
+                scope.control.getOptions = function() {
+                  return opts;
+                };
+                scope.control.getPovOptions = function() {
+                  return povOpts;
+                };
+                scope.control.getGObject = function() {
+                  return sv;
+                };
+                scope.control.getGPano = function() {
+                  return pano;
+                };
+              }
+              scope.$watch('options', function(newValue, oldValue) {
+                if (newValue === oldValue || newValue === opts || didCreateOptionsFromDirective) {
+                  return;
+                }
+                return create();
+              });
+              firstTime = true;
+              scope.$watch('focalcoord', function(newValue, oldValue) {
+                if (newValue === oldValue && !firstTime) {
+                  return;
+                }
+                if (newValue == null) {
+                  return;
+                }
+                firstTime = false;
+                return create();
+              });
+              return scope.$on('$destroy', function() {
+                return clean();
+              });
+            };
+          })(this));
+        }
+      };
+    }
+  ]);
+
+}).call(this);
+}( window, angular, _));

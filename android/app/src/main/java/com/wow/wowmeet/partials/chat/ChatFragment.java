@@ -97,6 +97,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        presenter.stop();
+    }
+
+    @Override
     public void setPresenter(ChatContract.Presenter presenter) {
         this.presenter = presenter;
     }

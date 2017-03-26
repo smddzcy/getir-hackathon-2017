@@ -22,8 +22,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
-import com.wow.wowmeet.partials.googleapi.GoogleLocationAPIWrapper;
+import com.wow.wowmeet.utils.googleapi.GoogleApiProvider;
+import com.wow.wowmeet.utils.googleapi.GoogleLocationAPIWrapper;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 import com.wow.wowmeet.utils.DialogHelper;
 
@@ -122,11 +122,12 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     public void onStop() {
         super.onStop();
         apiWrapper.onStop();
+        presenter.stop();
     }
 
     private void initializeMap(GoogleMap googleMap) {
         map = googleMap;
-        LatLng mainCoordinates = com.wow.wowmeet.models.Location.getDefaultLocation(); //TODO DYNAMIC TAKE
+        LatLng mainCoordinates = com.wow.wowmeet.models.Location.getDefaultLocation();
         map.setInfoWindowAdapter(infoWindowAdapter);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mainCoordinates, 12.0f));
         mapReady = true;
@@ -185,6 +186,7 @@ public class MapFragment extends SupportMapFragment implements MapContract.View 
     @Override
     public void showEvents(List<Event> events) {
         if(mapReady && map != null) {
+            map.clear();
             for (Event e : events) {
                 map.addMarker(new MarkerOptions()
                     .position(new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongitude())))

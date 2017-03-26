@@ -115,6 +115,9 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
     public void stop() {
         if(disposableSingleEventTypesObserver != null)
             disposableSingleEventTypesObserver.dispose();
+
+        if(disposableSingleCreateEventObserver != null)
+            disposableSingleCreateEventObserver.dispose();
     }
 
     //EventType, ISO - StartTime, ISO - EndTime, Location

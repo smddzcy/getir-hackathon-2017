@@ -30,6 +30,8 @@ public class MainPresenter implements MainContract.Presenter {
     private double lastLat = -1;
     private double lastLong = -1;
 
+    private DisposableSingleObserver<List<Event>> disposableSingleEventsObserver;
+
     public MainPresenter(MainContract.View view) {
         this.view = view;
         this.mainRepository = new MainRepository();
@@ -43,7 +45,8 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void stop() {
-
+        if(disposableSingleEventsObserver != null)
+            disposableSingleEventsObserver.dispose();
     }
 
     @Override
@@ -64,7 +67,7 @@ public class MainPresenter implements MainContract.Presenter {
         lastLat = lat;
         lastLong = lng;
         radius = rad;
-        mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
+        disposableSingleEventsObserver = mainRepository.getEvents(lat, lng, rad).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
                     @Override

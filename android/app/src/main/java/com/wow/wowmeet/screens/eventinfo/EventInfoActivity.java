@@ -17,6 +17,7 @@ import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 import com.wow.wowmeet.partials.chat.ChatFragment;
 import com.wow.wowmeet.utils.CalendarUtils;
+import com.wow.wowmeet.utils.DialogHelper;
 import com.wow.wowmeet.utils.UserProvider;
 
 import java.text.ParseException;
@@ -89,6 +90,12 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     protected void onStart() {
         super.onStart();
         presenter.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop();
     }
 
     @Override

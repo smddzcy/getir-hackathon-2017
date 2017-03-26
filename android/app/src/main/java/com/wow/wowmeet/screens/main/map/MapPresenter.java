@@ -25,7 +25,7 @@ public class MapPresenter implements MapContract.Presenter {
 
     @Override
     public void stop() {
-        //TODO stops
+
     }
 
     @Override

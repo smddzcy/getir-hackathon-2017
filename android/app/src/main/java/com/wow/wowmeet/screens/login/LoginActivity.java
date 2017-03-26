@@ -69,6 +69,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop();
+    }
+
+    @Override
     public void setPresenter(LoginContract.Presenter presenter) {
         this.presenter = presenter;
     }

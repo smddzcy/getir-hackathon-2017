@@ -33,7 +33,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         if(loginPreferences.isUserLoggedIn()){
             view.showLoading();
             String userId = loginPreferences.getUserId();
-            final String token = loginPreferences.getUserToken(); //TODO CHECK EXPIRE
+            final String token = loginPreferences.getUserToken();
 
             Single<User> userSingle = loginRepository.getUser(userId);
             disposableSingleUserObserver = userSingle

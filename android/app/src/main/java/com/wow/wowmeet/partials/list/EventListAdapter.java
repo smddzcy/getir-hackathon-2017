@@ -12,7 +12,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
+import com.wow.wowmeet.utils.CalendarUtils;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,9 +58,22 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             holder.textViewProfileName.setText(event.getCreator().getName());
             Picasso.with(context).load(event.getCreator().getPicture()).into(holder.imageViewProfilePhoto);
         }
+
+        try {
+            Date dateStart = CalendarUtils.stringToDate(event.getStartTime());
+            Date dateEnd = CalendarUtils.stringToDate(event.getEndTime());
+            String startString = CalendarUtils.dateToPrettyDateString(dateStart);
+            String endString = CalendarUtils.dateToPrettyDateString(dateEnd);
+
+            String datesString = startString + " - " + endString;
+            holder.textViewDate.setText(datesString);
+        } catch (ParseException e) {
+            holder.textViewDate.setText(event.getStartTime());
+            e.printStackTrace();
+        }
+
         holder.textViewPlaceName.setText(event.getLocation().getName());
         holder.textViewType.setText(event.getType().getName());
-        holder.textViewDate.setText(event.getStartTime());
     }
 
     @Override

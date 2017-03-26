@@ -3,7 +3,6 @@ package com.wow.wowmeet.partials.googleapi;
 import android.content.Context;
 
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 /**
  * Created by mahmutkaraca on 3/25/17.

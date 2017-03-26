@@ -1,6 +1,7 @@
 package com.wow.wowmeet.screens.login;
 
 import com.wow.wowmeet.data.loginregister.LoginRepository;
+import com.wow.wowmeet.exceptions.BaseException;
 import com.wow.wowmeet.models.User;
 
 import io.reactivex.Single;
@@ -49,7 +50,15 @@ public class LoginPresenter implements LoginContract.Presenter {
                         @Override
                         public void onError(Throwable e) {
                             view.hideLoading();
-                            view.showError(e.getMessage());
+                            if(e instanceof BaseException) {
+                                if(((BaseException)e).isUseResource()) {
+                                    view.showError(((BaseException) e).getErrorMessageResource());
+                                }else {
+                                    view.showError(((BaseException) e).getErrorMessage());
+                                }
+                            } else {
+                                view.showError(e.getMessage());
+                            }
                             e.printStackTrace();
                         }
                     });
@@ -82,7 +91,15 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        } else {
+                            view.showError(e.getMessage());
+                        }
                         view.hideLoading();
                         e.printStackTrace();
                     }

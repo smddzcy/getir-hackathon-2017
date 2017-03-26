@@ -1,6 +1,7 @@
 package com.wow.wowmeet.screens.eventinfo;
 
 import com.wow.wowmeet.data.eventinfo.EventInfoRepository;
+import com.wow.wowmeet.exceptions.BaseException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.User;
 
@@ -56,7 +57,13 @@ public class EventInfoPresenter implements EventInfoContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        }
                     }
                 });
     }

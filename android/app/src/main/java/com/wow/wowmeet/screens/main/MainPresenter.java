@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.data.main.MainRepository;
+import com.wow.wowmeet.exceptions.BaseException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.Type;
@@ -74,7 +75,15 @@ public class MainPresenter implements MainContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        } else {
+                            view.showError(e.getMessage());
+                        }
                         view.hideLoading();
                         e.printStackTrace();
                     }

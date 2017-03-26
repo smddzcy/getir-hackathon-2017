@@ -44,5 +44,6 @@
     <string name="see_details">See Details</string>
     <string name="date">Date:</string>
     <string name="radius_unit">%1d km</string>
+    <string name="server_error">Server Response Error</string>
 
 </resources>

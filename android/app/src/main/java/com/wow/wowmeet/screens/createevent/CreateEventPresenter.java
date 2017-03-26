@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -13,13 +12,13 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.data.createevent.CreateEventRepository;
+import com.wow.wowmeet.exceptions.BaseException;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.models.Location;
 import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.partials.dialogs.DatePickerFragment;
 import com.wow.wowmeet.partials.dialogs.TimePickerFragment;
 import com.wow.wowmeet.utils.CalendarUtils;
-import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.Calendar;
 import java.util.List;
@@ -98,7 +97,13 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        }
                     }
                 });
     }
@@ -130,7 +135,13 @@ public class CreateEventPresenter implements CreateEventContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        view.showError(e.getMessage());
+                        if(e instanceof BaseException) {
+                            if(((BaseException)e).isUseResource()) {
+                                view.showError(((BaseException) e).getErrorMessageResource());
+                            }else {
+                                view.showError(((BaseException) e).getErrorMessage());
+                            }
+                        }
                     }
                 });
     }

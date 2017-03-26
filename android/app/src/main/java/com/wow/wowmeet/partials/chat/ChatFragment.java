@@ -17,7 +17,6 @@ import com.wow.wowmeet.models.Message;
 import com.wow.wowmeet.utils.DialogHelper;
 import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -22,8 +22,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
-import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
-import com.wow.wowmeet.partials.googleapi.GoogleLocationAPIWrapper;
+import com.wow.wowmeet.utils.googleapi.GoogleApiProvider;
+import com.wow.wowmeet.utils.googleapi.GoogleLocationAPIWrapper;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
 import com.wow.wowmeet.utils.DialogHelper;
 

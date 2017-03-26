@@ -19,8 +19,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Type;
-import com.wow.wowmeet.partials.googleapi.GoogleApiProvider;
-import com.wow.wowmeet.partials.googleapi.GooglePlacesAPIWrapper;
+import com.wow.wowmeet.utils.googleapi.GoogleApiProvider;
+import com.wow.wowmeet.utils.googleapi.GooglePlacesAPIWrapper;
 import com.wow.wowmeet.utils.DialogHelper;
 import com.wow.wowmeet.utils.SharedPreferencesUtil;
 

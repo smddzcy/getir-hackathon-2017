@@ -14,10 +14,18 @@ angular.module('MyApp')
 	});
 
     $scope.searchType = function(){
-    	$http.get('/event/search/type/'+$scope.requestedType)
+    	console.log($scope.event.type.name);
+    	$http.get('/event/search/type/'+$scope.event.type.name)
 	      .then(function(eventTypes) {
-	      	console.log(eventTypes);
-	        $scope.events = eventTypes.data;
+	      	$scope.events = eventTypes.data;
+	      })
+	}
+	$scope.searchTime = function(){
+    	console.log($scope.startTime);
+    	console.log($scope.endTime);
+    	$http.get('/event/search/interval/'+$scope.startTime+'/'+$scope.endTime)
+	      .then(function(eventTypes) {
+	      	$scope.events = eventTypes.data;
 	      })
 	}
 });

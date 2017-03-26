@@ -1,1 +1,284 @@
-!function(s,t,e){"use strict";t.module("ngToast.provider",[]).provider("ngToast",[function(){function s(s){for(var n=Math.floor(1e3*Math.random());e.indexOf(n)>-1;)n=Math.floor(1e3*Math.random());this.id=n,this.count=0,this.animation=i.animation,this.className=i.className,this.additionalClasses=i.additionalClasses,this.dismissOnTimeout=i.dismissOnTimeout,this.timeout=i.timeout,this.dismissButton=i.dismissButton,this.dismissButtonHtml=i.dismissButtonHtml,this.dismissOnClick=i.dismissOnClick,this.onDismiss=i.onDismiss,this.compileContent=i.compileContent,t.extend(this,s)}var e=[],n=[],i={animation:!1,className:"success",additionalClasses:null,dismissOnTimeout:!0,timeout:4e3,dismissButton:!1,dismissButtonHtml:"&times;",dismissOnClick:!0,onDismiss:null,compileContent:!1,combineDuplications:!1,horizontalPosition:"right",verticalPosition:"top",maxNumber:0,newestOnTop:!0};this.configure=function(s){t.extend(i,s)},this.$get=[function(){var t=function(s,t){return t="object"==typeof t?t:{content:t},t.className=s,this.create(t)};return{settings:i,messages:e,dismiss:function(s){if(s){for(var t=e.length-1;t>=0;t--)if(e[t].id===s)return e.splice(t,1),void n.splice(n.indexOf(s),1)}else{for(;e.length>0;)e.pop();n=[]}},create:function(t){if(t="object"==typeof t?t:{content:t},i.combineDuplications)for(var o=n.length-1;o>=0;o--){var a=e[o],m=t.className||"success";if(a.content===t.content&&a.className===m)return void e[o].count++}i.maxNumber>0&&n.length>=i.maxNumber&&this.dismiss(n[0]);var c=new s(t);return e[i.newestOnTop?"unshift":"push"](c),n.push(c.id),c.id},success:function(s){return t.call(this,"success",s)},info:function(s){return t.call(this,"info",s)},warning:function(s){return t.call(this,"warning",s)},danger:function(s){return t.call(this,"danger",s)}}}]}])}(window,window.angular),function(s,t){"use strict";t.module("ngToast.directives",["ngToast.provider"]).run(["$templateCache",function(s){s.put("ngToast/toast.html",'<div class="ng-toast ng-toast--{{hPos}} ng-toast--{{vPos}} {{animation ? \'ng-toast--animate-\' + animation : \'\'}}"><ul class="ng-toast__list"><toast-message ng-repeat="message in messages" message="message" count="message.count"><span ng-bind-html="message.content"></span></toast-message></ul></div>'),s.put("ngToast/toastMessage.html",'<li class="ng-toast__message {{message.additionalClasses}}"ng-mouseenter="onMouseEnter()"ng-mouseleave="onMouseLeave()"><div class="alert alert-{{message.className}}" ng-class="{\'alert-dismissible\': message.dismissButton}"><button type="button" class="close" ng-if="message.dismissButton" ng-bind-html="message.dismissButtonHtml" ng-click="!message.dismissOnClick && dismiss()"></button><span ng-if="count" class="ng-toast__message__count">{{count + 1}}</span><span ng-if="!message.compileContent" ng-transclude></span></div></li>')}]).directive("toast",["ngToast","$templateCache","$log",function(s,t,e){return{replace:!0,restrict:"EA",templateUrl:"ngToast/toast.html",compile:function(n,i){if(i.template){var o=t.get(i.template);o?n.replaceWith(o):e.warn("ngToast: Provided template could not be loaded. Please be sure that it is populated before the <toast> element is represented.")}return function(t){t.hPos=s.settings.horizontalPosition,t.vPos=s.settings.verticalPosition,t.animation=s.settings.animation,t.messages=s.messages}}}}]).directive("toastMessage",["$timeout","$compile","ngToast",function(s,t,e){return{replace:!0,transclude:!0,restrict:"EA",scope:{message:"=",count:"="},controller:["$scope","ngToast",function(s,t){s.dismiss=function(){t.dismiss(s.message.id)}}],templateUrl:"ngToast/toastMessage.html",link:function(n,i,o,a,m){i.attr("data-message-id",n.message.id);var c,l=n.message.compileContent;if(n.cancelTimeout=function(){s.cancel(c)},n.startTimeout=function(){n.message.dismissOnTimeout&&(c=s(function(){e.dismiss(n.message.id)},n.message.timeout))},n.onMouseEnter=function(){n.cancelTimeout()},n.onMouseLeave=function(){n.startTimeout()},l){var u;m(n,function(s){u=s,i.children().append(u)}),s(function(){t(u.contents())("boolean"==typeof l?n.$parent:l,function(s){u.replaceWith(s)})},0)}n.startTimeout(),n.message.dismissOnClick&&i.bind("click",function(){e.dismiss(n.message.id),n.$apply()}),n.message.onDismiss&&n.$on("$destroy",n.message.onDismiss.bind(n.message))}}}])}(window,window.angular),function(s,t){"use strict";t.module("ngToast",["ngSanitize","ngToast.directives","ngToast.provider"])}(window,window.angular);
+/*!
+ * ngToast v2.0.0 (http://tameraydin.github.io/ngToast)
+ * Copyright 2016 Tamer Aydin (http://tamerayd.in)
+ * Licensed under MIT (http://tameraydin.mit-license.org/)
+ */
+
+(function(window, angular, undefined) {
+  'use strict';
+
+  angular.module('ngToast.provider', [])
+    .provider('ngToast', [
+      function() {
+        var messages = [],
+            messageStack = [];
+
+        var defaults = {
+          animation: false,
+          className: 'success',
+          additionalClasses: null,
+          dismissOnTimeout: true,
+          timeout: 4000,
+          dismissButton: false,
+          dismissButtonHtml: '&times;',
+          dismissOnClick: true,
+          onDismiss: null,
+          compileContent: false,
+          combineDuplications: false,
+          horizontalPosition: 'right', // right, center, left
+          verticalPosition: 'top', // top, bottom,
+          maxNumber: 0,
+          newestOnTop: true
+        };
+
+        function Message(msg) {
+          var id = Math.floor(Math.random()*1000);
+          while (messages.indexOf(id) > -1) {
+            id = Math.floor(Math.random()*1000);
+          }
+
+          this.id = id;
+          this.count = 0;
+          this.animation = defaults.animation;
+          this.className = defaults.className;
+          this.additionalClasses = defaults.additionalClasses;
+          this.dismissOnTimeout = defaults.dismissOnTimeout;
+          this.timeout = defaults.timeout;
+          this.dismissButton = defaults.dismissButton;
+          this.dismissButtonHtml = defaults.dismissButtonHtml;
+          this.dismissOnClick = defaults.dismissOnClick;
+          this.onDismiss = defaults.onDismiss;
+          this.compileContent = defaults.compileContent;
+
+          angular.extend(this, msg);
+        }
+
+        this.configure = function(config) {
+          angular.extend(defaults, config);
+        };
+
+        this.$get = [function() {
+          var _createWithClassName = function(className, msg) {
+            msg = (typeof msg === 'object') ? msg : {content: msg};
+            msg.className = className;
+
+            return this.create(msg);
+          };
+
+          return {
+            settings: defaults,
+            messages: messages,
+            dismiss: function(id) {
+              if (id) {
+                for (var i = messages.length - 1; i >= 0; i--) {
+                  if (messages[i].id === id) {
+                    messages.splice(i, 1);
+                    messageStack.splice(messageStack.indexOf(id), 1);
+                    return;
+                  }
+                }
+
+              } else {
+                while(messages.length > 0) {
+                  messages.pop();
+                }
+                messageStack = [];
+              }
+            },
+            create: function(msg) {
+              msg = (typeof msg === 'object') ? msg : {content: msg};
+
+              if (defaults.combineDuplications) {
+                for (var i = messageStack.length - 1; i >= 0; i--) {
+                  var _msg = messages[i];
+                  var _className = msg.className || 'success';
+
+                  if (_msg.content === msg.content &&
+                      _msg.className === _className) {
+                    messages[i].count++;
+                    return;
+                  }
+                }
+              }
+
+              if (defaults.maxNumber > 0 &&
+                  messageStack.length >= defaults.maxNumber) {
+                this.dismiss(messageStack[0]);
+              }
+
+              var newMsg = new Message(msg);
+              messages[defaults.newestOnTop ? 'unshift' : 'push'](newMsg);
+              messageStack.push(newMsg.id);
+
+              return newMsg.id;
+            },
+            success: function(msg) {
+              return _createWithClassName.call(this, 'success', msg);
+            },
+            info: function(msg) {
+              return _createWithClassName.call(this, 'info', msg);
+            },
+            warning: function(msg) {
+              return _createWithClassName.call(this, 'warning', msg);
+            },
+            danger: function(msg) {
+              return _createWithClassName.call(this, 'danger', msg);
+            }
+          };
+        }];
+      }
+    ]);
+
+})(window, window.angular);
+
+(function(window, angular) {
+  'use strict';
+
+  angular.module('ngToast.directives', ['ngToast.provider'])
+    .run(['$templateCache',
+      function($templateCache) {
+        $templateCache.put('ngToast/toast.html',
+          '<div class="ng-toast ng-toast--{{hPos}} ng-toast--{{vPos}} {{animation ? \'ng-toast--animate-\' + animation : \'\'}}">' +
+            '<ul class="ng-toast__list">' +
+              '<toast-message ng-repeat="message in messages" ' +
+                'message="message" count="message.count">' +
+                '<span ng-bind-html="message.content"></span>' +
+              '</toast-message>' +
+            '</ul>' +
+          '</div>');
+        $templateCache.put('ngToast/toastMessage.html',
+          '<li class="ng-toast__message {{message.additionalClasses}}"' +
+            'ng-mouseenter="onMouseEnter()"' +
+            'ng-mouseleave="onMouseLeave()">' +
+            '<div class="alert alert-{{message.className}}" ' +
+              'ng-class="{\'alert-dismissible\': message.dismissButton}">' +
+              '<button type="button" class="close" ' +
+                'ng-if="message.dismissButton" ' +
+                'ng-bind-html="message.dismissButtonHtml" ' +
+                'ng-click="!message.dismissOnClick && dismiss()">' +
+              '</button>' +
+              '<span ng-if="count" class="ng-toast__message__count">' +
+                '{{count + 1}}' +
+              '</span>' +
+              '<span ng-if="!message.compileContent" ng-transclude></span>' +
+            '</div>' +
+          '</li>');
+      }
+    ])
+    .directive('toast', ['ngToast', '$templateCache', '$log',
+      function(ngToast, $templateCache, $log) {
+        return {
+          replace: true,
+          restrict: 'EA',
+          templateUrl: 'ngToast/toast.html',
+          compile: function(tElem, tAttrs) {
+            if (tAttrs.template) {
+              var template = $templateCache.get(tAttrs.template);
+              if (template) {
+                tElem.replaceWith(template);
+              } else {
+                $log.warn('ngToast: Provided template could not be loaded. ' +
+                  'Please be sure that it is populated before the <toast> element is represented.');
+              }
+            }
+
+            return function(scope) {
+              scope.hPos = ngToast.settings.horizontalPosition;
+              scope.vPos = ngToast.settings.verticalPosition;
+              scope.animation = ngToast.settings.animation;
+              scope.messages = ngToast.messages;
+            };
+          }
+        };
+      }
+    ])
+    .directive('toastMessage', ['$timeout', '$compile', 'ngToast',
+      function($timeout, $compile, ngToast) {
+        return {
+          replace: true,
+          transclude: true,
+          restrict: 'EA',
+          scope: {
+            message: '=',
+            count: '='
+          },
+          controller: ['$scope', 'ngToast', function($scope, ngToast) {
+            $scope.dismiss = function() {
+              ngToast.dismiss($scope.message.id);
+            };
+          }],
+          templateUrl: 'ngToast/toastMessage.html',
+          link: function(scope, element, attrs, ctrl, transclude) {
+            element.attr('data-message-id', scope.message.id);
+
+            var dismissTimeout;
+            var scopeToBind = scope.message.compileContent;
+
+            scope.cancelTimeout = function() {
+              $timeout.cancel(dismissTimeout);
+            };
+
+            scope.startTimeout = function() {
+              if (scope.message.dismissOnTimeout) {
+                dismissTimeout = $timeout(function() {
+                  ngToast.dismiss(scope.message.id);
+                }, scope.message.timeout);
+              }
+            };
+
+            scope.onMouseEnter = function() {
+              scope.cancelTimeout();
+            };
+
+            scope.onMouseLeave = function() {
+              scope.startTimeout();
+            };
+
+            if (scopeToBind) {
+              var transcludedEl;
+
+              transclude(scope, function(clone) {
+                transcludedEl = clone;
+                element.children().append(transcludedEl);
+              });
+
+              $timeout(function() {
+                $compile(transcludedEl.contents())
+                  (typeof scopeToBind === 'boolean' ?
+                    scope.$parent : scopeToBind, function(compiledClone) {
+                    transcludedEl.replaceWith(compiledClone);
+                  });
+              }, 0);
+            }
+
+            scope.startTimeout();
+
+            if (scope.message.dismissOnClick) {
+              element.bind('click', function() {
+                ngToast.dismiss(scope.message.id);
+                scope.$apply();
+              });
+            }
+
+            if (scope.message.onDismiss) {
+              scope.$on('$destroy',
+                scope.message.onDismiss.bind(scope.message));
+            }
+          }
+        };
+      }
+    ]);
+
+})(window, window.angular);
+
+(function(window, angular) {
+  'use strict';
+
+  angular
+    .module('ngToast', [
+      'ngSanitize',
+      'ngToast.directives',
+      'ngToast.provider'
+    ]);
+
+})(window, window.angular);

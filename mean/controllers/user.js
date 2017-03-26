@@ -692,11 +692,16 @@ exports.addRank = function(req, res) {
     }  
 
     if(req.body.rank){
+      console.log(req.body.rank);
+      if(parseInt(req.body.rank) > 5){
+        console.log(123);
+        return res.status(400).send({ msg: 'Out of range'});
+      }
       if (!user.rank) user.rank = 0;
       if (!user.numberOfRates) user.numberOfRates = 0;
       user.rank = (parseInt(user.rank)*user.numberOfRates 
             + parseInt(req.body.rank))/(user.numberOfRates + 1);
-      user.numberOfRates++;
+      user.numberOfRates = parseInt(user.numberOfRates)+1;
     }
 
     console.log(user);

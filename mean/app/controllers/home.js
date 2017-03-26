@@ -29,13 +29,4 @@ angular.module('MyApp')
 			$scope.markers.push(marker);
 		});
 	});
-
-	// $http.get("http://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyBKls60hmP1Q1DLkVrt1qMMUcF2tsFJ7CQ")
-	// 	.then(function(response){
-	// 		console.log(response);
-	// 	},
-	// 	function(err){
-	// 		console.log(err);
-	// 		console.log("asd");
-	// 	});
 });

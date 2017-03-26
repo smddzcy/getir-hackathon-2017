@@ -15,7 +15,6 @@ import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.utils.CalendarUtils;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -60,12 +59,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         }
 
         try {
-            Date dateStart = CalendarUtils.stringToDate(event.getStartTime());
-            Date dateEnd = CalendarUtils.stringToDate(event.getEndTime());
-            String startString = CalendarUtils.dateToPrettyDateString(dateStart);
-            String endString = CalendarUtils.dateToPrettyDateString(dateEnd);
-
-            String datesString = startString + " - " + endString;
+            String datesString =
+                    CalendarUtils.getStartEndDateString(event.getStartTime(), event.getEndTime());
             holder.textViewDate.setText(datesString);
         } catch (ParseException e) {
             holder.textViewDate.setText(event.getStartTime());

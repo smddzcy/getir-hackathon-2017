@@ -13,6 +13,9 @@ import android.widget.TextView;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.partials.chat.ChatFragment;
+import com.wow.wowmeet.utils.CalendarUtils;
+
+import java.text.ParseException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,8 +91,19 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
         this.event = event;
         txtPlace.setText(event.getLocation().getName());
         txtType.setText(event.getType().getName());
-        txtDateTime.setText(event.getStartTime());
         txtUsername.setText(event.getCreator().getName());
+
+
+        try {
+            String datesString =
+                    CalendarUtils.getStartEndDateString(event.getStartTime(), event.getEndTime());
+
+            txtDateTime.setText(datesString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            txtDateTime.setText(event.getStartTime());
+        }
+
     }
 
 

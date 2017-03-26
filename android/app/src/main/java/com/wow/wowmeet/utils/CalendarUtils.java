@@ -30,4 +30,13 @@ public class CalendarUtils {
         return sdf.parse(time);
     }
 
+    public static String getStartEndDateString(String startTime, String endTime) throws ParseException {
+        Date dateStart = CalendarUtils.stringToDate(startTime);
+        Date dateEnd = CalendarUtils.stringToDate(endTime);
+        String startString = CalendarUtils.dateToPrettyDateString(dateStart);
+        String endString = CalendarUtils.dateToPrettyDateString(dateEnd);
+
+        return startString + " - " + endString;
+    }
+
 }

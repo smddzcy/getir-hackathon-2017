@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.screens.createevent.CreateEventActivity;
 import com.wow.wowmeet.utils.DialogHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
 
     public static final String ARG_PLACE_RADIUS = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argPlaceRadius";
     public static final String ARG_TYPE = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argType";
+    private FilterDialogContract.Presenter presenter;
 
     public static FilterDialogFragment newInstance() {
         FilterDialogFragment dialog = new FilterDialogFragment();
@@ -124,6 +127,8 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
 
     private boolean placeChanged;
 
+    private ArrayAdapter<Type> spinnerAdapter;
+    private List<Type> eventTypes;
 
     private void parseArguments(Bundle args) {
         int day = args.getInt(ARG_DATE_DAY);
@@ -280,6 +285,9 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
         edtDateFilter.setKeyListener(null);
         edtLocationFilter.setKeyListener(null);
 
+        eventTypes = new ArrayList<>();
+        spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, eventTypes);
+
         return v;
     }
 
@@ -310,7 +318,7 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
 
     @Override
     public void setPresenter(FilterDialogContract.Presenter presenter) {
-
+        this.presenter = presenter;
     }
 
     @Override
@@ -325,7 +333,9 @@ public class FilterDialogFragment extends DialogFragment implements FilterDialog
 
     @Override
     public void updateEventTypes(List<Type> eventTypes) {
-
+        this.eventTypes.clear();
+        this.eventTypes.addAll(eventTypes);
+        spinnerAdapter.notifyDataSetChanged();
     }
 
     public interface OnFilterDialogResultListener {

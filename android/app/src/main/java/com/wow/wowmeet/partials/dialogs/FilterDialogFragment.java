@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -26,6 +27,7 @@ import com.wow.wowmeet.screens.createevent.CreateEventActivity;
 import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by mahmutkaraca on 3/26/17.
  */
 
-public class FilterDialogFragment extends DialogFragment {
+public class FilterDialogFragment extends DialogFragment implements FilterDialogContract.View {
 
     public static final String ARG_DATE_DAY = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateDay";
     public static final String ARG_DATE_MONTH = "com.wow.wowmeet.partials.dialogs.FilterDialogFragment.argDateMonth";
@@ -102,6 +104,8 @@ public class FilterDialogFragment extends DialogFragment {
     @BindView(R.id.txtStartingHourText) TextView txtStartHour;
     @BindView(R.id.txtEndingHourText) TextView txtEndHour;
     @BindView(R.id.txtRadiusText) TextView txtRadius;
+    @BindView(R.id.spinnerActivityTypeFilter)
+    Spinner spinnerActivityTypeFilter;
 
     @BindView(R.id.btnFilterCancel) Button btnCancel;
     @BindView(R.id.btnFilterOk) Button btnOK;
@@ -302,6 +306,26 @@ public class FilterDialogFragment extends DialogFragment {
                 DialogHelper.showToastMessage(getActivity(), getString(R.string.place_selection_cancelled_info_text));
             }
         }
+    }
+
+    @Override
+    public void setPresenter(FilterDialogContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void showError(String e) {
+
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+
+    }
+
+    @Override
+    public void updateEventTypes(List<Type> eventTypes) {
+
     }
 
     public interface OnFilterDialogResultListener {

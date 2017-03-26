@@ -22,7 +22,6 @@ import com.wow.wowmeet.utils.UserProvider;
 
 import java.text.ParseException;
 import java.util.List;
-import com.wow.wowmeet.utils.DialogHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +90,6 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
     protected void onStart() {
         super.onStart();
         presenter.start();
-        DialogHelper.showAlertDialogWithError(this, e);
     }
 
     @Override

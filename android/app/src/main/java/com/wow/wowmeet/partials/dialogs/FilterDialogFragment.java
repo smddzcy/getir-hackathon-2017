@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -22,6 +23,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Type;
 import com.wow.wowmeet.screens.createevent.CreateEventActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.Calendar;
 
@@ -263,10 +265,10 @@ public class FilterDialogFragment extends DialogFragment {
                     startActivityForResult(i, CreateEventActivity.PLACE_PICKER_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
-                    //TODO handle error
+                    DialogHelper.showAlertDialogWithError(getActivity(), e.getLocalizedMessage());
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
-                    //TODO handle error 2
+                    DialogHelper.showAlertDialogWithError(getActivity(), e.getLocalizedMessage());
                 }
             }
         });
@@ -295,9 +297,9 @@ public class FilterDialogFragment extends DialogFragment {
                 place = PlacePicker.getPlace(getActivity(), data);
                 edtLocationFilter.setText(place.getName());
             } else if(resultCode == PlacePicker.RESULT_ERROR) {
-                //TODO handle error 3
+                DialogHelper.showAlertDialogWithError(getActivity(), PlacePicker.getStatus(getActivity(), data).getStatusMessage());
             } else if(resultCode == Activity.RESULT_CANCELED) {
-                //TODO handle cancellation
+                DialogHelper.showToastMessage(getActivity(), getString(R.string.place_selection_cancelled_info_text));
             }
         }
     }

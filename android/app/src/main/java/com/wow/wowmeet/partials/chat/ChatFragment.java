@@ -2,6 +2,7 @@ package com.wow.wowmeet.partials.chat;
 
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Message;
+import com.wow.wowmeet.utils.DialogHelper;
 import com.wow.wowmeet.utils.SharedPreferencesUtil;
 
 import java.net.URISyntaxException;
@@ -68,13 +70,10 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         List<Message> messages = chatMessageProvider.getMessages();
         final String toId = chatMessageProvider.getToId();
 
-        try {
-            final ChatContract.Presenter presenter = new ChatPresenter(this, toId, messages, userToken);
-            this.setPresenter(presenter);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            //TODO exception handle
-        }
+
+        ChatContract.Presenter presenter = new ChatPresenter(this, toId, messages, userToken);
+        this.setPresenter(presenter);
+
         chatListAdapter = new ChatListAdapter(new ArrayList<Message>());
         chatRecyclerView.setAdapter(chatListAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -85,7 +84,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
             public void onClick(View v) {
                 String message = editTextMessage.getText().toString();
                 editTextMessage.setText("");
-                presenter.sendMessage(message, toId);
+                ChatFragment.this.presenter.sendMessage(message, toId);
             }
         });
 
@@ -105,7 +104,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     @Override
     public void showError(String e) {
-        //TODO SHOW ERROR
+        DialogHelper.showAlertDialogWithError(getActivity(), e);
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override

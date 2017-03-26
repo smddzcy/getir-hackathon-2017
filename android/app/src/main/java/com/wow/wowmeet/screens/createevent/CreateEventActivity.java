@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.createevent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -150,7 +151,7 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
                 new GoogleApiProvider.OnProviderConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed() {
-                        //TODO show error
+                        DialogHelper.showAlertDialogWithError(CreateEventActivity.this, getString(R.string.api_conn_failed_error_text));
                     }
                 });
 
@@ -178,6 +179,11 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
     @Override
     public void showError(String e) {
         DialogHelper.showAlertDialogWithError(this, e);
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override
@@ -233,12 +239,17 @@ public class CreateEventActivity extends AppCompatActivity implements CreateEven
             startActivityForResult(placeAutocompleteIntent, PLACE_PICKER_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
-            //TODO handle error
+            DialogHelper.showAlertDialogWithError(this, e.getLocalizedMessage());
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
-            //TODO handle error 2
+            DialogHelper.showAlertDialogWithError(this, e.getLocalizedMessage());
         }
 
+    }
+
+    @Override
+    public void showPlacePickerError(Intent data) {
+        showError(PlacePicker.getStatus(this, data).getStatusMessage());
     }
 
     @Override

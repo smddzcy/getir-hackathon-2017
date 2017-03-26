@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.widget.Button;
@@ -75,6 +76,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void showError(String errorMessage) {
         DialogHelper.showAlertDialogWithError(this, errorMessage);
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
 

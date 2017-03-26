@@ -28,6 +28,7 @@ interface CreateEventContract {
 
         void showDialog(DialogFragment fragment, String tag);
         void showPlacePickerDialog();
+        void showPlacePickerError(Intent data);
     }
 
     interface Presenter extends BasePresenter{

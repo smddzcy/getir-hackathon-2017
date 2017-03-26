@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -171,6 +172,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public void showError(String errorMessage) {
         DialogHelper.showAlertDialogWithError(this, errorMessage);
+    }
+
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override

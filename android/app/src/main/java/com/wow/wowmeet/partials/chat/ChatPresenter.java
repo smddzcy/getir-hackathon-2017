@@ -30,10 +30,14 @@ public class ChatPresenter implements ChatContract.Presenter {
     private List<Message> messages;
 
     public ChatPresenter(ChatContract.View view, String toId, List<Message> messages,
-                         String userToken) throws URISyntaxException {
+                         String userToken) {
         this.messages = messages;
-        this.chatRepository = new ChatRepository(toId);
         this.view = view;
+        try {
+            this.chatRepository = new ChatRepository(toId);
+        } catch (URISyntaxException e) {
+            view.showError(e.getLocalizedMessage());
+        }
         this.userToken = userToken;
     }
 

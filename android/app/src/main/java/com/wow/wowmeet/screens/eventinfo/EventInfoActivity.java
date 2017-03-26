@@ -2,6 +2,7 @@ package com.wow.wowmeet.screens.eventinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.partials.chat.ChatFragment;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +71,12 @@ public class EventInfoActivity extends AppCompatActivity implements EventInfoCon
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(this, e);
+    }
 
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override

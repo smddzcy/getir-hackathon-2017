@@ -3,6 +3,7 @@ package com.wow.wowmeet.partials.list;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import com.wow.wowmeet.R;
 import com.wow.wowmeet.models.Event;
 import com.wow.wowmeet.screens.eventinfo.EventInfoActivity;
+import com.wow.wowmeet.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +80,12 @@ public class ListFragment extends Fragment implements ListContract.View {
 
     @Override
     public void showError(String e) {
+        DialogHelper.showAlertDialogWithError(getActivity(), e);
+    }
 
+    @Override
+    public void showError(@StringRes int resource) {
+        showError(getString(resource));
     }
 
     @Override

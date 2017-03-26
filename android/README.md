@@ -21,12 +21,12 @@ In main screen, user can use the navigation drawer and can log out.
 ### Application Architecture
 This application uses Model View Presenter (MVP) architecture. 
 
-### 3rd Party Libraries
-1 - OkHttp 3.6.0 for http requests
-2 - RxAndroid 2.0.1 and RxJava 2.0.1 for server connection and better error handling
-3 - Gson 2.6.2 for parsing json data to POJO
-4 - ButterKnife 8.5.1 for injecting views
-5 - Picasso 2.5.2 for handling images from the server
-6 - Google Play Services for maps, location and places apis.
-7 - Android support library for backwards compatibility.
+### Third Party Libraries
+1 - OkHttp 3.6.0 for http requests  
+2 - RxAndroid 2.0.1 and RxJava 2.0.1 for server connection and better error handling  
+3 - Gson 2.6.2 for parsing json data to POJO  
+4 - ButterKnife 8.5.1 for injecting views  
+5 - Picasso 2.5.2 for handling images from the server  
+6 - Google Play Services for maps, location and places apis.  
+7 - Android support library for backwards compatibility.  
 

@@ -63,6 +63,11 @@ public class EventInfoPresenter implements EventInfoContract.Presenter {
 
     private boolean isUserJoined() {
         List<User> joinedUsers = event.getUsers();
-        return joinedUsers.contains(user);
+        for(User u : joinedUsers){
+            if(u.get_id().equals(user.get_id()))
+                return true;
+        }
+
+        return false;
     }
 }
